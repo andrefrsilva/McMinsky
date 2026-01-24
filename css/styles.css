@@ -762,7 +762,10 @@ ul, ol {
 .program-item {
   background: var(--black-lighter);
   border: 1px solid var(--gray-dark);
-  overflow: hidden;
+}
+
+.program-item.active {
+  overflow: visible;
 }
 
 .program-header {
@@ -831,11 +834,12 @@ ul, ol {
 .program-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height var(--transition-medium);
+  transition: max-height 0.6s ease-in-out;
 }
 
 .program-item.active .program-content {
-  max-height: 2000px;
+  max-height: 8000px; /* Large enough for any content */
+  overflow: visible;
 }
 
 .program-body {

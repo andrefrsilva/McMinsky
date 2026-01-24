@@ -274,11 +274,14 @@ Enviado através do formulário do website McMinsky`;
 
   // Detect current language from URL
   function getCurrentLang() {
-    if (currentPath.includes('/en/') || currentPath.includes('/en.')) {
+    if (currentPath.includes('/en/') || currentPath.includes('/en.') || currentPath.includes('/events/en/')) {
       return 'en';
     }
     return 'pt';
   }
+
+  // Global language variable for use throughout the script
+  const isEnglish = getCurrentLang() === 'en';
 
   // Get base path for GitHub Pages compatibility
   function getBasePath() {
@@ -396,8 +399,8 @@ Enviado através do formulário do website McMinsky`;
 
   // Initialize
   updateActiveLangBtn();
-  // Uncomment to enable auto-redirect based on saved preference:
-  // checkLangRedirect();
+  // Auto-redirect based on saved preference
+  checkLangRedirect();
 
   // ========================================
   // DYNAMIC YEAR FOR COPYRIGHT
