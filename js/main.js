@@ -266,34 +266,138 @@ Enviado através do formulário do website McMinsky`;
   });
 
   // ========================================
-  // LANGUAGE SWITCHER
+  // LANGUAGE SWITCHER WITH LOCALSTORAGE
   // ========================================
+  const LANG_KEY = 'mcminsky_lang';
   const langBtns = document.querySelectorAll('.lang-btn');
+  const currentPath = window.location.pathname;
 
+  // Detect current language from URL
+  function getCurrentLang() {
+    if (currentPath.includes('/en/') || currentPath.includes('/en.')) {
+      return 'en';
+    }
+    return 'pt';
+  }
+
+  // Get base path for GitHub Pages compatibility
+  function getBasePath() {
+    // Find the base path by looking for known patterns
+    const match = currentPath.match(/^(\/[^\/]+)?(?:\/(?:en|pt))?/);
+    // If hosted at root, return empty; if at /repo-name/, return that
+    if (currentPath.startsWith('/mcminsky-site')) {
+      return '/mcminsky-site';
+    }
+    return '';
+  }
+
+  // Build URL for target language
+  function buildLangUrl(targetLang) {
+    const basePath = getBasePath();
+    const currentLang = getCurrentLang();
+
+    // Already on target language
+    if (currentLang === targetLang) return null;
+
+    let newPath = currentPath;
+
+    if (targetLang === 'en') {
+      // PT -> EN
+      if (currentPath.includes('/events/') && !currentPath.includes('/events/en/')) {
+        newPath = currentPath.replace('/events/', '/events/en/');
+      } else if (currentPath.includes('/articles/pt/')) {
+        newPath = currentPath.replace('/articles/pt/', '/articles/en/');
+      } else if (currentPath.includes('/articles/') && !currentPath.includes('/articles/en/')) {
+        newPath = currentPath.replace('/articles/', '/articles/en/');
+      } else if (!currentPath.includes('/en/')) {
+        // Main page or other pages
+        if (currentPath.endsWith('/') || currentPath.endsWith('/index.html')) {
+          const base = currentPath.replace(/index\.html$/, '').replace(/\/$/, '');
+          newPath = base + '/en/';
+        } else {
+          newPath = currentPath.replace(/\.html$/, '') + '/en/';
+        }
+      }
+    } else {
+      // EN -> PT
+      if (currentPath.includes('/events/en/')) {
+        newPath = currentPath.replace('/events/en/', '/events/');
+      } else if (currentPath.includes('/articles/en/')) {
+        newPath = currentPath.replace('/articles/en/', '/articles/pt/');
+      } else if (currentPath.includes('/en/')) {
+        newPath = currentPath.replace('/en/', '/');
+      }
+    }
+
+    return newPath;
+  }
+
+  // Mark active language button
+  function updateActiveLangBtn() {
+    const currentLang = getCurrentLang();
+    langBtns.forEach(function(btn) {
+      const btnLang = btn.getAttribute('data-lang');
+      btn.classList.toggle('active', btnLang === currentLang);
+    });
+  }
+
+  // Save language preference
+  function saveLangPreference(lang) {
+    try {
+      localStorage.setItem(LANG_KEY, lang);
+    } catch (e) {
+      // localStorage not available
+    }
+  }
+
+  // Get saved language preference
+  function getSavedLangPreference() {
+    try {
+      return localStorage.getItem(LANG_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Auto-redirect based on saved preference (only on main pages)
+  function checkLangRedirect() {
+    const savedLang = getSavedLangPreference();
+    const currentLang = getCurrentLang();
+
+    // Only auto-redirect if user has a saved preference different from current
+    if (savedLang && savedLang !== currentLang) {
+      const newUrl = buildLangUrl(savedLang);
+      if (newUrl && newUrl !== currentPath) {
+        // Check if the target page exists before redirecting
+        // For now, only redirect main pages where we know EN exists
+        const safeToRedirect =
+          (currentPath === '/' || currentPath.endsWith('/index.html') || currentPath.match(/\/mcminsky-site\/?$/)) ||
+          currentPath.includes('/en/');
+
+        if (safeToRedirect) {
+          window.location.href = newUrl;
+        }
+      }
+    }
+  }
+
+  // Handle language button clicks
   langBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
-      const lang = this.getAttribute('data-lang');
-      const currentPath = window.location.pathname;
+      const targetLang = this.getAttribute('data-lang');
+      saveLangPreference(targetLang);
 
-      if (lang === 'en') {
-        // Navigate to English version
-        if (!currentPath.includes('/en/')) {
-          if (currentPath.includes('/articles/')) {
-            window.location.href = currentPath.replace('/articles/', '/articles/en/');
-          } else {
-            window.location.href = '/en/' + currentPath.replace('/', '');
-          }
-        }
-      } else {
-        // Navigate to Portuguese version
-        if (currentPath.includes('/en/')) {
-          window.location.href = currentPath.replace('/en/', '/');
-        } else if (currentPath.includes('/articles/en/')) {
-          window.location.href = currentPath.replace('/articles/en/', '/articles/');
-        }
+      const newUrl = buildLangUrl(targetLang);
+      if (newUrl) {
+        window.location.href = newUrl;
       }
     });
   });
+
+  // Initialize
+  updateActiveLangBtn();
+  // Uncomment to enable auto-redirect based on saved preference:
+  // checkLangRedirect();
 
   // ========================================
   // DYNAMIC YEAR FOR COPYRIGHT
@@ -353,11 +457,14 @@ Enviado através do formulário do website McMinsky`;
   // EVENTS LOADER (from manifest.json)
   // ========================================
   const eventsContainer = document.querySelector('#events-container');
-  const isEnglish = window.location.pathname.includes('/en/');
+  const currentLangForEvents = getCurrentLang();
+  const isEnglishEvents = currentLangForEvents === 'en';
 
-  // Determine the base path for events
-  const eventsBasePath = isEnglish ? '../events/' : 'events/';
-  const manifestPath = eventsBasePath + 'manifest.json';
+  // Determine the base path for events and manifest
+  // Manifest is always in /events/, but event pages are in /events/ (PT) or /events/en/ (EN)
+  const manifestBasePath = isEnglishEvents ? '../events/' : 'events/';
+  const eventsBasePath = isEnglishEvents ? '../events/en/' : 'events/';
+  const manifestPath = manifestBasePath + 'manifest.json';
 
   function formatDatePt(dateStr) {
     if (!dateStr) return 'Contínuo';
