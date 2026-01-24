@@ -476,62 +476,155 @@ Enviado através do formulário do website McMinsky`;
   }
 
   // ========================================
-  // EVENT PAGE - QUIZ FUNCTIONALITY
+  // EVENT PAGE - CARD-BASED QUIZ
   // ========================================
-  const quizForm = document.querySelector('.event-quiz');
+  const quizContainer = document.querySelector('.event-quiz');
   const eventReveal = document.querySelector('.event-reveal');
 
-  if (quizForm) {
-    const quizOptions = quizForm.querySelectorAll('.quiz-option');
-    const quizSubmit = quizForm.querySelector('.quiz-submit');
+  if (quizContainer) {
+    initCardQuiz(quizContainer);
+  }
 
-    // Handle option selection
-    quizOptions.forEach(function(option) {
-      option.addEventListener('click', function() {
-        // Find the parent question
-        const question = this.closest('.quiz-question');
-        // Deselect siblings
-        question.querySelectorAll('.quiz-option').forEach(function(opt) {
-          opt.classList.remove('selected');
-        });
-        // Select this option
-        this.classList.add('selected');
-        this.querySelector('input').checked = true;
-      });
+  function initCardQuiz(container) {
+    const questions = container.querySelectorAll('.quiz-question');
+    if (questions.length === 0) return;
+
+    let currentIndex = 0;
+
+    // Create progress dots
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'quiz-progress';
+    questions.forEach(function(_, i) {
+      const dot = document.createElement('div');
+      dot.className = 'quiz-progress-dot' + (i === 0 ? ' active' : '');
+      progressContainer.appendChild(dot);
     });
 
-    // Handle form submission
-    if (quizSubmit) {
-      quizSubmit.addEventListener('click', function(e) {
-        e.preventDefault();
+    // Wrap questions in cards container
+    const cardsContainer = document.createElement('div');
+    cardsContainer.className = 'quiz-cards-container';
 
-        // Check if all questions are answered
-        const questions = quizForm.querySelectorAll('.quiz-question');
-        let allAnswered = true;
+    // Transform each question into a card
+    questions.forEach(function(question, index) {
+      const card = document.createElement('div');
+      card.className = 'quiz-card' + (index === 0 ? ' active' : '');
+      card.dataset.index = index;
 
-        questions.forEach(function(q) {
-          if (!q.querySelector('.quiz-option.selected')) {
-            allAnswered = false;
-          }
+      // Add card number
+      const cardNumber = document.createElement('div');
+      cardNumber.className = 'quiz-card-number';
+      cardNumber.textContent = (isEnglish ? 'Question ' : 'Pergunta ') + (index + 1) + ' / ' + questions.length;
+      card.appendChild(cardNumber);
+
+      // Move question content to card
+      const questionText = question.querySelector('.quiz-question-text');
+      const optionsContainer = question.querySelector('.quiz-options');
+
+      if (questionText) {
+        const text = document.createElement('p');
+        text.className = 'quiz-question-text';
+        text.textContent = questionText.textContent.replace(/^\d+\.\s*/, '');
+        card.appendChild(text);
+      }
+
+      if (optionsContainer) {
+        const newOptions = document.createElement('div');
+        newOptions.className = 'quiz-options';
+
+        const options = optionsContainer.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+          const newOpt = document.createElement('label');
+          newOpt.className = 'quiz-option';
+          const input = opt.querySelector('input');
+          const textContent = opt.textContent.trim();
+
+          newOpt.innerHTML = '<input type="radio" name="q' + index + '" value="' + (input ? input.value : '') + '"><span>' + textContent + '</span>';
+
+          // Handle option click - auto advance
+          newOpt.addEventListener('click', function() {
+            // Select this option
+            newOptions.querySelectorAll('.quiz-option').forEach(function(o) {
+              o.classList.remove('selected');
+            });
+            newOpt.classList.add('selected');
+
+            // Wait a moment for visual feedback then advance
+            setTimeout(function() {
+              advanceToNext(index);
+            }, 400);
+          });
+
+          newOptions.appendChild(newOpt);
         });
 
-        if (!allAnswered) {
-          alert(isEnglish ? 'Please answer all questions.' : 'Por favor, responde a todas as perguntas.');
-          return;
-        }
+        card.appendChild(newOptions);
+      }
 
-        // Reveal hidden content
+      cardsContainer.appendChild(card);
+    });
+
+    // Clear and rebuild quiz container
+    container.innerHTML = '';
+    container.appendChild(progressContainer);
+    container.appendChild(cardsContainer);
+
+    // Advance to next card or complete
+    function advanceToNext(fromIndex) {
+      const cards = cardsContainer.querySelectorAll('.quiz-card');
+      const dots = progressContainer.querySelectorAll('.quiz-progress-dot');
+
+      // Mark current as completed
+      cards[fromIndex].classList.remove('active');
+      cards[fromIndex].classList.add('completed');
+      dots[fromIndex].classList.remove('active');
+      dots[fromIndex].classList.add('completed');
+
+      const nextIndex = fromIndex + 1;
+
+      if (nextIndex < cards.length) {
+        // Show next card
+        cards[nextIndex].classList.add('active');
+        dots[nextIndex].classList.add('active');
+        currentIndex = nextIndex;
+      } else {
+        // Quiz complete - show completion animation
+        showQuizComplete();
+      }
+    }
+
+    function showQuizComplete() {
+      const completeHtml = `
+        <div class="quiz-complete">
+          <div class="quiz-complete-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h3 class="quiz-complete-title">${isEnglish ? 'Perfect!' : 'Perfeito!'}</h3>
+          <p class="quiz-complete-text">${isEnglish ? 'Here\'s what we prepared for you...' : 'Aqui está o que preparámos para ti...'}</p>
+        </div>
+      `;
+
+      container.innerHTML = completeHtml;
+
+      // Reveal hidden content after animation
+      setTimeout(function() {
         if (eventReveal) {
           eventReveal.classList.add('visible');
-          // Scroll to reveal
+          // Smooth scroll to reveal
           setTimeout(function() {
             eventReveal.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }, 300);
         }
-
-        // Hide quiz or show completion message
-        quizForm.style.display = 'none';
-      });
+        // Fade out quiz completion
+        setTimeout(function() {
+          container.style.opacity = '0';
+          container.style.transition = 'opacity 0.5s ease';
+          setTimeout(function() {
+            container.style.display = 'none';
+          }, 500);
+        }, 1500);
+      }, 800);
     }
   }
 
