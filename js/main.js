@@ -423,50 +423,19 @@ Enviado através do formulário do website McMinsky`;
   });
 
   // ========================================
-  // ARTICLES LOADER (for index pages)
+  // LANGUAGE DETECTION (for dynamic loaders)
   // ========================================
-  const articlesContainer = document.querySelector('#articles-container');
-
-  if (articlesContainer && typeof ARTICLES !== 'undefined') {
-    function renderArticles(articles, limit) {
-      const toRender = limit ? articles.slice(0, limit) : articles;
-
-      toRender.forEach(function(article) {
-        const card = document.createElement('a');
-        card.href = article.url;
-        card.className = 'article-card';
-        card.innerHTML = `
-          <div class="article-image">
-            <img src="${article.image}" alt="${article.title}" loading="lazy">
-          </div>
-          <div class="article-body">
-            <span class="article-category">${article.category}</span>
-            <h3 class="article-title">${article.title}</h3>
-            <p class="article-excerpt">${article.excerpt}</p>
-            <div class="article-meta">
-              <span>${article.date}</span>
-              <span>${article.readTime}</span>
-            </div>
-          </div>
-        `;
-        articlesContainer.appendChild(card);
-      });
-    }
-
-    renderArticles(ARTICLES, 6);
-  }
+  const isEnglish = getCurrentLang() === 'en';
 
   // ========================================
   // EVENTS LOADER (from manifest.json)
   // ========================================
   const eventsContainer = document.querySelector('#events-container');
-  const currentLangForEvents = getCurrentLang();
-  const isEnglishEvents = currentLangForEvents === 'en';
 
   // Determine the base path for events and manifest
   // Manifest is always in /events/, but event pages are in /events/ (PT) or /events/en/ (EN)
-  const manifestBasePath = isEnglishEvents ? '../events/' : 'events/';
-  const eventsBasePath = isEnglishEvents ? '../events/en/' : 'events/';
+  const manifestBasePath = isEnglish ? '../events/' : 'events/';
+  const eventsBasePath = isEnglish ? '../events/en/' : 'events/';
   const manifestPath = manifestBasePath + 'manifest.json';
 
   function formatDatePt(dateStr) {
@@ -773,6 +742,164 @@ Enviado através do formulário do evento no website McMinsky`;
 
       // Open user's email client
       window.location.href = mailtoLink;
+    });
+  }
+
+  // ========================================
+  // ARTICLES LOADER (from manifest.json)
+  // ========================================
+  const articlesContainer = document.querySelector('#articles-container');
+
+  if (articlesContainer) {
+    const articlesBasePath = isEnglish ? '../articles/' : 'articles/';
+    const articlesManifestPath = articlesBasePath + 'manifest.json';
+    const articlesHtmlPath = isEnglish ? articlesBasePath + 'en/' : articlesBasePath;
+
+    fetch(articlesManifestPath)
+      .then(function(response) {
+        if (!response.ok) throw new Error('Failed to load articles manifest');
+        return response.json();
+      })
+      .then(function(slugs) {
+        // Fetch metadata from each article HTML
+        const fetchPromises = slugs.map(function(slug) {
+          return fetch(articlesHtmlPath + slug + '.html')
+            .then(function(response) {
+              if (!response.ok) throw new Error('Failed to load article: ' + slug);
+              return response.text();
+            })
+            .then(function(html) {
+              // Parse HTML to extract meta tags
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+
+              const title = doc.querySelector('title') ? doc.querySelector('title').textContent.replace(' | McMinsky', '') : slug;
+              const description = doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').getAttribute('content') : '';
+              const category = doc.querySelector('meta[name="category"]') ? doc.querySelector('meta[name="category"]').getAttribute('content') : '';
+              const readingTime = doc.querySelector('meta[name="reading-time"]') ? doc.querySelector('meta[name="reading-time"]').getAttribute('content') : '5';
+              const image = doc.querySelector('meta[property="og:image"]') ? doc.querySelector('meta[property="og:image"]').getAttribute('content') : '';
+
+              return {
+                slug: slug,
+                title: title,
+                description: description,
+                category: category,
+                readingTime: readingTime,
+                image: image
+              };
+            });
+        });
+
+        return Promise.all(fetchPromises);
+      })
+      .then(function(articles) {
+        renderArticles(articles);
+      })
+      .catch(function(error) {
+        console.error('Error loading articles:', error);
+      });
+  }
+
+  function renderArticles(articles) {
+    if (!articlesContainer) return;
+
+    articles.forEach(function(article) {
+      const articlesHtmlPath = isEnglish ? '../articles/en/' : 'articles/';
+      const readTimeText = isEnglish ? article.readingTime + ' min read' : article.readingTime + ' min leitura';
+
+      const card = document.createElement('a');
+      card.href = articlesHtmlPath + article.slug + '.html';
+      card.className = 'article-card';
+
+      card.innerHTML = `
+        <div class="article-image">
+          <img src="${article.image}" alt="${article.title}" loading="lazy">
+        </div>
+        <div class="article-body">
+          <span class="article-category">${article.category}</span>
+          <h3 class="article-title">${article.title}</h3>
+          <p class="article-excerpt">${article.description}</p>
+          <div class="article-meta">
+            <span>${article.category}</span>
+            <span>${readTimeText}</span>
+          </div>
+        </div>
+      `;
+
+      articlesContainer.appendChild(card);
+    });
+  }
+
+  // ========================================
+  // PAGES/TOOLS LOADER (from manifest.json)
+  // ========================================
+  const pagesContainer = document.querySelector('#pages-container');
+
+  if (pagesContainer) {
+    const pagesBasePath = isEnglish ? '../pages/' : 'pages/';
+    const pagesManifestPath = pagesBasePath + 'manifest.json';
+    const pagesHtmlPath = isEnglish ? pagesBasePath + 'en/' : pagesBasePath;
+
+    fetch(pagesManifestPath)
+      .then(function(response) {
+        if (!response.ok) throw new Error('Failed to load pages manifest');
+        return response.json();
+      })
+      .then(function(slugs) {
+        // Fetch metadata from each page HTML
+        const fetchPromises = slugs.map(function(slug) {
+          return fetch(pagesHtmlPath + slug + '.html')
+            .then(function(response) {
+              if (!response.ok) throw new Error('Failed to load page: ' + slug);
+              return response.text();
+            })
+            .then(function(html) {
+              // Parse HTML to extract meta tags
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+
+              const title = doc.querySelector('title') ? doc.querySelector('title').textContent.replace(' | McMinsky', '') : slug;
+              const description = doc.querySelector('meta[name="short-description"]') ? doc.querySelector('meta[name="short-description"]').getAttribute('content') : '';
+              const icon = doc.querySelector('meta[name="icon"]') ? doc.querySelector('meta[name="icon"]').getAttribute('content') : slug.charAt(0).toUpperCase();
+
+              return {
+                slug: slug,
+                title: title,
+                description: description,
+                icon: icon
+              };
+            });
+        });
+
+        return Promise.all(fetchPromises);
+      })
+      .then(function(pages) {
+        renderPages(pages);
+      })
+      .catch(function(error) {
+        console.error('Error loading pages:', error);
+      });
+  }
+
+  function renderPages(pages) {
+    if (!pagesContainer) return;
+
+    pages.forEach(function(page) {
+      const pagesHtmlPath = isEnglish ? '../pages/en/' : 'pages/';
+
+      const item = document.createElement('a');
+      item.href = pagesHtmlPath + page.slug + '.html';
+      item.className = 'page-item';
+
+      item.innerHTML = `
+        <div class="page-icon">${page.icon}</div>
+        <div class="page-info">
+          <h3>${page.title}</h3>
+          <p>${page.description}</p>
+        </div>
+      `;
+
+      pagesContainer.appendChild(item);
     });
   }
 
