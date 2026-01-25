@@ -427,122 +427,130 @@ Enviado através do formulário do website McMinsky`;
   // ========================================
   const eventsContainer = document.querySelector('#events-container');
 
-  // Determine the base path for events and manifest
-  // Manifest is always in /events/, but event pages are in /events/ (PT) or /events/en/ (EN)
-  const manifestBasePath = isEnglish ? '../events/' : 'events/';
-  const eventsBasePath = isEnglish ? '../events/en/' : 'events/';
-  const manifestPath = manifestBasePath + 'manifest.json';
-
-  function formatDatePt(dateStr) {
-    if (!dateStr) return 'Contínuo';
-    const date = new Date(dateStr);
-    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
-  }
-
-  function formatDateEn(dateStr) {
-    if (!dateStr) return 'Continuous';
-    const date = new Date(dateStr);
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
-  }
-
-  function sortEvents(events) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Separate events with dates and continuous events
-    const datedEvents = events.filter(function(e) { return e.date && !e.continuous; });
-    const continuousEvents = events.filter(function(e) { return !e.date || e.continuous; });
-
-    // Filter out past events
-    const futureEvents = datedEvents.filter(function(e) {
-      const eventDate = new Date(e.date);
-      return eventDate >= today;
-    });
-
-    // Sort by date (closest first)
-    futureEvents.sort(function(a, b) {
-      return new Date(a.date) - new Date(b.date);
-    });
-
-    // Continuous events at the end
-    return futureEvents.concat(continuousEvents);
-  }
-
-  function renderEvents(events) {
-    if (!eventsContainer) return;
-
-    const sortedEvents = sortEvents(events);
-
-    sortedEvents.forEach(function(event) {
-      const card = document.createElement('a');
-      card.href = eventsBasePath + event.slug + '.html';
-      card.className = 'offer-card offer-card-link';
-
-      // Determine title, description, price based on language
-      const title = isEnglish && event.titleEn ? event.titleEn : event.title;
-      const description = isEnglish && event.descriptionEn ? event.descriptionEn : event.description;
-      const price = isEnglish && event.priceEn ? event.priceEn : event.price;
-      const dateFormatted = isEnglish ? formatDateEn(event.date) : formatDatePt(event.date);
-
-      // Spots text
-      let spotsText;
-      if (event.spotsText) {
-        spotsText = isEnglish && event.spotsTextEn ? event.spotsTextEn : event.spotsText;
-      } else if (event.spots) {
-        spotsText = isEnglish ? event.spots + ' spots' : event.spots + ' vagas';
-      } else {
-        spotsText = isEnglish ? 'Limited spots' : 'Vagas limitadas';
-      }
-
-      // Build media HTML (video or image)
-      let mediaHtml = '';
-      if (event.video) {
-        mediaHtml = `
-          <div class="offer-card-media">
-            <video autoplay muted loop playsinline>
-              <source src="${event.video}" type="video/mp4">
-            </video>
-          </div>
-        `;
-      } else if (event.image) {
-        mediaHtml = `
-          <div class="offer-card-media">
-            <img src="${event.image}" alt="${title}" loading="lazy">
-          </div>
-        `;
-      }
-
-      card.innerHTML = `
-        ${mediaHtml}
-        <span class="offer-date">${dateFormatted}</span>
-        <h3 class="offer-title">${title}</h3>
-        <span class="offer-category">${event.category}</span>
-        <p class="offer-description">${description}</p>
-        <div class="offer-meta">
-          <span class="offer-price">${price}</span>
-          <span class="offer-spots">${spotsText}</span>
-        </div>
-      `;
-
-      eventsContainer.appendChild(card);
-    });
-  }
-
-  // Load events from manifest
   if (eventsContainer) {
-    fetch(manifestPath)
+    const eventsBasePath = isEnglish ? '../events/' : 'events/';
+    const eventsManifestPath = eventsBasePath + 'manifest.json';
+    const eventsHtmlPath = isEnglish ? eventsBasePath + 'en/' : eventsBasePath;
+
+    function formatDatePt(dateStr) {
+      if (!dateStr) return 'Contínuo';
+      const date = new Date(dateStr);
+      const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
+    }
+
+    function formatDateEn(dateStr) {
+      if (!dateStr) return 'Continuous';
+      const date = new Date(dateStr);
+      const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+      return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+    }
+
+    function sortEvents(events) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const datedEvents = events.filter(function(e) { return e.date && !e.continuous; });
+      const continuousEvents = events.filter(function(e) { return !e.date || e.continuous; });
+
+      const futureEvents = datedEvents.filter(function(e) {
+        const eventDate = new Date(e.date);
+        return eventDate >= today;
+      });
+
+      futureEvents.sort(function(a, b) {
+        return new Date(a.date) - new Date(b.date);
+      });
+
+      return futureEvents.concat(continuousEvents);
+    }
+
+    function renderEvents(events) {
+      const sortedEvents = sortEvents(events);
+
+      sortedEvents.forEach(function(event) {
+        const card = document.createElement('a');
+        card.href = eventsHtmlPath + event.slug + '.html';
+        card.className = 'offer-card offer-card-link';
+
+        const dateFormatted = isEnglish ? formatDateEn(event.date) : formatDatePt(event.date);
+
+        let spotsText;
+        if (event.spotsText) {
+          spotsText = event.spotsText;
+        } else if (event.spots) {
+          spotsText = isEnglish ? event.spots + ' spots' : event.spots + ' vagas';
+        } else {
+          spotsText = isEnglish ? 'Limited spots' : 'Vagas limitadas';
+        }
+
+        let mediaHtml = '';
+        if (event.video) {
+          mediaHtml = '<div class="offer-card-media"><video autoplay muted loop playsinline><source src="' + event.video + '" type="video/mp4"></video></div>';
+        } else if (event.image) {
+          mediaHtml = '<div class="offer-card-media"><img src="' + event.image + '" alt="' + event.title + '" loading="lazy"></div>';
+        }
+
+        card.innerHTML = mediaHtml +
+          '<span class="offer-date">' + dateFormatted + '</span>' +
+          '<h3 class="offer-title">' + event.title + '</h3>' +
+          '<span class="offer-category">' + event.category + '</span>' +
+          '<p class="offer-description">' + event.description + '</p>' +
+          '<div class="offer-meta"><span class="offer-price">' + event.price + '</span><span class="offer-spots">' + spotsText + '</span></div>';
+
+        eventsContainer.appendChild(card);
+      });
+    }
+
+    fetch(eventsManifestPath)
       .then(function(response) {
-        if (!response.ok) throw new Error('Failed to load events');
+        if (!response.ok) throw new Error('Failed to load events manifest');
         return response.json();
       })
-      .then(function(data) {
-        if (data.events && data.events.length > 0) {
-          renderEvents(data.events);
-        }
+      .then(function(slugs) {
+        var fetchPromises = slugs.map(function(slug) {
+          return fetch(eventsHtmlPath + slug + '.html')
+            .then(function(response) {
+              if (!response.ok) throw new Error('Failed to load event: ' + slug);
+              return response.text();
+            })
+            .then(function(html) {
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(html, 'text/html');
+
+              var title = doc.querySelector('title') ? doc.querySelector('title').textContent.replace(' | McMinsky', '') : slug;
+              var description = doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').getAttribute('content') : '';
+              var category = doc.querySelector('meta[name="category"]') ? doc.querySelector('meta[name="category"]').getAttribute('content') : '';
+              var date = doc.querySelector('meta[name="event-date"]') ? doc.querySelector('meta[name="event-date"]').getAttribute('content') : null;
+              var price = doc.querySelector('meta[name="event-price"]') ? doc.querySelector('meta[name="event-price"]').getAttribute('content') : '';
+              var spots = doc.querySelector('meta[name="event-spots"]') ? doc.querySelector('meta[name="event-spots"]').getAttribute('content') : null;
+              var spotsText = doc.querySelector('meta[name="event-spots-text"]') ? doc.querySelector('meta[name="event-spots-text"]').getAttribute('content') : null;
+              var continuous = doc.querySelector('meta[name="event-continuous"]') ? doc.querySelector('meta[name="event-continuous"]').getAttribute('content') === 'true' : false;
+              var video = doc.querySelector('meta[name="event-video"]') ? doc.querySelector('meta[name="event-video"]').getAttribute('content') : null;
+              var image = doc.querySelector('meta[property="og:image"]') ? doc.querySelector('meta[property="og:image"]').getAttribute('content') : '';
+
+              return {
+                slug: slug,
+                title: title,
+                description: description,
+                category: category,
+                date: date,
+                price: price,
+                spots: spots,
+                spotsText: spotsText,
+                continuous: continuous,
+                video: video,
+                image: image
+              };
+            });
+        });
+
+        return Promise.all(fetchPromises);
+      })
+      .then(function(events) {
+        renderEvents(events);
       })
       .catch(function(error) {
         console.error('Error loading events:', error);

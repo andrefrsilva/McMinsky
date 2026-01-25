@@ -3,230 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sala de Estudo Premium McMinsky - Acompanhamento personalizado diário para crianças e jovens em Lisboa.">
+  <meta name="description" content="Acompanhamento personalizado diário. Inscrições abertas para o 2º período.">
+  <meta name="category" content="Kids / Teens">
+  <meta name="event-continuous" content="true">
+  <meta name="event-price" content="Desde 198€/mês">
+  <meta name="event-spots-text" content="Vagas limitadas">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600">
   <title>Sala de Estudo Premium | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .event-hero { min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: calc(var(--header-height) + var(--space-lg)) var(--space-sm) var(--space-lg); }
+    .event-content { max-width: 800px; margin: 0 auto; padding: 0 var(--space-sm) var(--space-xl); }
+    .event-details { background: var(--black-lighter); border: 1px solid var(--gold); padding: var(--space-lg); margin-top: var(--space-lg); }
+    .event-meta { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-bottom: var(--space-md); }
+    .event-meta-item { color: var(--gold); font-family: var(--font-display); }
+  </style>
 </head>
 <body class="loading">
-  <div class="loader">
-    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
-    <span class="loader-text">McMinsky</span>
-    <div class="loader-bar"></div>
-  </div>
-
-  <header class="header">
-    <div class="header-inner">
-      <a href="/" class="logo">
-        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
-        <span class="logo-text">McMinsky</span>
-      </a>
-      <button class="nav-toggle" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="nav">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="/" class="nav-link">Início</a></li>
-          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
-          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
-          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
-        </ul>
-        <div class="lang-switch">
-          <button class="lang-btn active" data-lang="pt">PT</button>
-          <button class="lang-btn" data-lang="en">EN</button>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <main class="event-page">
-
-    <!-- Hero Image -->
-    <section class="event-hero">
-      <img class="event-hero-image" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200" alt="Sala de Estudo">
-      <div class="event-hero-overlay"></div>
-      <div class="event-hero-content">
-        <div class="container">
-          <span class="event-category">Kids / Teens</span>
-          <h1 class="event-title">Sala de Estudo Premium</h1>
-          <div class="event-meta-info">
-            <div class="event-meta-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-              <span>Inscrições abertas para o 2º período</span>
-            </div>
-            <div class="event-meta-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <span>Seg-Sex 15:00-20:00 | Sáb 10:00-13:00</span>
-            </div>
-            <div class="event-meta-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              <span>McMinsky, Lisboa</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Content -->
-    <section class="event-content">
-      <div class="container">
-
-        <p class="event-hook">
-          "Um espaço onde estudar é produtivo, inspirador e até divertido."
-        </p>
-
-        <div class="event-description">
-          <p>
-            A Sala de Estudo Premium McMinsky não é uma sala de estudo comum.
-            É um espaço desenhado para maximizar a concentração, a motivação
-            e os resultados académicos. Acompanhamento personalizado por explicadores
-            especializados, ambiente premium, e uma metodologia que transforma
-            a relação do aluno com o estudo.
-          </p>
-          <p>
-            Pequenos grupos, atenção individualizada, e um sistema de gamificação
-            que torna o trabalho escolar mais envolvente. Os pais recebem relatórios
-            regulares do progresso.
-          </p>
-        </div>
-
-        <!-- Quiz Section -->
-        <div class="event-quiz">
-          <div class="quiz-header">
-            <h3 class="quiz-title">Descobre o plano certo para o teu filho/a</h3>
-            <p class="quiz-subtitle">Responde para ver opções personalizadas</p>
-          </div>
-
-          <div class="quiz-question">
-            <p class="quiz-question-text">1. Qual é o ano escolar do aluno?</p>
-            <div class="quiz-options">
-              <label class="quiz-option">
-                <input type="radio" name="q1" value="1-4">
-                <span class="quiz-option-radio"></span>
-                <span>1º - 4º ano (1º ciclo)</span>
-              </label>
-              <label class="quiz-option">
-                <input type="radio" name="q1" value="5-6">
-                <span class="quiz-option-radio"></span>
-                <span>5º - 6º ano (2º ciclo)</span>
-              </label>
-              <label class="quiz-option">
-                <input type="radio" name="q1" value="7-9">
-                <span class="quiz-option-radio"></span>
-                <span>7º - 9º ano (3º ciclo)</span>
-              </label>
-              <label class="quiz-option">
-                <input type="radio" name="q1" value="10-12">
-                <span class="quiz-option-radio"></span>
-                <span>10º - 12º ano (secundário)</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="quiz-question">
-            <p class="quiz-question-text">2. Quantos dias por semana precisam?</p>
-            <div class="quiz-options">
-              <label class="quiz-option">
-                <input type="radio" name="q2" value="1">
-                <span class="quiz-option-radio"></span>
-                <span>1 dia por semana</span>
-              </label>
-              <label class="quiz-option">
-                <input type="radio" name="q2" value="2-3">
-                <span class="quiz-option-radio"></span>
-                <span>2-3 dias por semana</span>
-              </label>
-              <label class="quiz-option">
-                <input type="radio" name="q2" value="4-5">
-                <span class="quiz-option-radio"></span>
-                <span>4-5 dias por semana (intensivo)</span>
-              </label>
-            </div>
-          </div>
-
-          <button class="btn btn-primary quiz-submit">Ver Planos e Preços</button>
-        </div>
-
-        <!-- Revealed Content -->
-        <div class="event-reveal">
-
-          <h2 style="font-family: var(--font-display); margin: var(--space-lg) 0 var(--space-md);">Planos Disponíveis</h2>
-
-          <div style="display: grid; gap: var(--space-md); margin-bottom: var(--space-lg);">
-
-            <div style="background: var(--black-lighter); border: 1px solid var(--gray-dark); padding: var(--space-md);">
-              <h4 style="color: var(--gold); margin-bottom: var(--space-xs);">Plano Tarde Inteira (1 dia/semana)</h4>
-              <p style="color: var(--white-dim); margin-bottom: var(--space-sm);">Uma tarde completa por semana, das 15h às 20h. Inclui lanche.</p>
-              <p style="font-size: 1.5rem; font-family: var(--font-display); color: var(--white);">198€/mês</p>
-            </div>
-
-            <div style="background: var(--black-lighter); border: 1px solid var(--gray-dark); padding: var(--space-md);">
-              <h4 style="color: var(--gold); margin-bottom: var(--space-xs);">Plano Flexível (por hora)</h4>
-              <p style="color: var(--white-dim); margin-bottom: var(--space-sm);">Para quem prefere maior flexibilidade. Marcação prévia necessária.</p>
-              <p style="font-size: 1.5rem; font-family: var(--font-display); color: var(--white);">30€/hora</p>
-            </div>
-
-            <div style="background: var(--black-lighter); border: 1px solid var(--gold); padding: var(--space-md);">
-              <h4 style="color: var(--gold); margin-bottom: var(--space-xs);">Plano Intensivo (5 dias/semana)</h4>
-              <p style="color: var(--white-dim); margin-bottom: var(--space-sm);">Acompanhamento diário. Ideal para alunos com exames ou dificuldades.</p>
-              <p style="font-size: 1.5rem; font-family: var(--font-display); color: var(--white);">Sob consulta</p>
-              <p style="color: var(--gray); font-size: 0.875rem;">Desconto significativo vs. plano por hora</p>
-            </div>
-
-          </div>
-
-          <h3 style="margin: var(--space-md) 0 var(--space-sm);">O que está incluído</h3>
-          <ul style="color: var(--white-dim); margin-bottom: var(--space-lg);">
-            <li><strong>Inscrição única:</strong> 60€ (seguro, pulseira, ficha pessoal, acesso ao portal, materiais)</li>
-            <li>Acompanhamento personalizado por explicadores especializados</li>
-            <li>Todas as disciplinas do currículo escolar</li>
-            <li>Apoio em português e inglês</li>
-            <li>Sistema de gamificação do estudo</li>
-            <li>Relatórios de progresso para os pais</li>
-            <li>Espaço seguro em condomínio privado com vigilante</li>
-            <li>Lanche incluído nas tardes completas</li>
-          </ul>
-
-          <!-- CTA with form -->
-          <div class="event-cta">
-            <h3 class="event-cta-title">Marcar visita ou inscrever</h3>
-            <p class="event-cta-text">Vagas limitadas para garantir qualidade de acompanhamento.</p>
-            <div class="event-cta-price">Desde 198€/mês</div>
-            <p class="event-cta-spots">Vagas limitadas para o 2º período</p>
-
-            <form id="event-contact-form" class="event-form">
-              <div class="form-group">
-                <input type="text" id="event-name" placeholder="Nome do aluno *" required>
-              </div>
-              <div class="form-group">
-                <input type="email" id="event-email" placeholder="Email do encarregado *" required>
-              </div>
-              <div class="form-group">
-                <input type="tel" id="event-phone" placeholder="Telefone de contacto *" required>
-              </div>
-              <div class="form-group">
-                <textarea id="event-message" placeholder="Ano escolar, disciplinas com mais dificuldade, disponibilidade pretendida"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width: 100%;">Pedir mais informações</button>
-            </form>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    <div class="footer-bottom">
-      <div class="footer-legal">
-        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclamações</a>
-      </div>
-      <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. Todos os direitos reservados.</p>
-    </div>
-  </footer>
-
+  <div class="loader"><img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo"><span class="loader-text">McMinsky</span><div class="loader-bar"></div></div>
+  <header class="header"><div class="header-inner"><a href="/" class="logo"><img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo"><span class="logo-text">McMinsky</span></a><button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button><nav class="nav"><ul class="nav-list"><li class="nav-item"><a href="/" class="nav-link">Início</a></li><li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li><li class="nav-item"><a href="/#events" class="nav-link">Eventos</a></li><li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li></ul><div class="lang-switch"><button class="lang-btn active" data-lang="pt">PT</button><button class="lang-btn" data-lang="en">EN</button></div></nav></div></header>
+  <section class="event-hero"><div class="hero-content"><span class="hero-eyebrow">Programa Contínuo</span><h1 class="hero-title">Sala de Estudo <strong>Premium</strong></h1><p class="hero-subtitle">Acompanhamento personalizado diário. Inscrições abertas para o 2º período.</p></div></section>
+  <div class="event-content"><div class="event-details"><div class="event-meta"><span class="event-meta-item">Contínuo</span><span class="event-meta-item">Desde 198€/mês</span><span class="event-meta-item">Vagas limitadas</span></div><p style="color: var(--white-dim); margin-bottom: var(--space-md);">Espaço de estudo premium com acompanhamento personalizado.</p><a href="/#contact" class="btn btn-primary">Inscrever</a></div></div>
+  <footer class="footer"><div class="footer-bottom"><div class="footer-legal"><a href="../legal/terms.html">Termos e Condições</a><a href="../legal/privacy.html">Política de Privacidade</a><a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclamações</a></div><p class="footer-copyright">© <span class="current-year">2025</span> McMinsky. Todos os direitos reservados.</p></div></footer>
   <script src="../js/main.js"></script>
 </body>
 </html>
