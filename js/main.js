@@ -423,11 +423,6 @@ Enviado através do formulário do website McMinsky`;
   });
 
   // ========================================
-  // LANGUAGE DETECTION (for dynamic loaders)
-  // ========================================
-  const isEnglish = getCurrentLang() === 'en';
-
-  // ========================================
   // EVENTS LOADER (from manifest.json)
   // ========================================
   const eventsContainer = document.querySelector('#events-container');
