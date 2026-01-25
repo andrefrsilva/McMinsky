@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mede a tua velocidade de leitura em palavras por minuto (WPM) com textos científicos e literários.">
+  <meta name="short-description" content="Mede a tua velocidade de leitura em palavras por minuto (WPM).">
+  <meta name="icon" content="L">
+  <title>Teste de Velocidade de Leitura | McMinsky</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: calc(var(--header-height) + var(--space-lg)) var(--space-sm) var(--space-xl);
+    }
+    .test-header {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+    .test-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      color: var(--white);
+      margin-bottom: var(--space-sm);
+    }
+    .test-header h1 strong { color: var(--gold); }
+    .test-intro {
+      color: var(--white-dim);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto var(--space-md);
+    }
+    .test-privacy {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+    .setup-panel, .reading-panel, .results-panel {
+      background: var(--black-lighter);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+    .setup-panel.hidden, .reading-panel.hidden, .results-panel.hidden {
+      display: none;
+    }
+    .setup-label {
+      display: block;
+      color: var(--white);
+      font-family: var(--font-display);
+      margin-bottom: var(--space-sm);
+    }
+    .setup-input {
+      width: 100%;
+      max-width: 200px;
+      padding: var(--space-sm);
+      background: var(--black);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 1rem;
+      margin-bottom: var(--space-md);
+    }
+    .setup-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .primary-btn {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .primary-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+    .primary-btn:active {
+      transform: scale(0.98);
+    }
+    .reading-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .progress-info {
+      font-family: var(--font-display);
+      color: var(--gold);
+      font-size: 0.9rem;
+    }
+    .timer {
+      font-family: var(--font-mono, monospace);
+      color: var(--white);
+      font-size: 1.1rem;
+      background: var(--black);
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+    .reading-text {
+      color: var(--white);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: var(--space-lg);
+      text-align: justify;
+    }
+    .done-btn {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .results-summary {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+    .wpm-display {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 5rem);
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: var(--space-xs);
+    }
+    .wpm-label {
+      color: var(--white-dim);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .results-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .detail-card {
+      background: rgba(255,255,255,0.03);
+      padding: var(--space-md);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .detail-value {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--white);
+      margin-bottom: var(--space-xs);
+    }
+    .detail-label {
+      color: var(--white-dim);
+      font-size: 0.8rem;
+    }
+    .comparison-section {
+      background: rgba(212, 175, 55, 0.05);
+      border-left: 3px solid var(--gold);
+      padding: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .comparison-title {
+      font-family: var(--font-display);
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .comparison-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .comparison-list li {
+      color: var(--white-dim);
+      font-size: 0.9rem;
+      padding: 4px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .comparison-list li.highlight {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .restart-btn {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+    .restart-btn:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+  </style>
+</head>
+<body class="loading">
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/" class="nav-link">Início</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#tools" class="nav-link">Ferramentas</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="test-container">
+    <div class="test-header">
+      <h1>Teste de <strong>Velocidade</strong> de Leitura</h1>
+      <p class="test-intro">Mede a tua velocidade de leitura em palavras por minuto (WPM). Lê cada texto com atenção e carrega no botão quando terminares.</p>
+      <span class="test-privacy">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        Nenhum dado é gravado
+      </span>
+    </div>
+
+    <div class="setup-panel" id="setup-panel">
+      <label class="setup-label">Quantos textos queres ler?</label>
+      <input type="number" class="setup-input" id="text-count" min="1" max="5" value="3" placeholder="1-5">
+      <br>
+      <button class="primary-btn" id="start-btn">Começar Teste</button>
+    </div>
+
+    <div class="reading-panel hidden" id="reading-panel">
+      <div class="reading-progress">
+        <span class="progress-info">Texto <span id="current-text">1</span> de <span id="total-texts">3</span></span>
+        <span class="timer" id="timer">00:00</span>
+      </div>
+      <p class="reading-text" id="reading-text"></p>
+      <button class="primary-btn done-btn" id="done-btn">Acabei de Ler</button>
+    </div>
+
+    <div class="results-panel hidden" id="results-panel">
+      <div class="results-summary">
+        <div class="wpm-display" id="wpm-result">0</div>
+        <div class="wpm-label">Palavras por Minuto</div>
+      </div>
+      <div class="results-details">
+        <div class="detail-card">
+          <div class="detail-value" id="texts-read">0</div>
+          <div class="detail-label">Textos Lidos</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-value" id="total-words">0</div>
+          <div class="detail-label">Total de Palavras</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-value" id="total-time">0:00</div>
+          <div class="detail-label">Tempo Total</div>
+        </div>
+      </div>
+      <div class="comparison-section">
+        <div class="comparison-title">Referência por Idade</div>
+        <ul class="comparison-list" id="comparison-list">
+          <li><span>6-7 anos</span><span>80-100 WPM</span></li>
+          <li><span>8-9 anos</span><span>115-140 WPM</span></li>
+          <li><span>10-11 anos</span><span>140-175 WPM</span></li>
+          <li><span>12-14 anos</span><span>175-225 WPM</span></li>
+          <li><span>Adulto médio</span><span>200-250 WPM</span></li>
+          <li><span>Adulto rápido</span><span>300-400 WPM</span></li>
+          <li><span>Speed reader</span><span>400-700 WPM</span></li>
+        </ul>
+      </div>
+      <button class="primary-btn restart-btn" id="restart-btn">Repetir Teste</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condições</a>
+        <a href="../legal/privacy.html">Política de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclamações</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    (function() {
+      var texts = [
+        "A neuroplasticidade refere-se à capacidade do cérebro de se reorganizar formando novas conexões neurais ao longo da vida. Esta capacidade permite que os neurónios compensem lesões e doenças, ajustando as suas atividades em resposta a novas situações ou mudanças no ambiente. A investigação demonstra que o cérebro continua a criar novos caminhos neurais e a alterar os existentes para se adaptar a novas experiências, aprender novas informações e criar novas memórias.",
+        "O sistema imunitário humano é uma rede complexa de células, tecidos e órgãos que trabalham em conjunto para defender o corpo contra invasores. Os glóbulos brancos, também chamados leucócitos, desempenham um papel central nesta defesa. Existem dois tipos principais: fagócitos, que destroem organismos invasores, e linfócitos, que permitem ao corpo recordar e reconhecer invasores anteriores.",
+        "A fotossíntese é o processo pelo qual as plantas convertem luz solar em energia química. Este processo ocorre principalmente nas folhas, onde a clorofila absorve a luz solar. O dióxido de carbono entra pelas estomas e combina-se com água para produzir glucose e oxigénio. A glucose é usada como fonte de energia para o crescimento da planta, enquanto o oxigénio é libertado para a atmosfera.",
+        "A inteligência emocional refere-se à capacidade de reconhecer, compreender e gerir as próprias emoções, bem como reconhecer, compreender e influenciar as emoções dos outros. Estudos indicam que pessoas com alta inteligência emocional têm melhor saúde mental, desempenho profissional e habilidades de liderança. Esta competência pode ser desenvolvida através de prática consciente e auto-reflexão.",
+        "A economia circular é um modelo económico que visa eliminar desperdício e promover a utilização contínua de recursos. Contrariamente ao modelo linear tradicional de produzir, usar e descartar, a economia circular enfatiza a reutilização, reparação, renovação e reciclagem de materiais e produtos existentes. Este modelo pode reduzir significativamente o impacto ambiental enquanto cria oportunidades económicas.",
+        "O sono é essencial para a consolidação da memória e a aprendizagem. Durante o sono, o cérebro processa e organiza as informações adquiridas durante o dia, fortalecendo as conexões neurais importantes e eliminando as desnecessárias. Estudos mostram que adultos que dormem menos de sete horas por noite têm maior dificuldade em reter novas informações e resolver problemas complexos.",
+        "As alterações climáticas representam uma das maiores ameaças ao nosso planeta. O aumento das temperaturas globais está a causar o derretimento das calotes polares, a subida do nível do mar e eventos meteorológicos extremos mais frequentes. A redução das emissões de gases de efeito estufa através de energias renováveis e práticas sustentáveis é crucial para mitigar estes impactos.",
+        "A microbiota intestinal, composta por triliões de microrganismos, desempenha um papel fundamental na saúde humana. Estas bactérias ajudam na digestão, produzem vitaminas essenciais e protegem contra patógenos. Investigações recentes sugerem que a microbiota também influencia o humor, o peso corporal e até a função cerebral através do eixo intestino-cérebro."
+      ];
+
+      var setupPanel = document.getElementById("setup-panel");
+      var readingPanel = document.getElementById("reading-panel");
+      var resultsPanel = document.getElementById("results-panel");
+      var textCountInput = document.getElementById("text-count");
+      var startBtn = document.getElementById("start-btn");
+      var doneBtn = document.getElementById("done-btn");
+      var restartBtn = document.getElementById("restart-btn");
+      var readingText = document.getElementById("reading-text");
+      var timerDisplay = document.getElementById("timer");
+      var currentTextSpan = document.getElementById("current-text");
+      var totalTextsSpan = document.getElementById("total-texts");
+
+      var currentIndex = 0;
+      var textCount = 3;
+      var shuffledTexts = [];
+      var startTime, timerInterval;
+      var results = [];
+      var totalSeconds = 0;
+
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = temp;
+        }
+        return arr;
+      }
+
+      function updateTimer() {
+        totalSeconds++;
+        var mins = Math.floor(totalSeconds / 60);
+        var secs = totalSeconds % 60;
+        timerDisplay.textContent = (mins < 10 ? "0" : "") + mins + ":" + (secs < 10 ? "0" : "") + secs;
+      }
+
+      function countWords(text) {
+        return text.trim().split(/\s+/).length;
+      }
+
+      function showReading() {
+        readingText.textContent = shuffledTexts[currentIndex];
+        currentTextSpan.textContent = currentIndex + 1;
+        totalSeconds = 0;
+        timerDisplay.textContent = "00:00";
+        startTime = new Date();
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+
+      function showResults() {
+        var totalWords = 0;
+        var totalMs = 0;
+        results.forEach(function(r) {
+          totalWords += r.words;
+          totalMs += r.time;
+        });
+        var totalMins = totalMs / 60000;
+        var avgWpm = Math.round(totalWords / totalMins);
+
+        document.getElementById("wpm-result").textContent = avgWpm;
+        document.getElementById("texts-read").textContent = results.length;
+        document.getElementById("total-words").textContent = totalWords;
+
+        var totalSecs = Math.round(totalMs / 1000);
+        var m = Math.floor(totalSecs / 60);
+        var s = totalSecs % 60;
+        document.getElementById("total-time").textContent = m + ":" + (s < 10 ? "0" : "") + s;
+
+        var list = document.getElementById("comparison-list");
+        var items = list.querySelectorAll("li");
+        items.forEach(function(li) { li.classList.remove("highlight"); });
+
+        if (avgWpm < 100) items[0].classList.add("highlight");
+        else if (avgWpm < 140) items[1].classList.add("highlight");
+        else if (avgWpm < 175) items[2].classList.add("highlight");
+        else if (avgWpm < 225) items[3].classList.add("highlight");
+        else if (avgWpm < 300) items[4].classList.add("highlight");
+        else if (avgWpm < 400) items[5].classList.add("highlight");
+        else items[6].classList.add("highlight");
+
+        readingPanel.classList.add("hidden");
+        resultsPanel.classList.remove("hidden");
+      }
+
+      startBtn.addEventListener("click", function() {
+        textCount = parseInt(textCountInput.value) || 3;
+        if (textCount < 1) textCount = 1;
+        if (textCount > 5) textCount = 5;
+
+        shuffledTexts = shuffle(texts.slice()).slice(0, textCount);
+        totalTextsSpan.textContent = textCount;
+        currentIndex = 0;
+        results = [];
+
+        setupPanel.classList.add("hidden");
+        readingPanel.classList.remove("hidden");
+        showReading();
+      });
+
+      doneBtn.addEventListener("click", function() {
+        clearInterval(timerInterval);
+        var endTime = new Date();
+        var elapsed = endTime - startTime;
+        var words = countWords(shuffledTexts[currentIndex]);
+        results.push({ words: words, time: elapsed });
+
+        currentIndex++;
+        if (currentIndex < textCount) {
+          showReading();
+        } else {
+          showResults();
+        }
+      });
+
+      restartBtn.addEventListener("click", function() {
+        resultsPanel.classList.add("hidden");
+        setupPanel.classList.remove("hidden");
+      });
+    })();
+  </script>
+</body>
+</html>
