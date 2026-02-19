@@ -770,9 +770,9 @@ ul, ol {
 
 .program-header {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
-  padding: var(--space-md);
+  padding: 0;
   cursor: pointer;
   transition: background var(--transition-fast);
 }
@@ -785,20 +785,28 @@ ul, ol {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  flex: 1;
+  min-width: 0;
 }
 
 .program-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: 100px;
+  border-radius: 0;
   overflow: hidden;
   flex-shrink: 0;
+  align-self: stretch;
 }
 
-.program-icon img {
+.program-icon img,
+.program-icon svg {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.program-header-content > div:not(.program-icon) {
+  padding: var(--space-md) 0;
 }
 
 .program-name {
@@ -822,6 +830,24 @@ ul, ol {
   color: var(--gray);
   font-size: 1.25rem;
   transition: var(--transition-fast);
+  flex-shrink: 0;
+  align-self: center;
+  margin-right: var(--space-md);
+}
+
+@media (max-width: 640px) {
+  .program-icon {
+    width: 72px;
+  }
+  .program-header-content {
+    gap: var(--space-sm);
+  }
+  .program-header-content > div:not(.program-icon) {
+    padding: var(--space-sm) 0;
+  }
+  .program-name {
+    font-size: 1.05rem;
+  }
 }
 
 .program-item.active .program-toggle {
