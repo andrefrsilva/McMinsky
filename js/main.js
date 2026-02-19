@@ -134,9 +134,9 @@
   const programItems = document.querySelectorAll('.program-item');
 
   programItems.forEach(function(item) {
-    const header = item.querySelector('.program-header');
-    if (header) {
-      header.addEventListener('click', function() {
+    const programHeader = item.querySelector('.program-header');
+    if (programHeader) {
+      programHeader.addEventListener('click', function() {
         // Close other items
         programItems.forEach(function(otherItem) {
           if (otherItem !== item) {
@@ -148,6 +148,25 @@
       });
     }
   });
+
+  // Deep-link: open specific accordion from URL hash (e.g. #program-teens)
+  (function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var target = document.querySelector(hash);
+      if (target && target.classList.contains('program-item')) {
+        // Close all others, open this one
+        programItems.forEach(function(item) { item.classList.remove('active'); });
+        target.classList.add('active');
+        // Scroll to it after a short delay for rendering
+        setTimeout(function() {
+          var headerHeight = header ? header.offsetHeight : 0;
+          var targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+          window.scrollTo({ top: targetTop, behavior: 'smooth' });
+        }, 300);
+      }
+    }
+  })();
 
   // ========================================
   // CONTACT FORM - MAILTO TRICK
