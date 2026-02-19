@@ -27,6 +27,46 @@
   setTimeout(hideLoader, 4000);
 
   // ========================================
+  // USER IDENTITY & REFERRAL TRACKING
+  // ========================================
+  var UID_KEY = 'mcminsky_uid';
+  var REFERRAL_KEY = 'mcminsky_referral';
+
+  function getMcmUserId() {
+    var uid = null;
+    try { uid = localStorage.getItem(UID_KEY); } catch(e) {}
+    if (!uid) {
+      uid = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0;
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+          });
+      try { localStorage.setItem(UID_KEY, uid); } catch(e) {}
+    }
+    return uid;
+  }
+
+  function checkReferralCode() {
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('code');
+    if (code) {
+      try {
+        if (!localStorage.getItem(REFERRAL_KEY)) {
+          localStorage.setItem(REFERRAL_KEY, code);
+        }
+      } catch(e) {}
+    }
+  }
+
+  function getMcmReferral() {
+    try { return localStorage.getItem(REFERRAL_KEY) || null; } catch(e) { return null; }
+  }
+
+  var mcmUserId = getMcmUserId();
+  checkReferralCode();
+
+  // ========================================
   // NAVIGATION
   // ========================================
   const navToggle = document.querySelector('.nav-toggle');
@@ -134,6 +174,9 @@ Enviado através do formulário do website McMinsky`;
 
       // Create mailto link
       const mailtoLink = `mailto:mcminsky@gmail.com?subject=${encodeURIComponent(subject || 'Contacto via Website')}&body=${encodeURIComponent(body)}`;
+
+      // Track in Google Forms
+      mcmTrack('contacto', 'Nome: ' + name + '\nEmail: ' + email + '\nAssunto: ' + (subject || 'N/A') + '\nMensagem: ' + message);
 
       // Open user's email client
       window.location.href = mailtoLink;
@@ -401,6 +444,52 @@ Enviado através do formulário do website McMinsky`;
   updateActiveLangBtn();
   // Auto-redirect based on saved preference
   checkLangRedirect();
+
+  // ========================================
+  // GOOGLE FORMS TRACKING SYSTEM
+  // ========================================
+  var GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse';
+  var GFORM_FIELD_ACTION = 'entry.1191618802';
+  var GFORM_FIELD_UID = 'entry.97481516';
+  var GFORM_FIELD_BODY = 'entry.1381161689';
+
+  function mcmTrack(actionType, extraContent) {
+    var referral = getMcmReferral();
+    var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    var body = 'Timestamp: ' + new Date().toISOString() +
+      '\nUser ID: ' + mcmUserId +
+      '\nPágina: ' + window.location.href +
+      '\nReferral: ' + (referral || 'direto') +
+      '\nDispositivo: ' + (isMobile ? 'Mobile' : 'Desktop') +
+      '\nIdioma: ' + getCurrentLang() +
+      '\nEcrã: ' + window.innerWidth + 'x' + window.innerHeight +
+      '\nUser Agent: ' + navigator.userAgent;
+    if (extraContent) body += '\n\n--- Dados Adicionais ---\n' + extraContent;
+
+    var formData = new URLSearchParams();
+    formData.append(GFORM_FIELD_ACTION, actionType);
+    formData.append(GFORM_FIELD_UID, mcmUserId);
+    formData.append(GFORM_FIELD_BODY, body);
+
+    try {
+      fetch(GFORM_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
+      });
+    } catch(e) {}
+  }
+
+  function getMcmPageTitle() {
+    return document.title.replace(' | McMinsky', '').trim();
+  }
+
+  // Track event page visit automatically
+  var isEventPage = !!document.querySelector('.event-content');
+  if (isEventPage) {
+    mcmTrack(getMcmPageTitle() + ': visita');
+  }
 
   // ========================================
   // DYNAMIC YEAR FOR COPYRIGHT
@@ -675,6 +764,8 @@ Enviado através do formulário do website McMinsky`;
     }
 
     function showQuizComplete() {
+      mcmTrack(getMcmPageTitle() + ': quiz', 'Quiz concluído');
+
       const completeHtml = `
         <div class="quiz-complete">
           <div class="quiz-complete-icon">
@@ -743,9 +834,86 @@ Enviado através do formulário do evento no website McMinsky`;
       const subject = isEnglish ? 'Event Registration: ' + eventTitle : 'Inscrição Evento: ' + eventTitle;
       const mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 
+      // Track in Google Forms
+      mcmTrack((eventTitle || 'Evento') + ': contacto', 'Nome: ' + name + '\nEmail: ' + email + '\nTelefone: ' + (phone || 'N/A') + '\nMensagem: ' + (message || 'N/A'));
+
       // Open user's email client
       window.location.href = mailtoLink;
     });
+  }
+
+  // ========================================
+  // EVENT PAGE - AUTO-INJECT CONTACT FORM
+  // ========================================
+  var eventContentEl = document.querySelector('.event-content');
+  if (eventContentEl && !document.querySelector('#event-contact-form')) {
+    var evtPageTitle = getMcmPageTitle();
+
+    // Inject contact form
+    var formWrapper = document.createElement('div');
+    formWrapper.id = 'event-form-section';
+    formWrapper.style.cssText = 'margin-top: var(--space-lg);';
+
+    formWrapper.innerHTML = isEnglish
+      ? '<h2 style="color: var(--gold); margin-bottom: var(--space-md); font-family: var(--font-display); font-size: 1.8rem;">Registration / Contact</h2>' +
+        '<form id="event-contact-form" class="contact-form">' +
+          '<div class="form-group"><label for="event-name" class="form-label">Name</label><input type="text" id="event-name" class="form-input" required></div>' +
+          '<div class="form-group"><label for="event-email" class="form-label">Email</label><input type="email" id="event-email" class="form-input" required></div>' +
+          '<div class="form-group"><label for="event-phone" class="form-label">Phone <span style="color:var(--gray)">(optional)</span></label><input type="tel" id="event-phone" class="form-input"></div>' +
+          '<div class="form-group"><label for="event-message" class="form-label">Message <span style="color:var(--gray)">(optional)</span></label><textarea id="event-message" class="form-textarea"></textarea></div>' +
+          '<button type="submit" class="btn btn-primary form-submit">Register</button>' +
+          '<p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">Your email client will open with the message pre-filled.</p>' +
+        '</form>'
+      : '<h2 style="color: var(--gold); margin-bottom: var(--space-md); font-family: var(--font-display); font-size: 1.8rem;">Inscrição / Contacto</h2>' +
+        '<form id="event-contact-form" class="contact-form">' +
+          '<div class="form-group"><label for="event-name" class="form-label">Nome</label><input type="text" id="event-name" class="form-input" required></div>' +
+          '<div class="form-group"><label for="event-email" class="form-label">Email</label><input type="email" id="event-email" class="form-input" required></div>' +
+          '<div class="form-group"><label for="event-phone" class="form-label">Telefone <span style="color:var(--gray)">(opcional)</span></label><input type="tel" id="event-phone" class="form-input"></div>' +
+          '<div class="form-group"><label for="event-message" class="form-label">Mensagem <span style="color:var(--gray)">(opcional)</span></label><textarea id="event-message" class="form-textarea"></textarea></div>' +
+          '<button type="submit" class="btn btn-primary form-submit">Inscrever</button>' +
+          '<p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">O seu cliente de email será aberto com a mensagem pré-preenchida.</p>' +
+        '</form>';
+
+    eventContentEl.appendChild(formWrapper);
+
+    // Redirect existing "Inscrever"/"Register" button to scroll to the form
+    var existingRegBtn = eventContentEl.querySelector('.event-details .btn');
+    if (existingRegBtn) {
+      existingRegBtn.href = '#event-form-section';
+      existingRegBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector('#event-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // Attach submit handler to injected form
+    var injectedForm = document.querySelector('#event-contact-form');
+    if (injectedForm) {
+      injectedForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var name = injectedForm.querySelector('#event-name').value.trim();
+        var email = injectedForm.querySelector('#event-email').value.trim();
+        var phone = injectedForm.querySelector('#event-phone') ? injectedForm.querySelector('#event-phone').value.trim() : '';
+        var message = injectedForm.querySelector('#event-message') ? injectedForm.querySelector('#event-message').value.trim() : '';
+        var title = evtPageTitle || 'Evento';
+
+        var emailBody = 'Nome: ' + name + '\nEmail: ' + email;
+        if (phone) emailBody += '\nTelefone: ' + phone;
+        emailBody += '\n\nEvento: ' + title;
+        if (message) emailBody += '\n\nMensagem: ' + message;
+        emailBody += '\n\n---\nEnviado através do formulário do evento no website McMinsky';
+
+        var subject = isEnglish ? 'Event Registration: ' + title : 'Inscrição Evento: ' + title;
+        var mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(emailBody);
+
+        // Track in Google Forms
+        mcmTrack(title + ': contacto', 'Nome: ' + name + '\nEmail: ' + email + '\nTelefone: ' + (phone || 'N/A') + '\nMensagem: ' + (message || 'N/A'));
+
+        // Open email client
+        window.location.href = mailtoLink;
+      });
+    }
   }
 
   // ========================================
