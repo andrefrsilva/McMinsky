@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Programa intensivo de preparação para exames nacionais de Biologia e Geologia, Matemática A e Física e Química A. Grupos de 10-12 alunos, presencial no Lumiar. Começa a 7 de Março.">
+  <meta name="keywords" content="exames nacionais, medicina, preparação intensiva, biologia geologia, matemática A, física química, McMinsky">
+  <meta name="author" content="McMinsky">
+  <meta name="category" content="Curso Intensivo">
+
+  <!-- Event metadata for listing -->
+  <meta name="event-date" content="2026-03-07">
+  <meta name="event-price" content="Desde 990€">
+  <meta name="event-spots-text" content="Vagas limitadas (10-12 por grupo)">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Queres Entrar em Medicina? | McMinsky">
+  <meta property="og:description" content="Preparação intensiva para exames nacionais. Grupos de 10-12 alunos, presencial, com tudo incluído. Começa a 7 de Março.">
+  <meta property="og:image" content="https://cdn.dribbble.com/userupload/24060034/file/original-20198d3631570cea6901fdcec9f0c457.gif">
+  <meta property="og:url" content="https://mcminsky.pt/events/preparacao-medicina.html">
+  <meta property="og:site_name" content="McMinsky">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Queres Entrar em Medicina? | McMinsky">
+  <meta name="twitter:description" content="Preparação intensiva para exames nacionais. Grupos de 10-12, presencial, com tudo incluído.">
+  <meta name="twitter:image" content="https://cdn.dribbble.com/userupload/24060034/file/original-20198d3631570cea6901fdcec9f0c457.gif">
+
+  <title>Preparação Intensiva para Exames Nacionais | McMinsky</title>
+
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .hero-gif{width:100%;max-width:420px;display:block;margin:0 auto var(--space-lg);border-radius:16px}
+    .intro-text{font-size:1.1rem;line-height:1.8;color:var(--gray-light);margin-bottom:var(--space-md)}
+    .intro-text strong{color:var(--white)}
+    .exam-dates-intro{display:flex;flex-direction:column;gap:10px;margin:var(--space-md) 0}
+    .exam-date-item{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--black-lighter);border-radius:10px;border-left:3px solid var(--gold)}
+    .exam-date-day{font-family:var(--font-display);font-weight:700;color:var(--gold);min-width:65px;font-size:1.05rem}
+    .exam-date-name{color:var(--white);font-size:1rem}
+    .intro-highlight{font-size:1.2rem;text-align:center;color:var(--white);font-weight:700;margin:var(--space-lg) 0 var(--space-sm)}
+    .urgency-bar{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:12px;padding:16px 20px;text-align:center;margin:var(--space-md) 0 var(--space-xl);color:var(--gray-light)}
+    .urgency-bar strong{color:var(--gold)}
+
+    #quiz-section h2{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.6rem);margin-bottom:var(--space-lg);text-align:center}
+    .quiz-progress{height:4px;background:var(--black-lighter);border-radius:2px;margin-bottom:var(--space-lg);position:relative}
+    .quiz-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0}
+    .quiz-progress-text{position:absolute;right:0;top:-22px;font-size:0.8rem;color:var(--gray)}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-question{color:var(--white);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    .quiz-hint{color:var(--gray);font-size:0.88rem;margin-bottom:var(--space-md)}
+    .quiz-options{display:flex;flex-direction:column;gap:10px}
+    .quiz-option{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px 20px;color:var(--white);font-size:0.98rem;text-align:left;cursor:pointer;transition:all 0.2s ease;font-family:inherit;line-height:1.4}
+    .quiz-option:hover{border-color:rgba(212,175,55,0.5)}
+    .quiz-option.selected{border-color:var(--gold);background:rgba(212,175,55,0.1);color:var(--gold)}
+    .quiz-multi-continue{display:block;margin:var(--space-md) 0 0 auto;padding:12px 32px;background:var(--gold);color:var(--black);border:none;border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:inherit}
+    .quiz-multi-continue:hover{opacity:0.9}
+
+    #diagnosis-panel{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border-left:4px solid var(--gold);animation:qFadeIn 0.5s ease}
+    .diagnosis-card{background:rgba(212,175,55,0.08);border-radius:8px;padding:16px 20px;margin:var(--space-md) 0}
+    .diagnosis-card p{margin:0;line-height:1.7}
+    .diagnosis-probability{font-family:var(--font-display);font-size:1.5rem;color:var(--gold);text-align:center;margin:var(--space-md) 0}
+    #diagnosis-panel>p{color:var(--gray-light);line-height:1.7;margin-top:var(--space-sm)}
+    #diagnosis-panel strong{color:var(--white)}
+
+    #exclusion-panel{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border-left:4px solid var(--gray-dark);animation:qFadeIn 0.5s ease}
+    #exclusion-panel p{color:var(--gray-light);line-height:1.7;margin-top:var(--space-sm)}
+    #exclusion-panel strong{color:var(--white)}
+
+    #course-reveal{animation:qFadeIn 0.6s ease}
+    .course-section{margin-top:var(--space-xl)}
+    .course-section h2{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:var(--space-md)}
+    .course-section>p{color:var(--gray-light);line-height:1.7}
+
+    .check-list,.not-list{list-style:none;padding:0;margin:var(--space-md) 0}
+    .check-list li,.not-list li{padding:10px 0;color:var(--white);font-size:0.98rem;display:flex;align-items:flex-start;gap:12px;line-height:1.5}
+    .check-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+    .not-list li::before{content:'✕';color:#c0392b;font-weight:700;flex-shrink:0}
+
+    .feature-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:var(--space-md)}
+    @media(min-width:600px){.feature-grid{grid-template-columns:1fr 1fr}}
+    .feature-item{display:flex;gap:14px;padding:16px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
+    .feature-icon{font-size:1.6rem;flex-shrink:0;width:36px;text-align:center;line-height:1.6}
+    .feature-text h4{color:var(--white);margin:0 0 4px;font-size:0.92rem}
+    .feature-text p{color:var(--gray-light);margin:0;font-size:0.84rem;line-height:1.5}
+
+    .med-context{background:var(--black-lighter);border-radius:12px;padding:20px 24px;margin-top:var(--space-md)}
+    .med-context p{color:var(--gray-light);font-size:0.92rem;line-height:1.7;margin-top:var(--space-sm)}
+    .med-context p:first-child{margin-top:0}
+    .med-context strong{color:var(--white)}
+
+    .pricing-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:var(--space-lg)}
+    @media(min-width:700px){.pricing-grid{grid-template-columns:repeat(3,1fr)}}
+    .pricing-card{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px 20px;text-align:center;position:relative;transition:border-color 0.2s}
+    .pricing-card.featured{border-color:var(--gold)}
+    .pricing-card.featured::before{content:'Mais popular';position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);padding:4px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;white-space:nowrap}
+    .pricing-card h3{color:var(--white);font-family:var(--font-display);margin:0 0 12px;font-size:1.1rem}
+    .pricing-price{font-size:2.2rem;font-weight:700;color:var(--gold);font-family:var(--font-display);line-height:1}
+    .pricing-unit{font-size:0.85rem;color:var(--gray);margin-top:6px}
+    .pricing-savings{font-size:0.88rem;color:var(--gold);margin-top:10px;font-weight:600}
+    .pricing-note{font-size:0.82rem;color:var(--gray);margin-top:var(--space-lg);line-height:1.6;text-align:center}
+
+    .form-section{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+    .form-section h2{color:var(--gold);font-family:var(--font-display);font-size:1.5rem;margin-bottom:var(--space-sm);text-align:center}
+    .form-section>p{text-align:center;color:var(--gray-light);margin-bottom:var(--space-md)}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#insights" class="nav-link">Insights</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="event-page">
+    <div class="event-hero">
+      <span class="event-hero-category">Curso Intensivo</span>
+      <h1 class="event-hero-title">Queres Entrar em Medicina?</h1>
+      <p class="event-hero-meta">Preparação Intensiva para Exames Nacionais</p>
+    </div>
+
+    <div class="course-content" style="max-width:700px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)">
+
+      <!-- ==================== INTRO ==================== -->
+      <div id="intro-section">
+        <img src="https://cdn.dribbble.com/userupload/24060034/file/original-20198d3631570cea6901fdcec9f0c457.gif" alt="" class="hero-gif">
+
+        <p class="intro-text">As notas de entrada em Medicina em Portugal situam-se entre os <strong>183 e os 189 pontos</strong> numa escala de 200. Metade vem do secundário. A outra metade vem de três exames nacionais:</p>
+
+        <div class="exam-dates-intro">
+          <div class="exam-date-item">
+            <span class="exam-date-day">18 Jun</span>
+            <span class="exam-date-name">Biologia e Geologia</span>
+          </div>
+          <div class="exam-date-item">
+            <span class="exam-date-day">23 Jun</span>
+            <span class="exam-date-name">Matemática A</span>
+          </div>
+          <div class="exam-date-item">
+            <span class="exam-date-day">25 Jun</span>
+            <span class="exam-date-name">Física e Química A</span>
+          </div>
+        </div>
+
+        <p class="intro-highlight">Três exames. Uma oportunidade.</p>
+
+        <div class="urgency-bar">
+          O programa começa a <strong>7 de Março</strong>. Não é para todos.
+        </div>
+      </div>
+
+      <!-- ==================== QUIZ ==================== -->
+      <div id="quiz-section">
+        <h2>Primeiro, vamos perceber se este programa é para ti.</h2>
+
+        <div class="quiz-progress">
+          <div class="quiz-progress-fill"></div>
+          <span class="quiz-progress-text">1 / 8</span>
+        </div>
+
+        <!-- Q1: Objectivo -->
+        <div class="quiz-step active" data-key="course" data-step="0">
+          <h3 class="quiz-question">Para que curso queres concorrer?</h3>
+          <p class="quiz-hint">O objectivo define a exigência.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="medicina">Medicina</button>
+            <button class="quiz-option" data-value="eng-top">Engenharia de topo (Biomédica, Aeroespacial, IST)</button>
+            <button class="quiz-option" data-value="outro-alto">Outro curso com média alta (&gt;17)</button>
+            <button class="quiz-option" data-value="indeciso">Ainda estou a decidir</button>
+          </div>
+        </div>
+
+        <!-- Q2: Disciplinas (multi-select) -->
+        <div class="quiz-step multi" data-key="subjects" data-step="1">
+          <h3 class="quiz-question">Em que disciplinas vais fazer exame nacional este Junho?</h3>
+          <p class="quiz-hint">Selecciona todas as que se aplicam.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="bio">Biologia e Geologia (18 de Junho)</button>
+            <button class="quiz-option" data-value="mat">Matemática A (23 de Junho)</button>
+            <button class="quiz-option" data-value="fqa">Física e Química A (25 de Junho)</button>
+          </div>
+          <button class="quiz-multi-continue">Continuar →</button>
+        </div>
+
+        <!-- Q3: Nota actual -->
+        <div class="quiz-step" data-key="grade" data-step="2">
+          <h3 class="quiz-question">Qual é a tua média actual nestas disciplinas?</h3>
+          <p class="quiz-hint">Sê honesto/a. Isto é o ponto de partida, não o veredicto.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="below-14">Abaixo de 14</button>
+            <button class="quiz-option" data-value="14-15.5">Entre 14 e 15.5</button>
+            <button class="quiz-option" data-value="15.5-17">Entre 15.5 e 17</button>
+            <button class="quiz-option" data-value="17-18.5">Entre 17 e 18.5</button>
+            <button class="quiz-option" data-value="above-18.5">Acima de 18.5</button>
+          </div>
+        </div>
+
+        <!-- Q4: Horas de estudo -->
+        <div class="quiz-step" data-key="hours" data-step="3">
+          <h3 class="quiz-question">Fora da escola, quantas horas por semana dedicas a estas disciplinas?</h3>
+          <p class="quiz-hint">Conta só estudo activo — não estar sentado/a à frente do livro.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="less-3">Menos de 3 horas</button>
+            <button class="quiz-option" data-value="3-5">3 a 5 horas</button>
+            <button class="quiz-option" data-value="5-10">5 a 10 horas</button>
+            <button class="quiz-option" data-value="10+">Mais de 10 horas</button>
+          </div>
+        </div>
+
+        <!-- Q5: Apoio actual -->
+        <div class="quiz-step" data-key="support" data-step="4">
+          <h3 class="quiz-question">Tens explicador ou centro de estudos neste momento?</h3>
+          <p class="quiz-hint">A maioria tem. A questão é se chega.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="has-not-enough">Sim, mas sinto que não chega</button>
+            <button class="quiz-option" data-value="has-satisfied">Sim, e estou satisfeito/a</button>
+            <button class="quiz-option" data-value="none">Não</button>
+          </div>
+        </div>
+
+        <!-- Q6: Preferência -->
+        <div class="quiz-step" data-key="preference" data-step="5">
+          <h3 class="quiz-question">Se pudesses escolher, como preferias preparar-te?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="alone">Sozinho/a, com o material certo</button>
+            <button class="quiz-option" data-value="guided">Alguém que me diz exactamente o que estudar e quando</button>
+            <button class="quiz-option" data-value="group">Num grupo pequeno de pessoas na mesma situação</button>
+          </div>
+        </div>
+
+        <!-- Q7: Presencial -->
+        <div class="quiz-step" data-key="presencial" data-step="6">
+          <h3 class="quiz-question">Podes estar presencialmente no Lumiar (Lisboa) a partir de 7 de Março?</h3>
+          <p class="quiz-hint">O programa é presencial. É o que faz a diferença.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="yes">Sim</button>
+            <button class="quiz-option" data-value="no">Não</button>
+            <button class="quiz-option" data-value="depends">Depende do horário</button>
+          </div>
+        </div>
+
+        <!-- Q8: Decisor -->
+        <div class="quiz-step" data-key="decision" data-step="7">
+          <h3 class="quiz-question">Quem vai participar na decisão de inscrição?</h3>
+          <p class="quiz-hint">Saber isto ajuda-nos a dar-te a informação certa.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="self">Eu próprio/a</button>
+            <button class="quiz-option" data-value="parents">Os meus pais</button>
+            <button class="quiz-option" data-value="both">Eu e os meus pais</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DIAGNOSIS (hidden) ==================== -->
+      <div id="diagnosis-panel" style="display:none"></div>
+
+      <!-- ==================== EXCLUSION (hidden) ==================== -->
+      <div id="exclusion-panel" style="display:none"></div>
+
+      <!-- ==================== COURSE CONTENT (hidden until quiz passes) ==================== -->
+      <div id="course-reveal" style="display:none">
+
+        <!-- URGENCY REMINDER -->
+        <div class="urgency-bar" style="margin-top:var(--space-xl)">
+          <strong>7 de Março → Exames em Junho.</strong> São ~14 semanas para mudar tudo.
+        </div>
+
+        <!-- FOR WHOM -->
+        <div class="course-section">
+          <h2>É para quem...</h2>
+          <ul class="check-list">
+            <li>Está entre o 14 e o 18.5 e quer entrar em Medicina ou curso com média alta</li>
+            <li>Está disposto/a a investir pelo menos 3 horas semanais de estudo autónomo</li>
+            <li>Quer saber exactamente o que estudar, quando, e durante quanto tempo</li>
+            <li>Pode estar presencialmente no Lumiar (Lisboa) a partir de 7 de Março</li>
+            <li>Quer resultados, não promessas</li>
+          </ul>
+        </div>
+
+        <!-- WHAT IT IS -->
+        <div class="course-section">
+          <h2>O que vais ter</h2>
+          <p>Cada elemento deste programa existe por uma razão. Nada é decoração.</p>
+
+          <div class="feature-grid">
+            <div class="feature-item">
+              <span class="feature-icon">🎯</span>
+              <div class="feature-text">
+                <h4>Sessão Zero — Diagnóstico Individual</h4>
+                <p>20 minutos para perceber exactamente onde estás. Tu ficas com um plano. A tua família recebe o diagnóstico por escrito.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📚</span>
+              <div class="feature-text">
+                <h4>8 Sessões Presenciais de Grupo</h4>
+                <p>Uma vez por semana, ~2h30. Matéria organizada por frequência nos exames — do que sai mais para o que sai menos.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">🎬</span>
+              <div class="feature-text">
+                <h4>Vídeo de Cada Sessão</h4>
+                <p>Gravação disponível 24h depois. Para quem faltou ou quer rever. Não é o produto — é a segurança.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📋</span>
+              <div class="feature-text">
+                <h4>Manual-Cábula Intensivo</h4>
+                <p>Curto, cirúrgico, com tudo o que precisas e nada do que não precisas. Entregue no início.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📊</span>
+              <div class="feature-text">
+                <h4>Monitorização Digital Semanal</h4>
+                <p>Sabes exactamente em que ponto estás em cada parte da matéria. A tua família também.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📝</span>
+              <div class="feature-text">
+                <h4>2 Simulacros Presenciais de Exame</h4>
+                <p>Exame completo, cronometrado, em condições quase idênticas ao dia real. Correcção detalhada e feedback individual.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📈</span>
+              <div class="feature-text">
+                <h4>Análise de Frequência de Matéria</h4>
+                <p>Nos últimos 10 exames, que temas saíram mais? Onde investir tempo? Dados, não palpites.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">🧠</span>
+              <div class="feature-text">
+                <h4>Técnicas de Aprendizagem e Neurociência</h4>
+                <p>5-10 minutos no início de cada sessão. Como o teu cérebro funciona nesta matéria. Nenhum explicador faz isto.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">☕</span>
+              <div class="feature-text">
+                <h4>Kit Ambiente Completo</h4>
+                <p>Lanche em cada sessão. Espaço com instrumentos, saco de boxe, jogos, sim racing, jardim. "Ir estudar" passa a ser "ir ao meu sítio."</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">👥</span>
+              <div class="feature-text">
+                <h4>O Grupo — O Produto Invisível</h4>
+                <p>10-12 pessoas com notas semelhantes, todas no mesmo barco, todas com o mesmo objectivo. Isto não é feature — é o produto.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHAT IT'S NOT -->
+        <div class="course-section">
+          <h2>Isto NÃO é...</h2>
+          <ul class="not-list">
+            <li><strong>Um centro de explicações.</strong> Explicadores resolvem dúvidas pontuais. Nós damos um sistema completo — do cérebro ao exame.</li>
+            <li><strong>Um curso online.</strong> Se não podes vir ao Lumiar, não é para ti. O presencial é o que justifica tudo.</li>
+            <li><strong>Para quem quer só passar.</strong> Isto é para quem quer o 18, o 19, o 20. Se o objectivo é "só passar", há opções mais baratas.</li>
+            <li><strong>Uma promessa de nota.</strong> Prometemos que não vai faltar nada. O processo é nosso. O resultado é teu.</li>
+            <li><strong>Aulas tradicionais.</strong> Não damos aulas. Damos estratégia, dados, simulação, comunidade, e as condições para não haver desculpa nenhuma.</li>
+          </ul>
+        </div>
+
+        <!-- MEDICINE ENTRY CONTEXT (for parents/father) -->
+        <div class="course-section">
+          <h2>Contexto: Entrar em Medicina em Portugal</h2>
+          <div class="med-context">
+            <p>As notas de entrada em Medicina situam-se entre os <strong>182 e os 189 pontos</strong> (escala de 200), dependendo da faculdade e do ano. Em 2024, o ICBAS-UP registou <strong>184,7</strong> e a FMUL/UM rondou os <strong>183-188 pontos</strong>.</p>
+            <p>A nota final é uma <strong>média composta</strong>: geralmente 50% nota do secundário + 50% provas de ingresso (Biologia e Geologia, Física e Química A, Matemática A).</p>
+            <p>Existem cerca de <strong>1.300 a 1.500 vagas anuais</strong> para o Mestrado Integrado em Medicina. A concorrência é feroz — cada décimo conta.</p>
+            <p>Uma subida de <strong>2 valores num exame</strong> pode significar a diferença entre entrar e ficar de fora. É exactamente esse gap que este programa foi desenhado para fechar.</p>
+          </div>
+        </div>
+
+        <!-- CREDENCIAIS -->
+        <div class="course-section">
+          <h2>Quem dá o programa</h2>
+          <p>Desenhado e orientado por profissionais com formação em <strong>Medicina</strong> e <strong>Neurociência da Aprendizagem</strong>, com experiência comprovada na preparação de mais de <strong>1.000 alunos</strong>. Cada disciplina é leccionada por especialistas da área, com foco total em resultados nos exames nacionais.</p>
+          <p style="color:var(--gray);font-size:0.9rem;margin-top:var(--space-sm)">Isto não é um explicador. É um médico especialista em aprendizagem, com uma equipa de especialistas por disciplina, dados de frequência de matéria, e um sistema construído para que não falte nada.</p>
+        </div>
+
+        <!-- PRICING -->
+        <div class="course-section">
+          <h2>Investimento</h2>
+
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <h3>1 Disciplina</h3>
+              <div class="pricing-price">990€</div>
+              <p class="pricing-unit">por disciplina</p>
+            </div>
+
+            <div class="pricing-card featured">
+              <h3>2 Disciplinas</h3>
+              <div class="pricing-price">1.790€</div>
+              <p class="pricing-unit">duas disciplinas</p>
+              <p class="pricing-savings">Poupas 190€</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>3 Disciplinas</h3>
+              <div class="pricing-price">2.490€</div>
+              <p class="pricing-unit">pacote completo</p>
+              <p class="pricing-savings">Poupas 480€</p>
+            </div>
+          </div>
+
+          <p class="pricing-note">Cada grupo tem no máximo 10-12 alunos. Quando enche, enche. A inscrição é validada por pagamento — não por reserva. Vagas por disciplina podem esgotar em momentos diferentes.</p>
+        </div>
+
+        <!-- FINAL URGENCY -->
+        <div class="urgency-bar" style="margin-top:var(--space-xl)">
+          <strong>O programa começa a 7 de Março.</strong><br>
+          Se estás a ler isto e a pensar "vou ver depois" — o depois é Junho. E Junho não espera.
+        </div>
+
+        <!-- CONTACT FORM -->
+        <div class="form-section" id="course-form-section">
+          <h2>Inscrição / Contacto</h2>
+          <p>Preenche o formulário e entramos em contacto contigo (ou com a tua família) em menos de 24 horas.</p>
+
+          <form id="course-contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="course-name" class="form-label">Nome</label>
+              <input type="text" id="course-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="course-email" class="form-label">Email</label>
+              <input type="email" id="course-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="course-phone" class="form-label">Telefone</label>
+              <input type="tel" id="course-phone" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="course-message" class="form-label">Mensagem <span style="color:var(--gray)">(opcional)</span></label>
+              <textarea id="course-message" class="form-textarea" placeholder="Ex: Tenho interesse em Biologia e Geologia + Matemática A. Gostava de saber mais sobre horários."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">Quero Saber Mais</button>
+            <p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">O seu cliente de email será aberto com a mensagem pré-preenchida.</p>
+          </form>
+        </div>
+
+      </div><!-- /course-reveal -->
+
+    </div><!-- /course-content -->
+  </div><!-- /event-page -->
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p>Centro de Excelência para mentes ambiciosas.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#programs">Programas</a></li>
+          <li><a href="/#insights">Insights</a></li>
+          <li><a href="/#contact">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Contacto</h4>
+        <p><a href="mailto:mcminsky@gmail.com">mcminsky@gmail.com</a></p>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisboa</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condições</a>
+        <a href="../legal/privacy.html">Política de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclamações</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  (function() {
+    // ========================================
+    // TRACKING (standalone - mcmTrack is inside main.js IIFE)
+    // ========================================
+    function trackAction(action, body) {
+      try {
+        var uid = '';
+        try { uid = localStorage.getItem('mcminsky_uid') || ''; } catch(e) {}
+        var fd = new FormData();
+        fd.append('entry.1191618802', action);
+        fd.append('entry.97481516', uid);
+        fd.append('entry.1381161689', body || '');
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse', {
+          method: 'POST', mode: 'no-cors', body: fd
+        }).catch(function(){});
+      } catch(e) {}
+    }
+
+    // ========================================
+    // QUIZ STATE
+    // ========================================
+    var currentStep = 0;
+    var totalSteps = 8;
+    var answers = {};
+    var quizSection = document.getElementById('quiz-section');
+    var diagnosisPanel = document.getElementById('diagnosis-panel');
+    var exclusionPanel = document.getElementById('exclusion-panel');
+    var courseReveal = document.getElementById('course-reveal');
+    var progressFill = document.querySelector('.quiz-progress-fill');
+    var progressText = document.querySelector('.quiz-progress-text');
+
+    function showStep(n) {
+      var steps = document.querySelectorAll('.quiz-step');
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].classList.toggle('active', i === n);
+      }
+      var pct = ((n + 1) / totalSteps) * 100;
+      if (progressFill) progressFill.style.width = pct + '%';
+      if (progressText) progressText.textContent = (n + 1) + ' / ' + totalSteps;
+    }
+
+    function advanceStep() {
+      currentStep++;
+      if (currentStep < totalSteps) {
+        showStep(currentStep);
+        quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        computeDiagnosis();
+      }
+    }
+
+    // Single-select handlers
+    var singleSteps = document.querySelectorAll('.quiz-step:not(.multi)');
+    for (var s = 0; s < singleSteps.length; s++) {
+      var opts = singleSteps[s].querySelectorAll('.quiz-option');
+      for (var o = 0; o < opts.length; o++) {
+        opts[o].addEventListener('click', function() {
+          var step = this.closest('.quiz-step');
+          var siblings = step.querySelectorAll('.quiz-option');
+          for (var j = 0; j < siblings.length; j++) siblings[j].classList.remove('selected');
+          this.classList.add('selected');
+          answers[step.dataset.key] = this.dataset.value;
+          setTimeout(advanceStep, 350);
+        });
+      }
+    }
+
+    // Multi-select handlers
+    var multiOpts = document.querySelectorAll('.quiz-step.multi .quiz-option');
+    for (var m = 0; m < multiOpts.length; m++) {
+      multiOpts[m].addEventListener('click', function() {
+        this.classList.toggle('selected');
+      });
+    }
+
+    // Multi-select continue button
+    var multiContinue = document.querySelector('.quiz-multi-continue');
+    if (multiContinue) {
+      multiContinue.addEventListener('click', function() {
+        var step = this.closest('.quiz-step');
+        var selected = step.querySelectorAll('.quiz-option.selected');
+        var vals = [];
+        for (var i = 0; i < selected.length; i++) vals.push(selected[i].dataset.value);
+        answers[step.dataset.key] = vals;
+        advanceStep();
+      });
+    }
+
+    // ========================================
+    // DIAGNOSIS
+    // ========================================
+    function buildQuizSummary() {
+      return [
+        'Curso: ' + (answers.course || '?'),
+        'Disciplinas: ' + (answers.subjects ? answers.subjects.join(', ') : '?'),
+        'Nota: ' + (answers.grade || '?'),
+        'Horas/semana: ' + (answers.hours || '?'),
+        'Apoio: ' + (answers.support || '?'),
+        'Preferência: ' + (answers.preference || '?'),
+        'Presencial: ' + (answers.presencial || '?'),
+        'Decisor: ' + (answers.decision || '?')
+      ].join('\n');
+    }
+
+    function computeDiagnosis() {
+      quizSection.style.display = 'none';
+
+      // Hard filters
+      var fails = [];
+      var subjects = answers.subjects || [];
+      var validSubjects = [];
+      for (var i = 0; i < subjects.length; i++) {
+        if (subjects[i] === 'bio' || subjects[i] === 'mat' || subjects[i] === 'fqa') {
+          validSubjects.push(subjects[i]);
+        }
+      }
+      if (validSubjects.length === 0) fails.push('subjects');
+      if (answers.grade === 'below-14') fails.push('grade');
+      if (answers.hours === 'less-3') fails.push('hours');
+      if (answers.presencial === 'no') fails.push('presencial');
+
+      if (fails.length > 0) {
+        showExclusion(fails);
+        trackAction('Prep Medicina: quiz excluído', 'Falhas: ' + fails.join(', ') + '\n' + buildQuizSummary());
+        return;
+      }
+
+      showDiagnosis();
+      courseReveal.style.display = 'block';
+
+      setTimeout(function() {
+        diagnosisPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+
+      trackAction('Prep Medicina: quiz aprovado', buildQuizSummary());
+    }
+
+    function showExclusion(fails) {
+      var html = '<h2 style="color:var(--gold);font-family:var(--font-display);margin-bottom:var(--space-md)">Obrigado pelas tuas respostas</h2>';
+
+      if (fails.indexOf('grade') !== -1) {
+        html += '<p>Com base na tua nota actual, o nosso programa intensivo <strong>não é o formato ideal para ti neste momento</strong>. Para resultados como os nossos, precisamos de uma base sólida que te permita aproveitar cada sessão ao máximo.</p>';
+        html += '<p>Recomendamos que trabalhes primeiro a tua base com apoio individual antes de avançares para um programa intensivo.</p>';
+      }
+      if (fails.indexOf('hours') !== -1) {
+        html += '<p>O nosso programa é um <strong>acelerador</strong>, não um substituto do estudo autónomo. Para tirares o máximo partido, precisas de dedicar pelo menos 3 horas semanais de estudo fora das sessões.</p>';
+      }
+      if (fails.indexOf('presencial') !== -1) {
+        html += '<p>Este programa é <strong>presencial</strong>, no Lumiar (Lisboa). O presencial é o que faz a diferença — não é replicável online.</p>';
+      }
+      if (fails.indexOf('subjects') !== -1) {
+        html += '<p>Os nossos programas intensivos focam-se em <strong>Biologia e Geologia</strong>, <strong>Matemática A</strong> e <strong>Física e Química A</strong>. Para outras disciplinas, contacta-nos directamente.</p>';
+      }
+
+      html += '<p style="margin-top:var(--space-lg);text-align:center"><a href="mailto:mcminsky@gmail.com" style="color:var(--gold);text-decoration:underline">Contacta-nos</a> se tiveres dúvidas.</p>';
+
+      exclusionPanel.innerHTML = html;
+      exclusionPanel.style.display = 'block';
+
+      setTimeout(function() {
+        exclusionPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    function showDiagnosis() {
+      var html = '<h2 style="color:var(--gold);font-family:var(--font-display);margin-bottom:var(--space-md)">O Teu Diagnóstico</h2>';
+
+      // Grade-based analysis
+      var g = answers.grade;
+      if (g === '14-15.5') {
+        html += '<div class="diagnosis-card"><p><strong>Zona de construção.</strong> Tens a base — mas o caminho até ao 18+ exige mais do que esforço: exige estratégia cirúrgica. Sem intervenção estruturada, a probabilidade estimada de atingires a nota de entrada em Medicina é muito baixa.</p></div>';
+        html += '<p class="diagnosis-probability">Estimativa sem intervenção: ~15-25%</p>';
+        html += '<p style="text-align:center;color:var(--gray-light)">Este programa existe exactamente para colmatar este gap.</p>';
+      } else if (g === '15.5-17') {
+        html += '<div class="diagnosis-card"><p><strong>Zona de frustração.</strong> Perto o suficiente para acreditar, longe o suficiente para duvidar. A cada teste, a mesma pergunta: "será que consigo?"</p></div>';
+        html += '<p class="diagnosis-probability">Estimativa sem intervenção: ~30-45%</p>';
+        html += '<p style="text-align:center;color:var(--gray-light)">Com o sistema certo, estás a uma distância que se fecha.</p>';
+      } else if (g === '17-18.5') {
+        html += '<div class="diagnosis-card"><p><strong>Salto final.</strong> Os últimos 2-3 valores são os mais difíceis — e os que separam quem entra de quem não entra.</p></div>';
+        html += '<p class="diagnosis-probability">Sem intervenção: ~50-60% · Com o sistema certo: &gt;80%</p>';
+        html += '<p style="text-align:center;color:var(--gray-light)">Aqui, a diferença entre estudar sozinho/a e ter o sistema certo decide tudo.</p>';
+      } else if (g === 'above-18.5') {
+        html += '<div class="diagnosis-card"><p><strong>Base excepcional.</strong> Estás a competir pela excelência — e é aí que os pormenores fazem toda a diferença. Talvez não precises de nós. Mas se queres a garantia de que não faltou nada, este é o sítio certo.</p></div>';
+      }
+
+      // Support-based insight
+      var s = answers.support;
+      if (s === 'has-not-enough') {
+        html += '<p style="margin-top:var(--space-md)">Já tens apoio, mas sentes que não chega. É comum — um explicador resolve dúvidas pontuais, mas não te dá o <strong>sistema completo</strong>: estratégia de exame, frequência de matéria, simulacros, comunidade, e as técnicas de aprendizagem que fazem a diferença real.</p>';
+      } else if (s === 'has-satisfied') {
+        html += '<p style="margin-top:var(--space-md)">Já tens apoio e estás satisfeito/a — bom. Este programa não substitui o teu explicador. <strong>Complementa-o</strong> com tudo o que um explicador não pode dar: visão estratégica, simulacros reais, comunidade, e técnicas de neurociência da aprendizagem.</p>';
+      } else {
+        html += '<p style="margin-top:var(--space-md)">Sem apoio estruturado, estás a depender só de ti. Isso é corajoso — mas <strong>Junho não espera</strong>.</p>';
+      }
+
+      // Preference-based insight
+      var p = answers.preference;
+      if (p === 'guided') {
+        html += '<p>Queres direcção clara — e é exactamente isso que damos. Cada semana, sabes exactamente o que estudar, quanto tempo, e porquê.</p>';
+      } else if (p === 'group') {
+        html += '<p>Queres comunidade — e esse é o nosso diferenciador mais poderoso. 10-12 pessoas na mesma situação, com o mesmo objectivo.</p>';
+      } else {
+        html += '<p>Preferes autonomia — e este programa respeita isso. Recebes o sistema completo e usas o grupo presencial como acelerador, não como muleta.</p>';
+      }
+
+      // Decision maker guidance
+      var d = answers.decision;
+      if (d === 'parents') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Mostra esta página aos teus pais. Abaixo encontras toda a informação que precisam para decidir.</p>';
+      } else if (d === 'both') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Explora a informação abaixo e partilha com os teus pais quando estiveres pronto/a.</p>';
+      }
+
+      diagnosisPanel.innerHTML = html;
+      diagnosisPanel.style.display = 'block';
+    }
+
+    // ========================================
+    // FORM HANDLING
+    // ========================================
+    var courseForm = document.getElementById('course-contact-form');
+    if (courseForm) {
+      courseForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var name = document.getElementById('course-name').value.trim();
+        var email = document.getElementById('course-email').value.trim();
+        var phone = document.getElementById('course-phone').value.trim();
+        var message = document.getElementById('course-message').value.trim();
+        var subjects = answers.subjects ? answers.subjects.join(', ') : '';
+        var grade = answers.grade || '';
+
+        var emailBody = 'Nome: ' + name + '\nEmail: ' + email;
+        if (phone) emailBody += '\nTelefone: ' + phone;
+        emailBody += '\n\nCurso: Preparação Intensiva para Exames Nacionais';
+        if (subjects) emailBody += '\nDisciplinas: ' + subjects;
+        if (grade) emailBody += '\nNota actual: ' + grade;
+        if (message) emailBody += '\n\nMensagem: ' + message;
+        emailBody += '\n\n---\nEnviado através do formulário do curso no website McMinsky';
+
+        var subject = 'Inscrição Prep. Medicina: ' + name;
+        var mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(emailBody);
+
+        trackAction('Prep Medicina: inscrição', 'Nome: ' + name + '\nEmail: ' + email + '\nTelefone: ' + (phone || 'N/A') + '\nDisciplinas: ' + subjects + '\nNota: ' + grade + '\nMensagem: ' + (message || 'N/A'));
+
+        window.location.href = mailtoLink;
+      });
+    }
+
+    // Init
+    showStep(0);
+    trackAction('Prep Medicina: página visitada', '');
+  })();
+  </script>
+</body>
+</html>

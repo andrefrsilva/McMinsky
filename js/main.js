@@ -938,6 +938,63 @@ Enviado através do formulário do evento no website McMinsky`;
   }
 
   // ========================================
+  // ARTICLE PAGE - REPLACE CTA WITH CONTACT FORM
+  // ========================================
+  var articleCta = document.querySelector('.article-content .article-cta');
+  if (articleCta) {
+    var artPageTitle = getMcmPageTitle();
+
+    articleCta.id = 'article-form-section';
+    articleCta.innerHTML = isEnglish
+      ? '<h3>Interested? Get in touch</h3>' +
+        '<p>We have specialised programmes for all ages and goals.</p>' +
+        '<form id="article-contact-form" class="contact-form" style="text-align:left">' +
+          '<div class="form-group"><label for="art-name" class="form-label">Name</label><input type="text" id="art-name" class="form-input" required></div>' +
+          '<div class="form-group"><label for="art-email" class="form-label">Email</label><input type="email" id="art-email" class="form-input" required></div>' +
+          '<div class="form-group"><label for="art-phone" class="form-label">Phone <span style="color:var(--gray)">(optional)</span></label><input type="tel" id="art-phone" class="form-input"></div>' +
+          '<div class="form-group"><label for="art-message" class="form-label">Message <span style="color:var(--gray)">(optional)</span></label><textarea id="art-message" class="form-textarea"></textarea></div>' +
+          '<button type="submit" class="btn btn-primary form-submit">Send</button>' +
+          '<p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">Your email client will open with the message pre-filled.</p>' +
+        '</form>'
+      : '<h3>Tem interesse? Fale connosco</h3>' +
+        '<p>Temos programas especializados para todas as idades e objectivos.</p>' +
+        '<form id="article-contact-form" class="contact-form" style="text-align:left">' +
+          '<div class="form-group"><label for="art-name" class="form-label">Nome</label><input type="text" id="art-name" class="form-input" required></div>' +
+          '<div class="form-group"><label for="art-email" class="form-label">Email</label><input type="email" id="art-email" class="form-input" required></div>' +
+          '<div class="form-group"><label for="art-phone" class="form-label">Telefone <span style="color:var(--gray)">(opcional)</span></label><input type="tel" id="art-phone" class="form-input"></div>' +
+          '<div class="form-group"><label for="art-message" class="form-label">Mensagem <span style="color:var(--gray)">(opcional)</span></label><textarea id="art-message" class="form-textarea"></textarea></div>' +
+          '<button type="submit" class="btn btn-primary form-submit">Enviar</button>' +
+          '<p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">O seu cliente de email será aberto com a mensagem pré-preenchida.</p>' +
+        '</form>';
+
+    var artForm = document.querySelector('#article-contact-form');
+    if (artForm) {
+      artForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var name = artForm.querySelector('#art-name').value.trim();
+        var email = artForm.querySelector('#art-email').value.trim();
+        var phone = artForm.querySelector('#art-phone') ? artForm.querySelector('#art-phone').value.trim() : '';
+        var message = artForm.querySelector('#art-message') ? artForm.querySelector('#art-message').value.trim() : '';
+        var title = artPageTitle || 'Artigo';
+
+        var emailBody = 'Nome: ' + name + '\nEmail: ' + email;
+        if (phone) emailBody += '\nTelefone: ' + phone;
+        emailBody += '\n\nArtigo: ' + title;
+        if (message) emailBody += '\n\nMensagem: ' + message;
+        emailBody += '\n\n---\nEnviado através do formulário do artigo no website McMinsky';
+
+        var subject = isEnglish ? 'Article Interest: ' + title : 'Interesse Artigo: ' + title;
+        var mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(emailBody);
+
+        mcmTrack((title || 'Artigo') + ': contacto artigo', 'Nome: ' + name + '\nEmail: ' + email + '\nTelefone: ' + (phone || 'N/A') + '\nMensagem: ' + (message || 'N/A'));
+
+        window.location.href = mailtoLink;
+      });
+    }
+  }
+
+  // ========================================
   // ARTICLES LOADER (from manifest.json)
   // ========================================
   const articlesContainer = document.querySelector('#articles-container');
