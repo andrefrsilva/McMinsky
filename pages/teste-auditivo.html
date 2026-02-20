@@ -496,7 +496,7 @@
     var PTA_FREQS = [500, 1000, 2000, 4000];
     var HIGH_EXT = [10000, 12000, 14000, 16000, 18000, 20000];
     var LOW_EXT = [100, 80, 60];
-    var EXT_VOLUME = 90;
+    var EXT_VOLUME = 75;
 
     var facts = [
       { emoji: '&#127820;', title: 'A Banana da Fala', text: 'No audiograma clínico, os sons da fala humana ocupam uma zona em forma de banana entre 250-6000 Hz e 20-50 dB. Se a tua audição cai fora desta zona, podes ter dificuldade em compreender conversas.' },
@@ -528,7 +528,7 @@
     var userName = '', userAge = 0, calibrationGain = 0.05;
     var audioCtx = null, currentOsc = null, currentGain = null, currentPanner = null, isPlaying = false;
     var testEar = 'right';
-    var testPhase = 'standard'; // standard | high-ext | high-bisect | low-ext | low-bisect
+    var testPhase = 'standard';
     var freqIndex = 0, currentFreq = 1000;
     var thresholds = { right: {}, left: {} };
     var extIdx = 0, bisectLo = 0, bisectHi = 0, bisectCount = 0;
@@ -560,13 +560,21 @@
       if (currentOsc) { try { currentOsc.stop(audioCtx.currentTime + 0.01); } catch(e) {} currentOsc = null; }
       currentGain = null; currentPanner = null; isPlaying = false;
     }
+
+    /* FIX 1: Correct dB mapping — lower slider = lower dB = better hearing = point near top */
+    function calSliderToGain(v) {
+      if (v <= 0) return 0;
+      return 0.5 * Math.pow(v / 100, 2);
+    }
     function sliderToGain(v) {
       if (v <= 0) return 0;
-      return calibrationGain * 4 * Math.pow(v / 100, 2);
+      return calibrationGain * Math.pow(10, (v - 50) / 20);
     }
     function gainToRelativeDb(g) {
-      if (g <= 0 || calibrationGain <= 0) return 100;
-      return Math.max(0, Math.round(-20 * Math.log10(g / calibrationGain)));
+      if (g <= 0) return -10;
+      if (calibrationGain <= 0) return 100;
+      var db = Math.round(20 * Math.log10(g / calibrationGain));
+      return Math.min(100, Math.max(-10, db));
     }
     function roundFreq(f) {
       if (f >= 10000) return Math.round(f / 500) * 500;
@@ -655,21 +663,46 @@
     }
 
     /* ============ AUDIOGRAM CHARTS ============ */
+    /* FIX 2: Dynamic frequency labels (includes extension data) */
+    function getActiveFreqs() {
+      var freqSet = {}, i;
+      for (i = 0; i < FREQ_LABELS.length; i++) freqSet[FREQ_LABELS[i]] = true;
+      for (var ear in thresholds) {
+        for (var f in thresholds[ear]) {
+          if (typeof thresholds[ear][f] === 'number') freqSet[parseInt(f)] = true;
+        }
+      }
+      var freqs = [];
+      for (var k in freqSet) freqs.push(parseInt(k));
+      freqs.sort(function(a, b) { return a - b; });
+      return freqs;
+    }
+    function freqToLabel(f) { return f >= 1000 ? (f / 1000) + 'k' : f + ''; }
+    function findFreqIdx(freqs, target) {
+      for (var i = 0; i < freqs.length; i++) { if (freqs[i] >= target) return i; }
+      return freqs.length - 1;
+    }
+
     var miniChart = null, overlayChart = null, fullChart = null;
+
+    /* FIX 3: Blue line (left ear) thicker + larger markers for visibility when overlapping */
     function getAudiogramConfig(compact) {
+      var dynFreqs = getActiveFreqs();
       var rD = [], lD = [];
-      for (var i = 0; i < FREQ_LABELS.length; i++) {
-        var f = FREQ_LABELS[i];
+      for (var i = 0; i < dynFreqs.length; i++) {
+        var f = dynFreqs[i];
         rD.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f] : null);
         lD.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f] : null);
       }
+      var idx500 = findFreqIdx(dynFreqs, 500);
+      var idx6000 = findFreqIdx(dynFreqs, 6000);
       return {
         type: 'line',
         data: {
-          labels: FREQ_LABELS.map(function(f) { return f >= 1000 ? (f / 1000) + 'k' : f + ''; }),
+          labels: dynFreqs.map(freqToLabel),
           datasets: [
             { label: 'Direito', data: rD, borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'circle', pointRadius: compact ? 4 : 6, pointBorderWidth: 2, borderWidth: 2, tension: 0, spanGaps: true },
-            { label: 'Esquerdo', data: lD, borderColor: '#3b82f6', backgroundColor: '#3b82f6', pointStyle: 'crossRot', pointRadius: compact ? 4 : 6, pointBorderWidth: 2, borderWidth: 2, tension: 0, spanGaps: true }
+            { label: 'Esquerdo', data: lD, borderColor: '#3b82f6', backgroundColor: '#3b82f6', pointStyle: 'crossRot', pointRadius: compact ? 6 : 9, pointBorderWidth: 3, borderWidth: 3, tension: 0, spanGaps: true }
           ]
         },
         options: {
@@ -678,7 +711,7 @@
             legend: { display: !compact, labels: { color: 'rgba(255,255,255,0.7)', usePointStyle: true } },
             tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y + ' dB'; } } },
             annotation: compact ? {} : { annotations: {
-              speechBanana: { type: 'box', xMin: 2, xMax: 7, yMin: 20, yMax: 50, backgroundColor: 'rgba(212,175,55,0.08)', borderColor: 'rgba(212,175,55,0.2)', borderWidth: 1, label: { display: true, content: 'Banana da Fala', color: 'rgba(212,175,55,0.5)', font: { size: 10 }, position: 'start' } },
+              speechBanana: { type: 'box', xMin: idx500, xMax: idx6000, yMin: 20, yMax: 50, backgroundColor: 'rgba(212,175,55,0.08)', borderColor: 'rgba(212,175,55,0.2)', borderWidth: 1, label: { display: true, content: 'Banana da Fala', color: 'rgba(212,175,55,0.5)', font: { size: 10 }, position: 'start' } },
               normalLine: { type: 'line', yMin: 20, yMax: 20, borderColor: 'rgba(34,197,94,0.4)', borderWidth: 1, borderDash: [4, 4], label: { display: true, content: 'Limite normal (20 dB)', color: 'rgba(34,197,94,0.5)', font: { size: 9 }, position: 'end' } }
             }}
           },
@@ -689,9 +722,19 @@
         }
       };
     }
-    function updateMiniAudiogram() { var c = getAudiogramConfig(true); if (miniChart) { miniChart.data = c.data; miniChart.update('none'); } else { miniChart = new Chart($('mini-audiogram').getContext('2d'), c); } }
-    function updateOverlayAudiogram() { var c = getAudiogramConfig(false); if (overlayChart) { overlayChart.data = c.data; overlayChart.update('none'); } else { overlayChart = new Chart($('overlay-audiogram').getContext('2d'), c); } }
-    function buildFullAudiogram() { var c = getAudiogramConfig(false); if (fullChart) { fullChart.data = c.data; fullChart.update(); } else { fullChart = new Chart($('full-audiogram').getContext('2d'), c); } }
+    /* Destroy & recreate charts since labels change dynamically */
+    function updateMiniAudiogram() {
+      if (miniChart) { miniChart.destroy(); miniChart = null; }
+      miniChart = new Chart($('mini-audiogram').getContext('2d'), getAudiogramConfig(true));
+    }
+    function updateOverlayAudiogram() {
+      if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
+      overlayChart = new Chart($('overlay-audiogram').getContext('2d'), getAudiogramConfig(false));
+    }
+    function buildFullAudiogram() {
+      if (fullChart) { fullChart.destroy(); fullChart = null; }
+      fullChart = new Chart($('full-audiogram').getContext('2d'), getAudiogramConfig(false));
+    }
 
     /* ============ SCREEN 1 ============ */
     $('btn-start').addEventListener('click', function() {
@@ -700,20 +743,20 @@
       showScreen('screen-calibration');
     });
 
-    /* ============ SCREEN 2: CALIBRATION ============ */
+    /* ============ SCREEN 2: CALIBRATION (uses calSliderToGain) ============ */
     var calPlaying = false;
     $('cal-slider').addEventListener('input', function() {
       var v = parseInt(this.value); $('cal-level').textContent = v + '%';
-      if (calPlaying && currentGain && audioCtx) currentGain.gain.linearRampToValueAtTime(sliderToGain(v), audioCtx.currentTime + 0.02);
+      if (calPlaying && currentGain && audioCtx) currentGain.gain.linearRampToValueAtTime(calSliderToGain(v), audioCtx.currentTime + 0.02);
     });
     $('btn-cal-play').addEventListener('click', function() {
       initAudio();
       if (calPlaying) { stopTone(); calPlaying = false; this.classList.remove('playing'); }
-      else { playTone(1000, sliderToGain(parseInt($('cal-slider').value)), 0); calPlaying = true; this.classList.add('playing'); }
+      else { playTone(1000, calSliderToGain(parseInt($('cal-slider').value)), 0); calPlaying = true; this.classList.add('playing'); }
     });
     $('btn-cal-ready').addEventListener('click', function() {
       stopTone(); calPlaying = false; $('btn-cal-play').classList.remove('playing');
-      calibrationGain = sliderToGain(parseInt($('cal-slider').value));
+      calibrationGain = calSliderToGain(parseInt($('cal-slider').value));
       if (calibrationGain < 0.0001) calibrationGain = 0.0001;
       testEar = 'right'; testPhase = 'standard'; freqIndex = 0;
       thresholds = { right: {}, left: {} };
@@ -743,27 +786,24 @@
       $('ear-transition').classList.remove('active');
       stopTone(); $('btn-play-tone').classList.remove('playing');
 
-      // Ear badge
       var badge = $('ear-badge');
       if (testEar === 'right') { badge.className = 'ear-badge right'; badge.innerHTML = '&#128066; Ouvido Direito'; }
       else { badge.className = 'ear-badge left'; badge.innerHTML = '&#128067; Ouvido Esquerdo'; }
 
-      // Progress
       var totalStd = STANDARD_FREQS.length * 2;
       if (testPhase === 'standard') {
         var step = (testEar === 'right' ? 0 : STANDARD_FREQS.length) + freqIndex + 1;
         $('progress-text').textContent = step + ' / ' + totalStd + '+';
         $('progress-bar').style.width = (step / totalStd * 85) + '%';
       } else {
-        var phaseLabel = (testPhase === 'high-ext' || testPhase === 'high-bisect') ? 'Freq. altas' : 'Freq. baixas';
-        $('progress-text').textContent = phaseLabel;
+        var phaseLabels = { 'high-ext': 'Extensão: freq. altas', 'high-bisect': 'Afinação: limite superior', 'low-ext': 'Extensão: freq. baixas', 'low-bisect': 'Afinação: limite inferior' };
+        $('progress-text').textContent = phaseLabels[testPhase] || '';
         $('progress-bar').style.width = (testEar === 'right' ? 46 : 92) + '%';
       }
 
-      // UI mode
       if (isExtPhase()) {
         $('vol-section').style.display = 'none';
-        $('tone-instructions').textContent = 'Carrega para ouvir. O tom toca a volume moderado — indica apenas se ouves ou não.';
+        $('tone-instructions').textContent = 'Carrega para ouvir. O tom toca a volume fixo — indica apenas se ouves ou não.';
         $('btn-hear').textContent = 'Ouço';
       } else {
         $('vol-section').style.display = '';
@@ -773,7 +813,6 @@
       }
     }
 
-    // Play tone
     $('btn-play-tone').addEventListener('click', function() {
       initAudio();
       if (isPlaying) { stopTone(); this.classList.remove('playing'); return; }
@@ -782,13 +821,11 @@
       this.classList.add('playing');
     });
 
-    // Volume slider
     $('vol-slider').addEventListener('input', function() {
       var v = parseInt(this.value); $('vol-level').textContent = v;
       if (isPlaying && !isExtPhase() && currentGain && audioCtx) currentGain.gain.linearRampToValueAtTime(sliderToGain(v), audioCtx.currentTime + 0.02);
     });
 
-    // Record response
     function recordResponse(heard) {
       stopTone(); $('btn-play-tone').classList.remove('playing');
       switch (testPhase) {
@@ -825,15 +862,19 @@
       else { checkLowExtension(); }
     }
 
+    /* Extension records thresholds so they appear on the audiogram */
     function recordHighExt(heard) {
+      var freq = HIGH_EXT[extIdx];
       if (heard) {
-        hearingRange[testEar].max = HIGH_EXT[extIdx];
+        thresholds[testEar][freq] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
+        hearingRange[testEar].max = freq;
         extIdx++;
         if (extIdx >= HIGH_EXT.length) { checkLowExtension(); }
         else { showCurrentStep(); }
       } else {
+        thresholds[testEar][freq] = 100;
         bisectLo = hearingRange[testEar].max;
-        bisectHi = HIGH_EXT[extIdx];
+        bisectHi = freq;
         bisectCount = 0;
         if (bisectHi - bisectLo < 200) { checkLowExtension(); }
         else { testPhase = 'high-bisect'; showCurrentStep(); }
@@ -842,8 +883,14 @@
 
     function recordHighBisect(heard) {
       var mid = roundFreq((bisectLo + bisectHi) / 2);
-      if (heard) { bisectLo = mid; hearingRange[testEar].max = mid; }
-      else { bisectHi = mid; }
+      if (heard) {
+        bisectLo = mid;
+        hearingRange[testEar].max = mid;
+        thresholds[testEar][mid] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
+      } else {
+        bisectHi = mid;
+        thresholds[testEar][mid] = 100;
+      }
       bisectCount++;
       if (bisectCount >= 3 || bisectHi - bisectLo < 200) { hearingRange[testEar].max = bisectLo; checkLowExtension(); }
       else { showCurrentStep(); }
@@ -855,14 +902,17 @@
     }
 
     function recordLowExt(heard) {
+      var freq = LOW_EXT[extIdx];
       if (heard) {
-        hearingRange[testEar].min = LOW_EXT[extIdx];
+        thresholds[testEar][freq] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
+        hearingRange[testEar].min = freq;
         extIdx++;
         if (extIdx >= LOW_EXT.length) { finishEar(); }
         else { showCurrentStep(); }
       } else {
+        thresholds[testEar][freq] = 100;
         bisectHi = hearingRange[testEar].min;
-        bisectLo = LOW_EXT[extIdx];
+        bisectLo = freq;
         bisectCount = 0;
         if (bisectHi - bisectLo < 10) { finishEar(); }
         else { testPhase = 'low-bisect'; showCurrentStep(); }
@@ -871,8 +921,14 @@
 
     function recordLowBisect(heard) {
       var mid = roundFreq((bisectLo + bisectHi) / 2);
-      if (heard) { bisectHi = mid; hearingRange[testEar].min = mid; }
-      else { bisectLo = mid; }
+      if (heard) {
+        bisectHi = mid;
+        hearingRange[testEar].min = mid;
+        thresholds[testEar][mid] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
+      } else {
+        bisectLo = mid;
+        thresholds[testEar][mid] = 100;
+      }
       bisectCount++;
       if (bisectCount >= 3 || bisectHi - bisectLo < 10) { hearingRange[testEar].min = bisectHi; finishEar(); }
       else { showCurrentStep(); }
@@ -889,7 +945,6 @@
       testEar = 'left'; testPhase = 'standard'; freqIndex = 0; showCurrentStep();
     });
 
-    // Audiogram overlay
     $('mini-audiogram-wrap').addEventListener('click', function() { updateOverlayAudiogram(); $('audiogram-overlay').classList.add('active'); });
     $('overlay-close').addEventListener('click', function() { $('audiogram-overlay').classList.remove('active'); });
     $('audiogram-overlay').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
@@ -934,8 +989,9 @@
       $('asha-marker').setAttribute('data-label', avg + ' dB');
     }
 
-    /* ============ PDF ============ */
+    /* ============ PDF (dynamic labels + blue thicker) ============ */
     function createPdfAudiogram() {
+      var dynFreqs = getActiveFreqs();
       var c = document.createElement('canvas'); c.width = 900; c.height = 500;
       c.style.position = 'fixed'; c.style.left = '-9999px';
       document.body.appendChild(c);
@@ -943,18 +999,20 @@
       ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 900, 500);
 
       var rD = [], lD = [];
-      for (var i = 0; i < FREQ_LABELS.length; i++) {
-        var f = FREQ_LABELS[i];
+      for (var i = 0; i < dynFreqs.length; i++) {
+        var f = dynFreqs[i];
         rD.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f] : null);
         lD.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f] : null);
       }
+      var idx500 = findFreqIdx(dynFreqs, 500);
+      var idx6000 = findFreqIdx(dynFreqs, 6000);
       var chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: FREQ_LABELS.map(function(f) { return f >= 1000 ? (f / 1000) + 'k' : f + ''; }),
+          labels: dynFreqs.map(freqToLabel),
           datasets: [
             { label: 'Direito', data: rD, borderColor: '#dc2626', backgroundColor: '#dc2626', pointStyle: 'circle', pointRadius: 6, pointBorderWidth: 2, borderWidth: 2, tension: 0, spanGaps: true },
-            { label: 'Esquerdo', data: lD, borderColor: '#2563eb', backgroundColor: '#2563eb', pointStyle: 'crossRot', pointRadius: 6, pointBorderWidth: 2, borderWidth: 2, tension: 0, spanGaps: true }
+            { label: 'Esquerdo', data: lD, borderColor: '#2563eb', backgroundColor: '#2563eb', pointStyle: 'crossRot', pointRadius: 9, pointBorderWidth: 3, borderWidth: 3, tension: 0, spanGaps: true }
           ]
         },
         options: {
@@ -962,7 +1020,7 @@
           plugins: {
             legend: { labels: { color: '#000', usePointStyle: true } },
             annotation: { annotations: {
-              speechBanana: { type: 'box', xMin: 2, xMax: 7, yMin: 20, yMax: 50, backgroundColor: 'rgba(180,160,60,0.1)', borderColor: 'rgba(180,160,60,0.4)', borderWidth: 1, label: { display: true, content: 'Banana da Fala', color: '#888', font: { size: 10 }, position: 'start' } },
+              speechBanana: { type: 'box', xMin: idx500, xMax: idx6000, yMin: 20, yMax: 50, backgroundColor: 'rgba(180,160,60,0.1)', borderColor: 'rgba(180,160,60,0.4)', borderWidth: 1, label: { display: true, content: 'Banana da Fala', color: '#888', font: { size: 10 }, position: 'start' } },
               normalLine: { type: 'line', yMin: 20, yMax: 20, borderColor: 'rgba(34,160,94,0.5)', borderWidth: 1, borderDash: [4, 4], label: { display: true, content: 'Limite normal (20 dB)', color: '#888', font: { size: 9 }, position: 'end' } }
             }}
           },
@@ -978,6 +1036,7 @@
     }
 
     $('btn-pdf').addEventListener('click', function() {
+      var dynFreqs = getActiveFreqs();
       var jsPDF = window.jspdf.jsPDF;
       var doc = new jsPDF({ unit: 'mm', format: 'a4' });
       var pw = 210, m = 20, cw = pw - m * 2, y = m;
@@ -1000,15 +1059,15 @@
       doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(0);
       doc.text('Limiares por Frequencia (dB relativo)', m, y); y += 5;
       doc.setFont(undefined, 'normal'); doc.setFontSize(8);
-      var colW = cw / (FREQ_LABELS.length + 1);
+      var colW = cw / (dynFreqs.length + 1);
       doc.setFillColor(240, 240, 240); doc.rect(m, y - 3, cw, 5, 'F');
       doc.setTextColor(0); doc.text('Hz', m + 2, y);
-      for (var i = 0; i < FREQ_LABELS.length; i++) doc.text(FREQ_LABELS[i] + '', m + colW * (i + 1), y);
+      for (var i = 0; i < dynFreqs.length; i++) doc.text(freqToLabel(dynFreqs[i]), m + colW * (i + 1), y);
       y += 5;
       doc.setTextColor(200, 40, 40); doc.text('Dir.', m + 2, y);
-      for (var j = 0; j < FREQ_LABELS.length; j++) { var v = thresholds.right[FREQ_LABELS[j]]; doc.text(typeof v === 'number' ? v + '' : '-', m + colW * (j + 1), y); } y += 4;
+      for (var j = 0; j < dynFreqs.length; j++) { var v = thresholds.right[dynFreqs[j]]; doc.text(typeof v === 'number' ? v + '' : '-', m + colW * (j + 1), y); } y += 4;
       doc.setTextColor(40, 80, 200); doc.text('Esq.', m + 2, y);
-      for (var l = 0; l < FREQ_LABELS.length; l++) { var vl = thresholds.left[FREQ_LABELS[l]]; doc.text(typeof vl === 'number' ? vl + '' : '-', m + colW * (l + 1), y); } y += 8;
+      for (var l = 0; l < dynFreqs.length; l++) { var vl = thresholds.left[dynFreqs[l]]; doc.text(typeof vl === 'number' ? vl + '' : '-', m + colW * (l + 1), y); } y += 8;
 
       doc.setTextColor(0); doc.setFontSize(10); doc.setFont(undefined, 'bold');
       var ptaR = computePTA(thresholds.right), ptaL = computePTA(thresholds.left);
