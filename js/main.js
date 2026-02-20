@@ -374,6 +374,8 @@ Enviado através do formulário do website McMinsky`;
         newPath = currentPath.replace('/articles/pt/', '/articles/en/');
       } else if (currentPath.includes('/articles/') && !currentPath.includes('/articles/en/')) {
         newPath = currentPath.replace('/articles/', '/articles/en/');
+      } else if (currentPath.includes('/pages/') && !currentPath.includes('/pages/en/')) {
+        newPath = currentPath.replace('/pages/', '/pages/en/');
       } else if (!currentPath.includes('/en/')) {
         // Main page or other pages
         if (currentPath.endsWith('/') || currentPath.endsWith('/index.html')) {
