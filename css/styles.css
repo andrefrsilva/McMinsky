@@ -1560,9 +1560,14 @@ ul, ol {
 .article-cta {
   background: var(--black-lighter);
   border: 1px solid var(--gray-dark);
+  border-radius: 12px;
   padding: var(--space-lg);
   text-align: center;
   margin-top: var(--space-xl);
+}
+
+.article-cta .btn-primary {
+  color: var(--black);
 }
 
 .article-cta h3 {
