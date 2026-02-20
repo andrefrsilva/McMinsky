@@ -567,7 +567,12 @@
   <script>
     (function() {
       var STORAGE_KEY = 'mcminsky_precos_carros';
-      var PROXY = 'https://api.allorigins.win/raw?url=';
+      var PROXIES = [
+        { url: 'https://corsproxy.io/?url=', type: 'raw' },
+        { url: 'https://api.allorigins.win/get?url=', type: 'json' },
+        { url: 'https://api.codetabs.com/v1/proxy?quest=', type: 'raw' }
+      ];
+      var currentProxyIndex = 0;
       var BASE = 'https://auto.sapo.pt';
       var MAX_RETRIES = 3;
 
@@ -682,55 +687,84 @@
         attemptFetch();
       }
 
+      function fetchViaProxy(proxy, targetUrl) {
+        var proxyUrl = proxy.url + encodeURIComponent(targetUrl);
+        return fetch(proxyUrl).then(function(res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          if (proxy.type === 'json') {
+            return res.json().then(function(data) {
+              if (!data.contents) throw new Error('Empty response');
+              return data.contents;
+            });
+          }
+          return res.text();
+        });
+      }
+
       function attemptFetch() {
         var page = Math.floor(Math.random() * 200) + 1;
         var targetUrl = BASE + '/carro/usado?p=' + page;
-        var proxyUrl = PROXY + encodeURIComponent(targetUrl);
 
-        fetch(proxyUrl)
-          .then(function(res) {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            return res.text();
-          })
-          .then(function(html) {
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
-            var cards = doc.querySelectorAll('article.vehicle-card');
-            if (!cards.length) throw new Error('No cards found');
+        // Try each proxy in order until one works
+        var proxyAttempt = currentProxyIndex;
+        var triedCount = 0;
 
-            // Pick a random card
-            var card = cards[Math.floor(Math.random() * cards.length)];
-
-            // Extract image
-            var imgEl = card.querySelector('.thumb img');
-            if (!imgEl) throw new Error('No image');
-            var imgSrc = imgEl.getAttribute('src') || '';
-            if (imgSrc && imgSrc.indexOf('http') !== 0) imgSrc = BASE + imgSrc;
-
-            // Extract link
-            var linkEl = card.querySelector('.thumb a');
-            var linkHref = linkEl ? (linkEl.getAttribute('href') || '') : '';
-            if (linkHref && linkHref.indexOf('http') !== 0) linkHref = BASE + linkHref;
-
-            // Extract price
-            var priceEl = card.querySelector('.price span');
-            if (!priceEl) throw new Error('No price');
-            var price = priceEl.textContent.trim();
-
-            if (!imgSrc || !price) throw new Error('Missing data');
-
-            // Preload image
-            preloadAndShow(imgSrc, price, linkHref);
-          })
-          .catch(function(err) {
+        function tryNextProxy() {
+          if (triedCount >= PROXIES.length) {
             retryCount++;
             if (retryCount < MAX_RETRIES) {
+              currentProxyIndex = 0;
               attemptFetch();
             } else {
-              errorMessage.textContent = 'Não foi possível carregar o anúncio. (' + err.message + ')';
+              errorMessage.textContent = 'Não foi possível carregar o anúncio. Todos os servidores falharam.';
               showGameState('state-error');
             }
-          });
+            return;
+          }
+
+          var proxy = PROXIES[proxyAttempt % PROXIES.length];
+          triedCount++;
+          proxyAttempt++;
+
+          fetchViaProxy(proxy, targetUrl)
+            .then(function(html) { return parseCarData(html); })
+            .then(function(car) {
+              // Remember which proxy worked
+              currentProxyIndex = (proxyAttempt - 1) % PROXIES.length;
+              preloadAndShow(car.imgSrc, car.price, car.linkHref);
+            })
+            .catch(function() {
+              tryNextProxy();
+            });
+        }
+
+        tryNextProxy();
+      }
+
+      function parseCarData(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var cards = doc.querySelectorAll('article.vehicle-card');
+        if (!cards.length) throw new Error('No cards found');
+
+        var card = cards[Math.floor(Math.random() * cards.length)];
+
+        var imgEl = card.querySelector('.thumb img');
+        if (!imgEl) throw new Error('No image');
+        var imgSrc = imgEl.getAttribute('src') || '';
+        if (imgSrc && imgSrc.indexOf('http') !== 0) imgSrc = BASE + imgSrc;
+
+        var linkEl = card.querySelector('.thumb a');
+        var linkHref = linkEl ? (linkEl.getAttribute('href') || '') : '';
+        if (linkHref && linkHref.indexOf('http') !== 0) linkHref = BASE + linkHref;
+
+        var priceEl = card.querySelector('.price span');
+        if (!priceEl) throw new Error('No price');
+        var price = priceEl.textContent.trim();
+
+        if (!imgSrc || !price) throw new Error('Missing data');
+
+        return { imgSrc: imgSrc, price: price, linkHref: linkHref };
       }
 
       function preloadAndShow(imgSrc, price, link) {
