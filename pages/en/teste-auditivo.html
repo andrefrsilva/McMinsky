@@ -268,11 +268,11 @@
     <!-- ========== SCREEN 1: INTRO ========== -->
     <div class="screen active" id="screen-intro">
       <div class="test-header">
-        <h1><strong>Hearing</strong> Test</h1>
-        <p class="test-intro">Discover how your hearing is doing with this interactive educational test. Test different frequencies, get your personal audiogram and learn about hearing health.</p>
+        <h1>Hearing <strong>Test</strong></h1>
+        <p class="test-intro">Find out how your hearing is doing with this interactive educational test. Test different frequencies, get your personal audiogram and learn about hearing health.</p>
         <span class="badge-disclaimer">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
-          For educational purposes only &mdash; no clinical validity
+          For educational purposes only &mdash; not clinically valid
         </span>
       </div>
 
@@ -299,7 +299,7 @@
           </div>
           <div>
             <label class="input-label" for="user-age">Age</label>
-            <input type="number" class="input-field" id="user-age" placeholder="E.g.: 25" min="3" max="120">
+            <input type="number" class="input-field" id="user-age" placeholder="E.g. 25" min="3" max="120">
           </div>
         </div>
         <div style="text-align:center; margin-top: var(--space-md);">
@@ -320,7 +320,7 @@
           <li><span class="instruction-icon">&#128264;</span><span>Go to a quiet environment</span></li>
           <li><span class="instruction-icon">&#128266;</span><span>Set your device volume to ~50%</span></li>
         </ul>
-        <p style="color: var(--white-dim); font-size: 0.88rem; margin-bottom: var(--space-md);">Press the button to hear a 1000 Hz tone. Adjust the slider until you hear it <strong style="color: var(--white);">comfortably</strong>.</p>
+        <p style="color: var(--white-dim); font-size: 0.88rem; margin-bottom: var(--space-md);">Press the button to hear a 1000 Hz tone. Adjust the slider until you can hear it <strong style="color: var(--white);">comfortably</strong>.</p>
         <button class="play-cal-btn" id="btn-cal-play" aria-label="Play calibration tone">
           <span class="wave-ring"></span><span class="wave-ring"></span><span class="wave-ring"></span>
           <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -338,7 +338,7 @@
     <div class="screen" id="screen-test">
       <div class="test-top-bar">
         <span class="ear-badge right" id="ear-badge">&#128066; Right Ear</span>
-        <span class="progress-text" id="progress-text">1 / 9</span>
+        <span class="progress-text" id="progress-text"></span>
       </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progress-bar" style="width: 0%"></div>
@@ -355,12 +355,10 @@
       </button>
       <p class="tone-instructions" id="tone-instructions">Press to play the tone. Adjust the volume until you can barely hear it.</p>
 
-      <div id="vol-section">
-        <div class="vol-slider-wrap">
-          <input type="range" id="vol-slider" min="0" max="100" value="50">
-          <div class="vol-slider-labels"><span>Quieter</span><span>Louder</span></div>
-          <div class="vol-level" id="vol-level">50</div>
-        </div>
+      <div class="vol-slider-wrap">
+        <input type="range" id="vol-slider" min="0" max="100" value="50">
+        <div class="vol-slider-labels"><span>Quieter</span><span>Louder</span></div>
+        <div class="vol-level" id="vol-level">50</div>
       </div>
 
       <div class="action-btns">
@@ -451,7 +449,7 @@
 
       <div class="disclaimer-box">
         <h4>Important Notice</h4>
-        <p>This test is <strong>for educational purposes only</strong> and does not replace a professional audiological assessment. The values shown are relative to your device's calibration level and do not correspond to clinically calibrated dB HL (decibels hearing level). If you suspect hearing loss, please consult an ENT specialist or audiologist.</p>
+        <p>This test is <strong>for educational purposes only</strong> and does not replace a professional audiological evaluation. The values shown are relative to your device's calibration level and do not correspond to clinically calibrated dB HL (decibels hearing level). If you suspect hearing loss, please consult an ENT specialist or audiologist.</p>
       </div>
 
       <div class="result-btns">
@@ -465,9 +463,9 @@
   <footer class="footer">
     <div class="footer-bottom">
       <div class="footer-legal">
-        <a href="../../legal/en/terms.html">Terms & Conditions</a>
+        <a href="../../legal/en/terms.html">Terms &amp; Conditions</a>
         <a href="../../legal/en/privacy.html">Privacy Policy</a>
-        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Complaints Book</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclamações</a>
       </div>
       <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. All rights reserved.</p>
     </div>
@@ -491,24 +489,21 @@
     }
 
     /* ============ DATA ============ */
-    var STANDARD_FREQS = [1000, 2000, 3000, 4000, 6000, 8000, 500, 250, 125];
-    var FREQ_LABELS = [125, 250, 500, 1000, 2000, 3000, 4000, 6000, 8000];
+    var FREQS_UP = [1000, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000];
+    var FREQS_DOWN = [500, 250, 125];
     var PTA_FREQS = [500, 1000, 2000, 4000];
-    var HIGH_EXT = [10000, 12000, 14000, 16000, 18000, 20000];
-    var LOW_EXT = [100, 80, 60];
-    var EXT_VOLUME = 75;
 
     var facts = [
       { emoji: '&#127820;', title: 'The Speech Banana', text: 'On a clinical audiogram, human speech sounds occupy a banana-shaped zone between 250-6000 Hz and 20-50 dB. If your hearing falls outside this zone, you may have difficulty understanding conversations.' },
-      { emoji: '&#129528;', title: 'Sensorineural vs. Conductive', text: 'Conductive loss (outer/middle ear) can be treated surgically. Sensorineural loss (cochlea/nerve) is usually permanent and requires hearing aids or implants.' },
-      { emoji: '&#128164;', title: 'Auditory Fatigue', text: 'After prolonged noise exposure (concerts, factories), your hearing threshold rises temporarily. If it happens often, the damage becomes permanent.' },
+      { emoji: '&#129528;', title: 'Sensorineural vs. Conductive', text: 'Conductive loss (outer/middle ear) can often be treated surgically. Sensorineural loss (cochlea/nerve) is usually permanent and requires hearing aids or implants.' },
+      { emoji: '&#128164;', title: 'Auditory Fatigue', text: 'After prolonged noise exposure (concert, factory), your hearing threshold temporarily rises. If this happens frequently, the damage becomes permanent.' },
       { emoji: '&#128065;', title: 'Hidden Hearing Loss', text: 'You can have a normal audiogram and still struggle to understand speech in noisy environments. It\'s called cochlear synaptopathy — the synapses between hair cells and the nerve are damaged.' },
-      { emoji: '&#129504;', title: 'Ear-Brain Link & Dementia', text: 'Lancet studies estimate that untreated hearing loss is the largest modifiable risk factor for dementia, accounting for up to 8% of cases. Treating hearing can protect the brain.' },
-      { emoji: '&#129516;', title: 'Cells That Don\'t Regrow', text: 'Humans are born with ~15,000 hair cells per ear. Unlike birds and reptiles, ours do not regenerate. Each lost cell is permanent.' },
+      { emoji: '&#129504;', title: 'Hearing-Brain Link and Dementia', text: 'Lancet studies estimate that untreated hearing loss is the largest modifiable risk factor for dementia, accounting for up to 8% of cases. Treating hearing can protect the brain.' },
+      { emoji: '&#129516;', title: 'Cells That Don\'t Regenerate', text: 'Humans are born with ~15,000 hair cells per ear. Unlike birds and reptiles, ours do not regenerate. Each lost cell is permanent.' },
       { emoji: '&#128680;', title: 'Sudden Deafness', text: 'Sudden hearing loss (within hours/days) is a medical emergency. Treatment with corticosteroids within the first 72 hours can restore hearing. Don\'t wait!' },
       { emoji: '&#9878;&#65039;', title: 'Asymmetric Loss', text: 'A significant difference between the two ears may indicate an acoustic neuroma (benign tumour). It\'s a red flag that warrants an MRI scan.' },
-      { emoji: '&#128147;', title: 'Pulsatile Tinnitus', text: 'A ringing that beats in time with your heartbeat (pulsatile) is different from common tinnitus. It may indicate a vascular anomaly and should be investigated urgently.' },
-      { emoji: '&#128116;', title: 'Presbycusis', text: 'From age 30 onwards, everyone progressively loses hearing in high frequencies. By 65, 1 in 3 people has significant hearing loss. It\'s the natural ageing of the cochlea.' },
+      { emoji: '&#128147;', title: 'Pulsatile Tinnitus', text: 'Tinnitus that beats in time with your heartbeat (pulsatile) is different from common tinnitus. It may indicate a vascular abnormality and should be urgently investigated.' },
+      { emoji: '&#128116;', title: 'Presbycusis', text: 'From the age of 30, we all gradually lose hearing at high frequencies. By age 65, 1 in 3 people has significant hearing loss. It is the natural ageing of the cochlea.' },
       { emoji: '&#128557;', title: 'The Isolation Epidemic', text: 'Untreated hearing loss is associated with social isolation, depression and accelerated cognitive decline. People avoid conversations and social events out of embarrassment or frustration.' },
       { emoji: '&#127758;', title: 'The 1 in 3 Rule (WHO)', text: 'The WHO estimates that more than 1 in 3 people over 65 have disabling hearing loss. And over a billion young people are at risk due to unsafe listening practices.' }
     ];
@@ -528,11 +523,13 @@
     var userName = '', userAge = 0, calibrationGain = 0.05;
     var audioCtx = null, currentOsc = null, currentGain = null, currentPanner = null, isPlaying = false;
     var testEar = 'right';
-    var testPhase = 'standard';
-    var freqIndex = 0, currentFreq = 1000;
+    var direction = 'up';
+    var stepIdx = 0;
+    var bisecting = false;
+    var bisectHeard = 0, bisectNotHeard = 0, bisectRound = 0;
+    var lastHeardFreq = null;
+    var currentFreq = 1000;
     var thresholds = { right: {}, left: {} };
-    var extIdx = 0, bisectLo = 0, bisectHi = 0, bisectCount = 0;
-    var hearingRange = { right: { max: 8000, min: 125 }, left: { max: 8000, min: 125 } };
 
     /* ============ AUDIO ENGINE ============ */
     function initAudio() {
@@ -561,7 +558,7 @@
       currentGain = null; currentPanner = null; isPlaying = false;
     }
 
-    /* FIX 1: Correct dB mapping — lower slider = lower dB = better hearing = point near top */
+    /* ============ GAIN / DB MAPPING ============ */
     function calSliderToGain(v) {
       if (v <= 0) return 0;
       return 0.5 * Math.pow(v / 100, 2);
@@ -577,10 +574,8 @@
       return Math.min(100, Math.max(-10, db));
     }
     function roundFreq(f) {
-      if (f >= 10000) return Math.round(f / 500) * 500;
-      if (f >= 1000) return Math.round(f / 100) * 100;
-      if (f >= 100) return Math.round(f / 10) * 10;
-      return Math.round(f / 5) * 5;
+      if (f >= 1000) return Math.round(f / 50) * 50;
+      return Math.round(f / 10) * 10;
     }
     function formatFreq(f) { return f >= 1000 ? (f / 1000) + ' kHz' : f + ' Hz'; }
 
@@ -594,12 +589,23 @@
       if (pta <= 90) return 'Severe';
       return 'Profound';
     }
-    function computePTA(ear) {
+    function computePTA(earData) {
       var s = 0, c = 0;
       for (var i = 0; i < PTA_FREQS.length; i++) {
-        if (typeof ear[PTA_FREQS[i]] === 'number') { s += ear[PTA_FREQS[i]]; c++; }
+        if (typeof earData[PTA_FREQS[i]] === 'number') { s += earData[PTA_FREQS[i]]; c++; }
       }
       return c > 0 ? Math.round(s / c) : 0;
+    }
+    function computeHearingRange(earData) {
+      var lo = null, hi = null;
+      for (var f in earData) {
+        var freq = parseInt(f);
+        if (earData[f] < 100) {
+          if (lo === null || freq < lo) lo = freq;
+          if (hi === null || freq > hi) hi = freq;
+        }
+      }
+      return { min: lo || 0, max: hi || 0 };
     }
 
     /* ============ ANIMAL CHART ============ */
@@ -663,10 +669,8 @@
     }
 
     /* ============ AUDIOGRAM CHARTS ============ */
-    /* FIX 2: Dynamic frequency labels (includes extension data) */
     function getActiveFreqs() {
-      var freqSet = {}, i;
-      for (i = 0; i < FREQ_LABELS.length; i++) freqSet[FREQ_LABELS[i]] = true;
+      var freqSet = {};
       for (var ear in thresholds) {
         for (var f in thresholds[ear]) {
           if (typeof thresholds[ear][f] === 'number') freqSet[parseInt(f)] = true;
@@ -675,7 +679,7 @@
       var freqs = [];
       for (var k in freqSet) freqs.push(parseInt(k));
       freqs.sort(function(a, b) { return a - b; });
-      return freqs;
+      return freqs.length > 0 ? freqs : [1000];
     }
     function freqToLabel(f) { return f >= 1000 ? (f / 1000) + 'k' : f + ''; }
     function findFreqIdx(freqs, target) {
@@ -685,7 +689,6 @@
 
     var miniChart = null, overlayChart = null, fullChart = null;
 
-    /* FIX 3: Blue line (left ear) thicker + larger markers for visibility when overlapping */
     function getAudiogramConfig(compact) {
       var dynFreqs = getActiveFreqs();
       var rD = [], lD = [];
@@ -722,7 +725,6 @@
         }
       };
     }
-    /* Destroy & recreate charts since labels change dynamically */
     function updateMiniAudiogram() {
       if (miniChart) { miniChart.destroy(); miniChart = null; }
       miniChart = new Chart($('mini-audiogram').getContext('2d'), getAudiogramConfig(true));
@@ -743,7 +745,7 @@
       showScreen('screen-calibration');
     });
 
-    /* ============ SCREEN 2: CALIBRATION (uses calSliderToGain) ============ */
+    /* ============ SCREEN 2: CALIBRATION ============ */
     var calPlaying = false;
     $('cal-slider').addEventListener('input', function() {
       var v = parseInt(this.value); $('cal-level').textContent = v + '%';
@@ -758,30 +760,57 @@
       stopTone(); calPlaying = false; $('btn-cal-play').classList.remove('playing');
       calibrationGain = calSliderToGain(parseInt($('cal-slider').value));
       if (calibrationGain < 0.0001) calibrationGain = 0.0001;
-      testEar = 'right'; testPhase = 'standard'; freqIndex = 0;
+      testEar = 'right';
       thresholds = { right: {}, left: {} };
-      hearingRange = { right: { max: 8000, min: 125 }, left: { max: 8000, min: 125 } };
       trackAction('Hearing Test: start');
       showScreen('screen-test');
-      showCurrentStep();
+      startEar();
       updateMiniAudiogram();
     });
 
     /* ============ SCREEN 3: TEST ============ */
-    function isExtPhase() { return testPhase !== 'standard'; }
+    /*
+     * Flow per ear:
+     *   1. Go UP through FREQS_UP (1000→20000), user adjusts volume at each
+     *   2. "I can (barely) hear it" → record threshold, advance to next frequency
+     *   3. "I can't hear it" → bisect 3× between last-heard freq and this one → stop going up
+     *   4. Go DOWN through FREQS_DOWN (500→125), same logic
+     *   5. "I can't hear it" during down → bisect 3× → finish ear
+     */
 
-    function getCurrentTestFreq() {
-      switch (testPhase) {
-        case 'standard': return STANDARD_FREQS[freqIndex];
-        case 'high-ext': return HIGH_EXT[extIdx];
-        case 'high-bisect': return roundFreq((bisectLo + bisectHi) / 2);
-        case 'low-ext': return LOW_EXT[extIdx];
-        case 'low-bisect': return roundFreq((bisectLo + bisectHi) / 2);
-      }
+    function startEar() {
+      direction = 'up';
+      stepIdx = 0;
+      bisecting = false;
+      bisectRound = 0;
+      lastHeardFreq = null;
+      showCurrentStep();
+    }
+
+    function switchToDown() {
+      direction = 'down';
+      stepIdx = 0;
+      bisecting = false;
+      bisectRound = 0;
+      lastHeardFreq = (typeof thresholds[testEar][1000] === 'number' && thresholds[testEar][1000] < 100) ? 1000 : null;
+      showCurrentStep();
+    }
+
+    function getCurrentFreq() {
+      if (bisecting) return roundFreq((bisectHeard + bisectNotHeard) / 2);
+      return direction === 'up' ? FREQS_UP[stepIdx] : FREQS_DOWN[stepIdx];
+    }
+
+    function getProgressPercent() {
+      var perEar = FREQS_UP.length + FREQS_DOWN.length;
+      var total = perEar * 2;
+      var earBase = testEar === 'left' ? perEar : 0;
+      var dirBase = direction === 'down' ? FREQS_UP.length : 0;
+      return Math.min(98, Math.round((earBase + dirBase + stepIdx) / total * 100));
     }
 
     function showCurrentStep() {
-      currentFreq = getCurrentTestFreq();
+      currentFreq = getCurrentFreq();
       $('freq-number').textContent = currentFreq;
       $('ear-transition').classList.remove('active');
       stopTone(); $('btn-play-tone').classList.remove('playing');
@@ -790,160 +819,96 @@
       if (testEar === 'right') { badge.className = 'ear-badge right'; badge.innerHTML = '&#128066; Right Ear'; }
       else { badge.className = 'ear-badge left'; badge.innerHTML = '&#128067; Left Ear'; }
 
-      var totalStd = STANDARD_FREQS.length * 2;
-      if (testPhase === 'standard') {
-        var step = (testEar === 'right' ? 0 : STANDARD_FREQS.length) + freqIndex + 1;
-        $('progress-text').textContent = step + ' / ' + totalStd + '+';
-        $('progress-bar').style.width = (step / totalStd * 85) + '%';
+      $('progress-bar').style.width = getProgressPercent() + '%';
+      if (bisecting) {
+        $('progress-text').textContent = 'Fine-tuning (' + (bisectRound + 1) + '/3)';
+        $('tone-instructions').textContent = 'We are fine-tuning your threshold. Adjust the volume and indicate if you can hear it.';
+      } else if (direction === 'up') {
+        $('progress-text').textContent = (stepIdx + 1) + '/' + FREQS_UP.length + ' \u2191';
+        $('tone-instructions').textContent = 'Press to play the tone. Adjust the volume until you can barely hear it.';
       } else {
-        var phaseLabels = { 'high-ext': 'Extension: high freq.', 'high-bisect': 'Fine-tuning: upper limit', 'low-ext': 'Extension: low freq.', 'low-bisect': 'Fine-tuning: lower limit' };
-        $('progress-text').textContent = phaseLabels[testPhase] || '';
-        $('progress-bar').style.width = (testEar === 'right' ? 46 : 92) + '%';
+        $('progress-text').textContent = (stepIdx + 1) + '/' + FREQS_DOWN.length + ' \u2193';
+        $('tone-instructions').textContent = 'Press to play the tone. Adjust the volume until you can barely hear it.';
       }
 
-      if (isExtPhase()) {
-        $('vol-section').style.display = 'none';
-        $('tone-instructions').textContent = 'Press to listen. The tone plays at fixed volume — just indicate if you can hear it or not.';
-        $('btn-hear').textContent = 'I hear it';
-      } else {
-        $('vol-section').style.display = '';
-        $('tone-instructions').textContent = 'Press to play the tone. Adjust the volume until you can barely hear it.';
-        $('btn-hear').textContent = 'I can (barely) hear it';
-        $('vol-slider').value = 50; $('vol-level').textContent = '50';
-      }
+      $('vol-slider').value = 50; $('vol-level').textContent = '50';
     }
 
+    /* Play / stop tone */
     $('btn-play-tone').addEventListener('click', function() {
       initAudio();
       if (isPlaying) { stopTone(); this.classList.remove('playing'); return; }
-      var gain = isExtPhase() ? sliderToGain(EXT_VOLUME) : sliderToGain(parseInt($('vol-slider').value));
-      playTone(currentFreq, gain, testEar === 'right' ? 1 : -1);
+      playTone(currentFreq, sliderToGain(parseInt($('vol-slider').value)), testEar === 'right' ? 1 : -1);
       this.classList.add('playing');
     });
 
+    /* Volume slider live update */
     $('vol-slider').addEventListener('input', function() {
       var v = parseInt(this.value); $('vol-level').textContent = v;
-      if (isPlaying && !isExtPhase() && currentGain && audioCtx) currentGain.gain.linearRampToValueAtTime(sliderToGain(v), audioCtx.currentTime + 0.02);
+      if (isPlaying && currentGain && audioCtx) currentGain.gain.linearRampToValueAtTime(sliderToGain(v), audioCtx.currentTime + 0.02);
     });
 
+    /* Record user response */
     function recordResponse(heard) {
       stopTone(); $('btn-play-tone').classList.remove('playing');
-      switch (testPhase) {
-        case 'standard': recordStandard(heard); break;
-        case 'high-ext': recordHighExt(heard); break;
-        case 'high-bisect': recordHighBisect(heard); break;
-        case 'low-ext': recordLowExt(heard); break;
-        case 'low-bisect': recordLowBisect(heard); break;
+      var db = heard ? gainToRelativeDb(sliderToGain(parseInt($('vol-slider').value))) : 100;
+
+      /* ---- BISECTION ---- */
+      if (bisecting) {
+        var mid = getCurrentFreq();
+        thresholds[testEar][mid] = db;
+        if (heard) bisectHeard = mid;
+        else bisectNotHeard = mid;
+        bisectRound++;
+        var nextMid = roundFreq((bisectHeard + bisectNotHeard) / 2);
+        if (bisectRound >= 3 || nextMid === bisectHeard || nextMid === bisectNotHeard) {
+          bisecting = false;
+          if (direction === 'up') switchToDown();
+          else finishEar();
+        } else {
+          showCurrentStep();
+        }
+        updateMiniAudiogram();
+        return;
+      }
+
+      /* ---- NORMAL STEP ---- */
+      var freq = getCurrentFreq();
+      thresholds[testEar][freq] = db;
+
+      if (heard) {
+        lastHeardFreq = freq;
+        stepIdx++;
+        if ((direction === 'up' && stepIdx >= FREQS_UP.length) || (direction === 'down' && stepIdx >= FREQS_DOWN.length)) {
+          if (direction === 'up') switchToDown();
+          else finishEar();
+        } else {
+          showCurrentStep();
+        }
+      } else {
+        /* Can't hear → bisect if we have a reference, otherwise skip direction */
+        if (lastHeardFreq !== null) {
+          bisecting = true;
+          bisectHeard = lastHeardFreq;
+          bisectNotHeard = freq;
+          bisectRound = 0;
+          showCurrentStep();
+        } else {
+          if (direction === 'up') switchToDown();
+          else finishEar();
+        }
       }
       updateMiniAudiogram();
     }
 
-    function recordStandard(heard) {
-      var freq = STANDARD_FREQS[freqIndex];
-      if (heard) { thresholds[testEar][freq] = gainToRelativeDb(sliderToGain(parseInt($('vol-slider').value))); }
-      else { thresholds[testEar][freq] = 100; }
-      freqIndex++;
-      if (freqIndex >= STANDARD_FREQS.length) { initHearingRange(); checkHighExtension(); }
-      else { showCurrentStep(); }
-    }
-
-    function initHearingRange() {
-      var maxF = 125, minF = 8000;
-      for (var i = 0; i < STANDARD_FREQS.length; i++) {
-        var f = STANDARD_FREQS[i];
-        if (thresholds[testEar][f] < 80) { if (f > maxF) maxF = f; if (f < minF) minF = f; }
-      }
-      hearingRange[testEar].max = maxF;
-      hearingRange[testEar].min = minF;
-    }
-
-    function checkHighExtension() {
-      if (thresholds[testEar][8000] < 80) { testPhase = 'high-ext'; extIdx = 0; showCurrentStep(); }
-      else { checkLowExtension(); }
-    }
-
-    /* Extension records thresholds so they appear on the audiogram */
-    function recordHighExt(heard) {
-      var freq = HIGH_EXT[extIdx];
-      if (heard) {
-        thresholds[testEar][freq] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
-        hearingRange[testEar].max = freq;
-        extIdx++;
-        if (extIdx >= HIGH_EXT.length) { checkLowExtension(); }
-        else { showCurrentStep(); }
-      } else {
-        thresholds[testEar][freq] = 100;
-        bisectLo = hearingRange[testEar].max;
-        bisectHi = freq;
-        bisectCount = 0;
-        if (bisectHi - bisectLo < 200) { checkLowExtension(); }
-        else { testPhase = 'high-bisect'; showCurrentStep(); }
-      }
-    }
-
-    function recordHighBisect(heard) {
-      var mid = roundFreq((bisectLo + bisectHi) / 2);
-      if (heard) {
-        bisectLo = mid;
-        hearingRange[testEar].max = mid;
-        thresholds[testEar][mid] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
-      } else {
-        bisectHi = mid;
-        thresholds[testEar][mid] = 100;
-      }
-      bisectCount++;
-      if (bisectCount >= 3 || bisectHi - bisectLo < 200) { hearingRange[testEar].max = bisectLo; checkLowExtension(); }
-      else { showCurrentStep(); }
-    }
-
-    function checkLowExtension() {
-      if (thresholds[testEar][125] < 80) { testPhase = 'low-ext'; extIdx = 0; showCurrentStep(); }
-      else { finishEar(); }
-    }
-
-    function recordLowExt(heard) {
-      var freq = LOW_EXT[extIdx];
-      if (heard) {
-        thresholds[testEar][freq] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
-        hearingRange[testEar].min = freq;
-        extIdx++;
-        if (extIdx >= LOW_EXT.length) { finishEar(); }
-        else { showCurrentStep(); }
-      } else {
-        thresholds[testEar][freq] = 100;
-        bisectHi = hearingRange[testEar].min;
-        bisectLo = freq;
-        bisectCount = 0;
-        if (bisectHi - bisectLo < 10) { finishEar(); }
-        else { testPhase = 'low-bisect'; showCurrentStep(); }
-      }
-    }
-
-    function recordLowBisect(heard) {
-      var mid = roundFreq((bisectLo + bisectHi) / 2);
-      if (heard) {
-        bisectHi = mid;
-        hearingRange[testEar].min = mid;
-        thresholds[testEar][mid] = gainToRelativeDb(sliderToGain(EXT_VOLUME));
-      } else {
-        bisectLo = mid;
-        thresholds[testEar][mid] = 100;
-      }
-      bisectCount++;
-      if (bisectCount >= 3 || bisectHi - bisectLo < 10) { hearingRange[testEar].min = bisectHi; finishEar(); }
-      else { showCurrentStep(); }
-    }
-
     function finishEar() {
-      if (testEar === 'right') { $('ear-transition').classList.add('active'); }
-      else { showResults(); }
+      if (testEar === 'right') $('ear-transition').classList.add('active');
+      else showResults();
     }
 
     $('btn-hear').addEventListener('click', function() { recordResponse(true); });
     $('btn-no-hear').addEventListener('click', function() { recordResponse(false); });
-    $('btn-start-left').addEventListener('click', function() {
-      testEar = 'left'; testPhase = 'standard'; freqIndex = 0; showCurrentStep();
-    });
+    $('btn-start-left').addEventListener('click', function() { testEar = 'left'; startEar(); });
 
     $('mini-audiogram-wrap').addEventListener('click', function() { updateOverlayAudiogram(); $('audiogram-overlay').classList.add('active'); });
     $('overlay-close').addEventListener('click', function() { $('audiogram-overlay').classList.remove('active'); });
@@ -955,29 +920,30 @@
       $('results-subtitle').textContent = 'Audiogram of ' + userName;
       var ptaR = computePTA(thresholds.right), ptaL = computePTA(thresholds.left);
       var classR = classify(ptaR), classL = classify(ptaL);
+      var rangeR = computeHearingRange(thresholds.right), rangeL = computeHearingRange(thresholds.left);
       $('pta-right').textContent = ptaR; $('pta-left').textContent = ptaL;
       $('class-right').textContent = classR; $('class-left').textContent = classL;
-      $('range-right').textContent = formatFreq(hearingRange.right.min) + ' — ' + formatFreq(hearingRange.right.max);
-      $('range-left').textContent = formatFreq(hearingRange.left.min) + ' — ' + formatFreq(hearingRange.left.max);
+      $('range-right').textContent = formatFreq(rangeR.min) + ' — ' + formatFreq(rangeR.max);
+      $('range-left').textContent = formatFreq(rangeL.min) + ' — ' + formatFreq(rangeL.max);
       buildFullAudiogram();
-      buildInterpretation(ptaR, ptaL, classR, classL);
+      buildInterpretation(ptaR, ptaL, classR, classL, rangeR, rangeL);
       updateAshaMarker(ptaR, ptaL);
-      trackAction('Hearing Test: completed', 'PTA R: ' + ptaR + ' dB (' + classR + ') | PTA L: ' + ptaL + ' dB (' + classL + ') | Range R: ' + hearingRange.right.min + '-' + hearingRange.right.max + ' Hz | Range L: ' + hearingRange.left.min + '-' + hearingRange.left.max + ' Hz');
+      trackAction('Hearing Test: completed', 'PTA R: ' + ptaR + ' dB (' + classR + ') | PTA L: ' + ptaL + ' dB (' + classL + ') | Range R: ' + rangeR.min + '-' + rangeR.max + ' Hz | Range L: ' + rangeL.min + '-' + rangeL.max + ' Hz');
     }
 
-    function buildInterpretation(ptaR, ptaL, classR, classL) {
+    function buildInterpretation(ptaR, ptaL, classR, classL, rangeR, rangeL) {
       var text = '', avgPta = Math.round((ptaR + ptaL) / 2);
-      if (avgPta <= 15) text += 'Your results suggest hearing within normal parameters. You can probably perceive all human speech sounds in the audiogram\'s "speech banana". ';
-      else if (avgPta <= 25) text += 'Your results suggest slight hearing loss. You may have some difficulty hearing soft sounds or whispers, especially in noisy environments. ';
-      else if (avgPta <= 40) text += 'Your results suggest mild hearing loss. You may have difficulty following group conversations or with background noise. Some sounds in the "speech banana" may already be escaping you. ';
-      else if (avgPta <= 55) text += 'Your results suggest moderate hearing loss. You probably frequently have difficulty in normal conversations and miss significant parts of speech. ';
-      else text += 'Your results suggest significant hearing loss. Verbal communication without amplification is probably very difficult. ';
+      if (avgPta <= 15) text += 'Your results suggest hearing within normal parameters. You can probably perceive all the sounds of human speech in the audiogram\'s "speech banana". ';
+      else if (avgPta <= 25) text += 'Your results suggest a slight hearing loss. You may have some difficulty hearing soft sounds or whispers, especially in noisy environments. ';
+      else if (avgPta <= 40) text += 'Your results suggest a mild hearing loss. You may have difficulty following group conversations or conversations with background noise. Some sounds in the "speech banana" may already be escaping you. ';
+      else if (avgPta <= 55) text += 'Your results suggest a moderate hearing loss. You probably have frequent difficulty in normal conversations and miss significant parts of speech. ';
+      else text += 'Your results suggest a significant hearing loss. Verbal communication without amplification is probably very difficult. ';
 
-      var avgMax = Math.round((hearingRange.right.max + hearingRange.left.max) / 2);
+      var avgMax = Math.round((rangeR.max + rangeL.max) / 2);
       if (avgMax >= 16000) text += 'Your high-frequency range is excellent — you can hear sounds that most adults can no longer perceive. ';
       else if (avgMax < 8000) text += 'Your high-frequency range appears reduced, which may make it harder to distinguish certain sounds like "s", "f" or "z". ';
 
-      if (Math.abs(ptaR - ptaL) >= 15) text += 'Note: There is an asymmetric difference between both ears, which may warrant investigation. ';
+      if (Math.abs(ptaR - ptaL) >= 15) text += 'Note: There is an asymmetric difference between your two ears, which may warrant further investigation. ';
       if (userAge && userAge >= 55) text += 'Presbycusis (age-related hearing loss) is natural and becomes more pronounced over time. ';
       text += 'Remember that these values are relative to your device\'s calibration and are for educational purposes only.';
       $('interpretation-text').textContent = text;
@@ -989,7 +955,7 @@
       $('asha-marker').setAttribute('data-label', avg + ' dB');
     }
 
-    /* ============ PDF (dynamic labels + blue thicker) ============ */
+    /* ============ PDF ============ */
     function createPdfAudiogram() {
       var dynFreqs = getActiveFreqs();
       var c = document.createElement('canvas'); c.width = 900; c.height = 500;
@@ -1044,7 +1010,7 @@
       doc.setFontSize(18); doc.setFont(undefined, 'bold'); doc.setTextColor(0);
       doc.text('McMinsky - Educational Hearing Test', pw / 2, y, { align: 'center' }); y += 8;
       doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(120);
-      doc.text('For educational purposes only - no clinical validity', pw / 2, y, { align: 'center' }); y += 10;
+      doc.text('For educational purposes only - not clinically valid', pw / 2, y, { align: 'center' }); y += 10;
 
       doc.setTextColor(0); doc.setFontSize(10);
       doc.text('Name: ' + userName, m, y);
@@ -1071,14 +1037,15 @@
 
       doc.setTextColor(0); doc.setFontSize(10); doc.setFont(undefined, 'bold');
       var ptaR = computePTA(thresholds.right), ptaL = computePTA(thresholds.left);
+      var rangeR = computeHearingRange(thresholds.right), rangeL = computeHearingRange(thresholds.left);
       doc.text('PTA Right: ' + ptaR + ' dB (' + classify(ptaR) + ')', m, y); y += 5;
       doc.text('PTA Left: ' + ptaL + ' dB (' + classify(ptaL) + ')', m, y); y += 5;
       doc.setFont(undefined, 'normal');
-      doc.text('Range R.: ' + formatFreq(hearingRange.right.min) + ' - ' + formatFreq(hearingRange.right.max), m, y); y += 5;
-      doc.text('Range L.: ' + formatFreq(hearingRange.left.min) + ' - ' + formatFreq(hearingRange.left.max), m, y); y += 10;
+      doc.text('Range R.: ' + formatFreq(rangeR.min) + ' - ' + formatFreq(rangeR.max), m, y); y += 5;
+      doc.text('Range L.: ' + formatFreq(rangeL.min) + ' - ' + formatFreq(rangeL.max), m, y); y += 10;
 
       doc.setFontSize(7); doc.setTextColor(100);
-      var disc = 'NOTICE: This test is for educational purposes only and does not replace a professional audiological assessment. The values shown are relative to the device calibration level and do not correspond to clinically calibrated dB HL. If you suspect hearing loss, please consult an ENT specialist or audiologist.';
+      var disc = 'NOTICE: This test is for educational purposes only and does not replace a professional audiological evaluation. The values shown are relative to the device calibration level and do not correspond to clinically calibrated dB HL. If you suspect hearing loss, please consult an ENT specialist or audiologist.';
       var sd = doc.splitTextToSize(disc, cw); doc.text(sd, m, y);
 
       doc.setFontSize(8); doc.setTextColor(140);
@@ -1091,8 +1058,8 @@
     /* ============ RESTART ============ */
     $('btn-restart').addEventListener('click', function() {
       thresholds = { right: {}, left: {} };
-      hearingRange = { right: { max: 8000, min: 125 }, left: { max: 8000, min: 125 } };
-      testEar = 'right'; testPhase = 'standard'; freqIndex = 0;
+      testEar = 'right'; direction = 'up'; stepIdx = 0;
+      bisecting = false; bisectRound = 0; lastHeardFreq = null;
       if (miniChart) { miniChart.destroy(); miniChart = null; }
       if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
       if (fullChart) { fullChart.destroy(); fullChart = null; }
