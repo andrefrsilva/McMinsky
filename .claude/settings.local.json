@@ -3,7 +3,8 @@
     "allow": [
       "Bash(find:*)",
       "Bash(node:*)",
-      "Bash(ls -la \"C:\\\\Users\\\\andre\\\\MM_code\\\\mcminsky-site\\\\pages\\\\en\"\" 2>/dev/null || echo \"Directory does not exist \")"
+      "Bash(ls -la \"C:\\\\Users\\\\andre\\\\MM_code\\\\mcminsky-site\\\\pages\\\\en\"\" 2>/dev/null || echo \"Directory does not exist \")",
+      "WebSearch"
     ]
   }
 }

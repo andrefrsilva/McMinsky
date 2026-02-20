@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Teste auditivo educativo com audiograma interativo, relatório PDF e conteúdo sobre saúde auditiva. Para toda a família.">
+  <meta name="short-description" content="Teste auditivo educativo com audiograma interativo e relatório PDF.">
+  <meta name="icon" content="&#x1f442;">
+  <title>Teste Auditivo | McMinsky</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
+  <style>
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: calc(var(--header-height) + var(--space-lg)) var(--space-sm) var(--space-xl);
+    }
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---- Shared ---- */
+    .test-header { text-align: center; margin-bottom: var(--space-xl); }
+    .test-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      color: var(--white);
+      margin-bottom: var(--space-sm);
+    }
+    .test-header h1 strong { color: var(--gold); }
+    .test-intro {
+      color: var(--white-dim);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto var(--space-md);
+    }
+    .badge-disclaimer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      margin-bottom: var(--space-md);
+    }
+    .card {
+      background: var(--black-lighter);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+    .card-gold {
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+    .primary-btn {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .primary-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .primary-btn:active { transform: scale(0.98); }
+    .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .outline-btn {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-lg);
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .outline-btn:hover { background: rgba(212, 175, 55, 0.1); }
+    .section-title {
+      font-family: var(--font-display);
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: var(--space-md);
+    }
+    .input-field {
+      width: 100%;
+      padding: var(--space-sm);
+      background: var(--black);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 1rem;
+      margin-bottom: var(--space-md);
+      box-sizing: border-box;
+    }
+    .input-field:focus { outline: none; border-color: var(--gold); }
+    .input-label {
+      display: block;
+      color: var(--white);
+      font-family: var(--font-display);
+      margin-bottom: var(--space-xs);
+      font-size: 0.9rem;
+    }
+
+    /* ---- Screen 1: Intro ---- */
+    .animal-chart-wrap { margin-bottom: var(--space-lg); }
+    .animal-chart-wrap canvas { width: 100% !important; max-height: 360px; }
+
+    /* Carousel */
+    .carousel { position: relative; margin-bottom: var(--space-lg); overflow: hidden; }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.4s ease;
+      will-change: transform;
+    }
+    .carousel-slide {
+      min-width: 100%;
+      box-sizing: border-box;
+      padding: 0 4px;
+    }
+    .fact-card {
+      background: var(--black-lighter);
+      border: 2px solid rgba(212, 175, 55, 0.25);
+      border-radius: 12px;
+      padding: var(--space-lg);
+      text-align: center;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .fact-emoji { font-size: 2rem; margin-bottom: var(--space-sm); }
+    .fact-title {
+      font-family: var(--font-display);
+      color: var(--gold);
+      font-size: 1rem;
+      margin-bottom: var(--space-sm);
+    }
+    .fact-text { color: var(--white-dim); font-size: 0.88rem; line-height: 1.55; }
+    .carousel-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-top: var(--space-sm);
+    }
+    .carousel-arrow {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+    .carousel-arrow:hover { background: rgba(212, 175, 55, 0.25); }
+    .carousel-dots { display: flex; gap: 6px; }
+    .carousel-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      padding: 0;
+    }
+    .carousel-dot.active { background: var(--gold); }
+    .form-row { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+    .form-row > * { flex: 1; min-width: 140px; }
+
+    /* ---- Screen 2: Calibration ---- */
+    .calibration-card { text-align: center; max-width: 500px; margin: 0 auto; }
+    .instruction-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 var(--space-lg);
+      text-align: left;
+    }
+    .instruction-list li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) 0;
+      color: var(--white);
+      font-size: 0.95rem;
+    }
+    .instruction-icon {
+      width: 36px; height: 36px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .play-cal-btn {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-md);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .play-cal-btn:hover { transform: scale(1.05); background: var(--gold-light); }
+    .play-cal-btn svg { width: 32px; height: 32px; fill: var(--black); }
+    .wave-ring {
+      position: absolute;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      opacity: 0;
+      animation: none;
+    }
+    .play-cal-btn.playing .wave-ring { animation: waveExpand 1.5s ease-out infinite; }
+    .play-cal-btn.playing .wave-ring:nth-child(2) { animation-delay: 0.5s; }
+    .play-cal-btn.playing .wave-ring:nth-child(3) { animation-delay: 1s; }
+    @keyframes waveExpand {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+    .cal-slider-wrap {
+      max-width: 300px;
+      margin: 0 auto var(--space-lg);
+    }
+    .cal-slider-label {
+      color: var(--white-dim);
+      font-size: 0.85rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    /* ---- Screen 3: Test ---- */
+    .test-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .ear-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .ear-badge.right { background: rgba(220, 50, 50, 0.15); color: #ef4444; border: 1px solid rgba(220, 50, 50, 0.3); }
+    .ear-badge.left { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .progress-text {
+      color: var(--white-dim);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+    }
+    .progress-bar-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      margin-bottom: var(--space-lg);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    .freq-display {
+      text-align: center;
+      margin-bottom: var(--space-md);
+    }
+    .freq-number {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      color: var(--white);
+      line-height: 1;
+    }
+    .freq-unit {
+      color: var(--white-dim);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .play-tone-btn {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.15);
+      border: 2px solid var(--gold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-md);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .play-tone-btn:hover { background: rgba(212, 175, 55, 0.25); }
+    .play-tone-btn.playing { background: rgba(212, 175, 55, 0.3); }
+    .play-tone-btn svg { width: 36px; height: 36px; fill: var(--gold); }
+    .play-tone-btn .wave-ring { border-color: var(--gold); }
+    .play-tone-btn.playing .wave-ring { animation: waveExpand 1.5s ease-out infinite; }
+    .play-tone-btn.playing .wave-ring:nth-child(2) { animation-delay: 0.5s; }
+    .play-tone-btn.playing .wave-ring:nth-child(3) { animation-delay: 1s; }
+    .tone-instructions {
+      text-align: center;
+      color: var(--white-dim);
+      font-size: 0.85rem;
+      margin-bottom: var(--space-md);
+    }
+    .vol-slider-wrap {
+      max-width: 350px;
+      margin: 0 auto var(--space-lg);
+    }
+    .vol-slider-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--white-dim);
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+    .vol-level {
+      text-align: center;
+      color: var(--gold);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      margin-top: var(--space-xs);
+    }
+    .action-btns {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-lg);
+    }
+    .action-btns .primary-btn,
+    .action-btns .outline-btn { min-width: 140px; text-align: center; }
+    .mini-audiogram-wrap {
+      margin-top: var(--space-md);
+      cursor: pointer;
+      position: relative;
+    }
+    .mini-audiogram-wrap canvas { width: 100% !important; max-height: 180px; }
+    .mini-audiogram-hint {
+      text-align: center;
+      color: var(--white-dim);
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+    .ear-transition {
+      display: none;
+      text-align: center;
+      padding: var(--space-xl) 0;
+    }
+    .ear-transition.active { display: block; animation: fadeIn 0.5s ease; }
+    .ear-transition h2 {
+      font-family: var(--font-display);
+      color: var(--white);
+      font-size: 1.5rem;
+      margin-bottom: var(--space-sm);
+    }
+    .ear-transition p { color: var(--white-dim); }
+
+    /* Audiogram overlay */
+    .audiogram-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      padding: var(--space-lg);
+      overflow-y: auto;
+    }
+    .audiogram-overlay.active { display: flex; align-items: center; justify-content: center; }
+    .audiogram-overlay-inner {
+      width: 100%;
+      max-width: 600px;
+    }
+    .audiogram-overlay canvas { width: 100% !important; max-height: 70vh; }
+    .audiogram-overlay-close {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      background: none;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* ---- Screen 4: Results ---- */
+    .audiogram-full-wrap { margin-bottom: var(--space-lg); }
+    .audiogram-full-wrap canvas { width: 100% !important; max-height: 400px; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .summary-card {
+      background: rgba(255,255,255,0.03);
+      padding: var(--space-md);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .summary-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .summary-label {
+      color: var(--white-dim);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .summary-card.right .summary-value { color: #ef4444; }
+    .summary-card.left .summary-value { color: #3b82f6; }
+    .interpretation-panel {
+      background: rgba(212, 175, 55, 0.05);
+      border-left: 3px solid var(--gold);
+      padding: var(--space-md);
+      margin-bottom: var(--space-lg);
+      border-radius: 0 8px 8px 0;
+    }
+    .interpretation-panel h3 {
+      font-family: var(--font-display);
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+      font-size: 1rem;
+    }
+    .interpretation-panel p {
+      color: var(--white-dim);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: var(--space-sm);
+    }
+    .asha-scale {
+      margin-bottom: var(--space-lg);
+    }
+    .asha-scale-title {
+      font-family: var(--font-display);
+      color: var(--white);
+      font-size: 0.9rem;
+      margin-bottom: var(--space-sm);
+    }
+    .asha-bar {
+      position: relative;
+      height: 24px;
+      border-radius: 12px;
+      background: linear-gradient(to right, #22c55e 0%, #22c55e 15%, #84cc16 15%, #84cc16 25%, #eab308 25%, #eab308 40%, #f97316 40%, #f97316 55%, #ef4444 55%, #ef4444 70%, #dc2626 70%, #dc2626 90%, #7f1d1d 90%);
+      margin-bottom: 6px;
+    }
+    .asha-marker {
+      position: absolute;
+      top: -6px;
+      width: 3px;
+      height: 36px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: left 0.5s ease;
+    }
+    .asha-marker::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--white);
+      white-space: nowrap;
+    }
+    .asha-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--white-dim);
+    }
+    .disclaimer-box {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .disclaimer-box h4 {
+      color: #ef4444;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      margin-bottom: var(--space-xs);
+    }
+    .disclaimer-box p {
+      color: var(--white-dim);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+    .result-btns {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ---- Range Slider ---- */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      border: none;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 480px) {
+      .summary-grid { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+      .form-row { flex-direction: column; }
+      .action-btns { flex-direction: column; align-items: center; }
+      .action-btns .primary-btn,
+      .action-btns .outline-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body class="loading">
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/" class="nav-link">Início</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#tools" class="nav-link">Ferramentas</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="test-container">
+
+    <!-- ========== SCREEN 1: INTRO ========== -->
+    <div class="screen active" id="screen-intro">
+      <div class="test-header">
+        <h1>Teste <strong>Auditivo</strong></h1>
+        <p class="test-intro">Descobre como está a tua audição com este teste educativo interativo. Testa diferentes frequências, obtém o teu audiograma pessoal e aprende sobre saúde auditiva.</p>
+        <span class="badge-disclaimer">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+          Apenas para fins educativos &mdash; sem validade clínica
+        </span>
+      </div>
+
+      <!-- Animal hearing range chart -->
+      <div class="card animal-chart-wrap">
+        <h3 class="section-title">Alcance Auditivo no Reino Animal</h3>
+        <canvas id="animal-chart"></canvas>
+      </div>
+
+      <!-- Did you know carousel -->
+      <div class="carousel" id="fact-carousel">
+        <div class="carousel-track" id="carousel-track"></div>
+        <div class="carousel-nav">
+          <button class="carousel-arrow" id="carousel-prev" aria-label="Anterior">&#8249;</button>
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <button class="carousel-arrow" id="carousel-next" aria-label="Próximo">&#8250;</button>
+        </div>
+      </div>
+
+      <!-- Name + Age form -->
+      <div class="card">
+        <h3 class="section-title">Os Teus Dados</h3>
+        <div class="form-row">
+          <div>
+            <label class="input-label" for="user-name">Nome</label>
+            <input type="text" class="input-field" id="user-name" placeholder="O teu nome" maxlength="60">
+          </div>
+          <div>
+            <label class="input-label" for="user-age">Idade</label>
+            <input type="number" class="input-field" id="user-age" placeholder="Ex: 25" min="3" max="120">
+          </div>
+        </div>
+        <div style="text-align:center; margin-top: var(--space-md);">
+          <button class="primary-btn" id="btn-start">Iniciar Teste</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 2: CALIBRATION ========== -->
+    <div class="screen" id="screen-calibration">
+      <div class="test-header">
+        <h1>Calibração</h1>
+        <p class="test-intro">Antes de começar, vamos calibrar o volume para garantir resultados fiáveis.</p>
+      </div>
+
+      <div class="card calibration-card">
+        <ul class="instruction-list">
+          <li>
+            <span class="instruction-icon">&#127911;</span>
+            <span>Usa auscultadores (fortemente recomendado)</span>
+          </li>
+          <li>
+            <span class="instruction-icon">&#128264;</span>
+            <span>Vai para um ambiente silencioso</span>
+          </li>
+          <li>
+            <span class="instruction-icon">&#128266;</span>
+            <span>Coloca o volume do dispositivo a ~50%</span>
+          </li>
+        </ul>
+
+        <p style="color: var(--white-dim); font-size: 0.88rem; margin-bottom: var(--space-md);">Carrega no botão para ouvir um tom de 1000 Hz. Ajusta o slider até o ouvires <strong style="color: var(--white);">confortavelmente</strong>.</p>
+
+        <button class="play-cal-btn" id="btn-cal-play" aria-label="Tocar tom de calibração">
+          <span class="wave-ring"></span>
+          <span class="wave-ring"></span>
+          <span class="wave-ring"></span>
+          <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+        </button>
+
+        <div class="cal-slider-wrap">
+          <div class="cal-slider-label">Volume de calibração</div>
+          <input type="range" id="cal-slider" min="0" max="100" value="50">
+          <div class="vol-level" id="cal-level">50%</div>
+        </div>
+
+        <button class="primary-btn" id="btn-cal-ready">Estou Pronto</button>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 3: TEST ========== -->
+    <div class="screen" id="screen-test">
+      <div class="test-top-bar">
+        <span class="ear-badge right" id="ear-badge">&#128066; Ouvido Direito</span>
+        <span class="progress-text" id="progress-text">1 / 9</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar" style="width: 0%"></div>
+      </div>
+
+      <div class="freq-display">
+        <div class="freq-number" id="freq-number">1000</div>
+        <div class="freq-unit">Hz</div>
+      </div>
+
+      <button class="play-tone-btn" id="btn-play-tone" aria-label="Tocar tom">
+        <span class="wave-ring"></span>
+        <span class="wave-ring"></span>
+        <span class="wave-ring"></span>
+        <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+      </button>
+      <p class="tone-instructions">Carrega para tocar o tom. Ajusta o volume até o ouvires mal.</p>
+
+      <div class="vol-slider-wrap">
+        <input type="range" id="vol-slider" min="0" max="100" value="50">
+        <div class="vol-slider-labels">
+          <span>Mais baixo</span>
+          <span>Mais alto</span>
+        </div>
+        <div class="vol-level" id="vol-level">50</div>
+      </div>
+
+      <div class="action-btns">
+        <button class="primary-btn" id="btn-hear">Ouço (mal)</button>
+        <button class="outline-btn" id="btn-no-hear">Não ouço</button>
+      </div>
+
+      <!-- Ear transition -->
+      <div class="ear-transition" id="ear-transition">
+        <h2>Ouvido Direito concluído!</h2>
+        <p>Agora vamos testar o <strong style="color: #3b82f6;">Ouvido Esquerdo</strong>.</p>
+        <div style="margin-top: var(--space-lg);">
+          <button class="primary-btn" id="btn-start-left">Continuar</button>
+        </div>
+      </div>
+
+      <!-- Mini audiogram -->
+      <div class="mini-audiogram-wrap" id="mini-audiogram-wrap">
+        <canvas id="mini-audiogram"></canvas>
+        <p class="mini-audiogram-hint">Toca para ampliar o audiograma</p>
+      </div>
+    </div>
+
+    <!-- ========== AUDIOGRAM OVERLAY ========== -->
+    <div class="audiogram-overlay" id="audiogram-overlay">
+      <button class="audiogram-overlay-close" id="overlay-close" aria-label="Fechar">&times;</button>
+      <div class="audiogram-overlay-inner">
+        <canvas id="overlay-audiogram"></canvas>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 4: RESULTS ========== -->
+    <div class="screen" id="screen-results">
+      <div class="test-header">
+        <h1>Resultados</h1>
+        <p class="test-intro" id="results-subtitle">Audiograma de —</p>
+      </div>
+
+      <div class="card audiogram-full-wrap">
+        <canvas id="full-audiogram"></canvas>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card right">
+          <div class="summary-value" id="pta-right">—</div>
+          <div class="summary-label">PTA Direito (dB)</div>
+        </div>
+        <div class="summary-card left">
+          <div class="summary-value" id="pta-left">—</div>
+          <div class="summary-label">PTA Esquerdo (dB)</div>
+        </div>
+        <div class="summary-card right">
+          <div class="summary-value" id="class-right" style="font-size:1.1rem;">—</div>
+          <div class="summary-label">Classificação Dir.</div>
+        </div>
+        <div class="summary-card left">
+          <div class="summary-value" id="class-left" style="font-size:1.1rem;">—</div>
+          <div class="summary-label">Classificação Esq.</div>
+        </div>
+      </div>
+
+      <div class="interpretation-panel" id="interpretation-panel">
+        <h3>Interpretação</h3>
+        <p id="interpretation-text"></p>
+      </div>
+
+      <div class="asha-scale">
+        <div class="asha-scale-title">Escala ASHA (média dos dois ouvidos)</div>
+        <div class="asha-bar">
+          <div class="asha-marker" id="asha-marker" data-label="" style="left: 0%"></div>
+        </div>
+        <div class="asha-labels">
+          <span>Normal</span>
+          <span>Ligeira</span>
+          <span>Leve</span>
+          <span>Moderada</span>
+          <span>Severa</span>
+          <span>Profunda</span>
+        </div>
+      </div>
+
+      <div class="disclaimer-box">
+        <h4>Aviso Importante</h4>
+        <p>Este teste é <strong>apenas educativo</strong> e não substitui uma avaliação audiológica profissional. Os valores apresentados são relativos ao nível de calibração do seu dispositivo e não correspondem a dB HL (decibéis nível de audição) calibrados clinicamente. Se suspeita de perda auditiva, consulte um otorrinolaringologista (ORL) ou audiologista.</p>
+      </div>
+
+      <div class="result-btns">
+        <button class="primary-btn" id="btn-pdf">Descarregar PDF</button>
+        <button class="outline-btn" id="btn-restart">Repetir Teste</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condições</a>
+        <a href="../legal/privacy.html">Política de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclamações</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  (function() {
+    'use strict';
+
+    /* ================================================
+       UTILITIES
+    ================================================ */
+    var $ = function(id) { return document.getElementById(id); };
+
+    function showScreen(id) {
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+      $(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function trackAction(action, extra) {
+      if (typeof mcmTrack === 'function') {
+        mcmTrack(action, extra || '');
+      }
+    }
+
+    /* ================================================
+       DATA
+    ================================================ */
+    var FREQUENCIES = [1000, 2000, 3000, 4000, 6000, 8000, 500, 250, 125];
+    var FREQ_LABELS = [125, 250, 500, 1000, 2000, 3000, 4000, 6000, 8000];
+    var PTA_FREQS = [500, 1000, 2000, 4000];
+
+    var facts = [
+      { emoji: '&#127820;', title: 'A Banana da Fala', text: 'No audiograma clínico, os sons da fala humana ocupam uma zona em forma de banana entre 250-6000 Hz e 20-50 dB. Se a tua audição cai fora desta zona, podes ter dificuldade em compreender conversas.' },
+      { emoji: '&#129528;', title: 'Neurossensorial vs. Condutiva', text: 'A perda condutiva (ouvido externo/médio) pode ser tratada cirurgicamente. A perda neurossensorial (cóclea/nervo) é geralmente permanente e requer aparelhos ou implantes.' },
+      { emoji: '&#128164;', title: 'A Fadiga Auditiva', text: 'Após exposição prolongada a ruído (concerto, fábrica), o limiar auditivo sobe temporariamente. Se acontecer com frequência, os danos tornam-se permanentes.' },
+      { emoji: '&#128065;', title: 'Perda Auditiva Oculta', text: 'Podes ter um audiograma normal e ainda assim ter dificuldade em perceber fala em ambientes ruidosos. Chama-se sinaptopatia coclear — as sinapses entre as células ciliadas e o nervo estão danificadas.' },
+      { emoji: '&#129504;', title: 'Ouvido-Cérebro e Demência', text: 'Estudos da Lancet estimam que a perda auditiva não tratada é o maior fator de risco modificável para demência, representando até 8% dos casos. Tratar a audição pode proteger o cérebro.' },
+      { emoji: '&#129516;', title: 'Células que não Renascem', text: 'Os humanos nascem com ~15.000 células ciliadas por ouvido. Ao contrário das aves e répteis, as nossas não se regeneram. Cada célula perdida é permanente.' },
+      { emoji: '&#128680;', title: 'Surdez Súbita', text: 'Uma perda auditiva súbita (em horas/dias) é uma emergência médica. O tratamento com corticosteroides nas primeiras 72h pode recuperar a audição. Não esperes!' },
+      { emoji: '&#9878;&#65039;', title: 'Perda Assimétrica', text: 'Uma diferença significativa entre os dois ouvidos pode indicar um neuroma acústico (tumor benigno). É uma red flag que justifica uma ressonância magnética.' },
+      { emoji: '&#128147;', title: 'Zumbido Pulsátil', text: 'Um zumbido que bate ao ritmo do coração (pulsátil) é diferente do zumbido comum. Pode indicar uma anomalia vascular e deve ser investigado urgentemente.' },
+      { emoji: '&#128116;', title: 'Presbiacusia', text: 'A partir dos 30 anos, todos perdemos audição nas frequências altas progressivamente. Aos 65 anos, 1 em 3 pessoas tem perda auditiva significativa. É o envelhecimento natural da cóclea.' },
+      { emoji: '&#128557;', title: 'Epidemia do Isolamento', text: 'A perda auditiva não tratada está associada a isolamento social, depressão e declínio cognitivo acelerado. As pessoas evitam conversas e eventos sociais por vergonha ou frustração.' },
+      { emoji: '&#127758;', title: 'Regra do 1 em 3 (OMS)', text: 'A OMS estima que mais de 1 em 3 pessoas com mais de 65 anos tem perda auditiva incapacitante. E mais de mil milhões de jovens estão em risco devido a práticas auditivas inseguras.' }
+    ];
+
+    var animalData = [
+      { name: 'Humano', min: 20, max: 20000, color: 'rgba(212,175,55,0.85)' },
+      { name: 'Cão', min: 67, max: 45000, color: 'rgba(139,92,246,0.75)' },
+      { name: 'Gato', min: 48, max: 85000, color: 'rgba(244,114,182,0.75)' },
+      { name: 'Morcego', min: 2000, max: 110000, color: 'rgba(99,102,241,0.75)' },
+      { name: 'Golfinho', min: 150, max: 150000, color: 'rgba(34,211,238,0.75)' },
+      { name: 'Elefante', min: 5, max: 12000, color: 'rgba(248,113,113,0.75)' },
+      { name: 'Coruja', min: 200, max: 12000, color: 'rgba(251,191,36,0.75)' },
+      { name: 'Rato', min: 1000, max: 91000, color: 'rgba(74,222,128,0.75)' }
+    ];
+
+    /* ================================================
+       STATE
+    ================================================ */
+    var userName = '';
+    var userAge = 0;
+    var calibrationGain = 0.05;
+    var audioCtx = null;
+    var currentOsc = null;
+    var currentGain = null;
+    var currentPanner = null;
+
+    var testEar = 'right'; // 'right' or 'left'
+    var testFreqIndex = 0;
+    var thresholds = { right: {}, left: {} };
+    var isPlaying = false;
+
+    /* ================================================
+       AUDIO ENGINE
+    ================================================ */
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTone(freq, gainValue, pan) {
+      stopTone();
+      initAudio();
+
+      currentOsc = audioCtx.createOscillator();
+      currentGain = audioCtx.createGain();
+      currentPanner = audioCtx.createStereoPanner();
+
+      currentOsc.type = 'sine';
+      currentOsc.frequency.value = freq;
+      currentGain.gain.setValueAtTime(0, audioCtx.currentTime);
+      currentGain.gain.linearRampToValueAtTime(gainValue, audioCtx.currentTime + 0.005);
+      currentPanner.pan.value = pan;
+
+      currentOsc.connect(currentGain);
+      currentGain.connect(currentPanner);
+      currentPanner.connect(audioCtx.destination);
+      currentOsc.start();
+      isPlaying = true;
+    }
+
+    function stopTone() {
+      if (currentGain && audioCtx) {
+        try {
+          currentGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.005);
+        } catch(e) {}
+      }
+      if (currentOsc) {
+        try {
+          currentOsc.stop(audioCtx.currentTime + 0.01);
+        } catch(e) {}
+        currentOsc = null;
+      }
+      currentGain = null;
+      currentPanner = null;
+      isPlaying = false;
+    }
+
+    function sliderToGain(sliderVal) {
+      // Exponential mapping: slider 0-100 → gain 0.0 to calibrationGain*4
+      if (sliderVal <= 0) return 0;
+      var normalized = sliderVal / 100;
+      return calibrationGain * 4 * Math.pow(normalized, 2);
+    }
+
+    function gainToRelativeDb(gainValue) {
+      // dB relative to calibration level
+      if (gainValue <= 0 || calibrationGain <= 0) return 100;
+      var db = 20 * Math.log10(gainValue / calibrationGain);
+      // Invert: at calibration level db=0, louder is positive, but in hearing tests, higher dB = worse hearing
+      // So if the person needs MORE volume, their threshold is higher
+      return Math.max(0, Math.round(-db));
+    }
+
+    function relativeDbFromSlider(sliderVal) {
+      var gain = sliderToGain(sliderVal);
+      return gainToRelativeDb(gain);
+    }
+
+    /* ================================================
+       CLASSIFICATION
+    ================================================ */
+    function classify(pta) {
+      if (pta <= 15) return 'Normal';
+      if (pta <= 25) return 'Ligeira';
+      if (pta <= 40) return 'Leve';
+      if (pta <= 55) return 'Moderada';
+      if (pta <= 70) return 'Mod. Severa';
+      if (pta <= 90) return 'Severa';
+      return 'Profunda';
+    }
+
+    function computePTA(earThresholds) {
+      var sum = 0;
+      var count = 0;
+      for (var i = 0; i < PTA_FREQS.length; i++) {
+        var f = PTA_FREQS[i];
+        if (typeof earThresholds[f] === 'number') {
+          sum += earThresholds[f];
+          count++;
+        }
+      }
+      return count > 0 ? Math.round(sum / count) : 0;
+    }
+
+    /* ================================================
+       ANIMAL CHART (Screen 1)
+    ================================================ */
+    function buildAnimalChart() {
+      var ctx = $('animal-chart').getContext('2d');
+      var labels = [];
+      var minData = [];
+      var barData = [];
+      var bgColors = [];
+
+      for (var i = 0; i < animalData.length; i++) {
+        labels.push(animalData[i].name);
+        minData.push(Math.log10(animalData[i].min));
+        barData.push(Math.log10(animalData[i].max) - Math.log10(animalData[i].min));
+        bgColors.push(animalData[i].color);
+      }
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Offset',
+              data: minData,
+              backgroundColor: 'transparent',
+              borderWidth: 0,
+              barPercentage: 0.6
+            },
+            {
+              label: 'Alcance (Hz)',
+              data: barData,
+              backgroundColor: bgColors,
+              borderWidth: 0,
+              borderRadius: 4,
+              barPercentage: 0.6
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  var idx = ctx.dataIndex;
+                  var a = animalData[idx];
+                  return a.name + ': ' + a.min.toLocaleString() + ' - ' + a.max.toLocaleString() + ' Hz';
+                }
+              },
+              filter: function(item) { return item.datasetIndex === 1; }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              title: { display: true, text: 'Frequência (Hz) — escala log', color: 'rgba(255,255,255,0.5)', font: { size: 11 } },
+              ticks: {
+                color: 'rgba(255,255,255,0.5)',
+                callback: function(v) {
+                  var hz = Math.pow(10, v);
+                  if (hz >= 1000) return (hz / 1000) + 'k';
+                  return Math.round(hz) + '';
+                }
+              },
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              min: 0,
+              max: Math.log10(200000)
+            },
+            y: {
+              stacked: true,
+              ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 12 } },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    /* ================================================
+       CAROUSEL (Screen 1)
+    ================================================ */
+    function buildCarousel() {
+      var track = $('carousel-track');
+      var dotsWrap = $('carousel-dots');
+      var shuffled = facts.slice();
+      // Shuffle for random start
+      for (var i = shuffled.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+      }
+
+      var html = '';
+      var dotsHtml = '';
+      for (var k = 0; k < shuffled.length; k++) {
+        var f = shuffled[k];
+        html += '<div class="carousel-slide"><div class="fact-card">';
+        html += '<div class="fact-emoji">' + f.emoji + '</div>';
+        html += '<div class="fact-title">Sabia que? — ' + f.title + '</div>';
+        html += '<div class="fact-text">' + f.text + '</div>';
+        html += '</div></div>';
+        dotsHtml += '<button class="carousel-dot' + (k === 0 ? ' active' : '') + '" data-idx="' + k + '"></button>';
+      }
+      track.innerHTML = html;
+      dotsWrap.innerHTML = dotsHtml;
+
+      var currentSlide = 0;
+      var total = shuffled.length;
+      var dots = dotsWrap.querySelectorAll('.carousel-dot');
+
+      function goTo(idx) {
+        if (idx < 0) idx = total - 1;
+        if (idx >= total) idx = 0;
+        currentSlide = idx;
+        track.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+        for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('active', d === currentSlide);
+      }
+
+      $('carousel-prev').addEventListener('click', function() { goTo(currentSlide - 1); });
+      $('carousel-next').addEventListener('click', function() { goTo(currentSlide + 1); });
+      for (var d = 0; d < dots.length; d++) {
+        dots[d].addEventListener('click', function() { goTo(parseInt(this.getAttribute('data-idx'))); });
+      }
+
+      // Touch swipe
+      var startX = 0;
+      var carousel = $('fact-carousel');
+      carousel.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+      carousel.addEventListener('touchend', function(e) {
+        var diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) goTo(currentSlide + (diff > 0 ? 1 : -1));
+      }, { passive: true });
+    }
+
+    /* ================================================
+       AUDIOGRAM CHARTS
+    ================================================ */
+    var miniChart = null;
+    var overlayChart = null;
+    var fullChart = null;
+
+    function getAudiogramConfig(canvasId, compact) {
+      var rightData = [];
+      var leftData = [];
+      for (var i = 0; i < FREQ_LABELS.length; i++) {
+        var f = FREQ_LABELS[i];
+        rightData.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f] : null);
+        leftData.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f] : null);
+      }
+
+      return {
+        type: 'line',
+        data: {
+          labels: FREQ_LABELS.map(function(f) { return f >= 1000 ? (f / 1000) + 'k' : f + ''; }),
+          datasets: [
+            {
+              label: 'Direito',
+              data: rightData,
+              borderColor: '#ef4444',
+              backgroundColor: '#ef4444',
+              pointStyle: 'circle',
+              pointRadius: compact ? 4 : 6,
+              pointBorderWidth: 2,
+              borderWidth: 2,
+              tension: 0,
+              spanGaps: true
+            },
+            {
+              label: 'Esquerdo',
+              data: leftData,
+              borderColor: '#3b82f6',
+              backgroundColor: '#3b82f6',
+              pointStyle: 'crossRot',
+              pointRadius: compact ? 4 : 6,
+              pointBorderWidth: 2,
+              borderWidth: 2,
+              tension: 0,
+              spanGaps: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: !compact,
+              labels: { color: 'rgba(255,255,255,0.7)', usePointStyle: true, pointStyle: 'circle' }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y + ' dB'; }
+              }
+            },
+            annotation: compact ? {} : {
+              annotations: {
+                speechBanana: {
+                  type: 'box',
+                  xMin: 2, xMax: 7,
+                  yMin: 20, yMax: 50,
+                  backgroundColor: 'rgba(212,175,55,0.08)',
+                  borderColor: 'rgba(212,175,55,0.2)',
+                  borderWidth: 1,
+                  label: {
+                    display: true,
+                    content: 'Banana da Fala',
+                    color: 'rgba(212,175,55,0.5)',
+                    font: { size: 10 },
+                    position: 'start'
+                  }
+                },
+                normalLine: {
+                  type: 'line',
+                  yMin: 20, yMax: 20,
+                  borderColor: 'rgba(34,197,94,0.4)',
+                  borderWidth: 1,
+                  borderDash: [4, 4],
+                  label: {
+                    display: true,
+                    content: 'Limite normal (20 dB)',
+                    color: 'rgba(34,197,94,0.5)',
+                    font: { size: 9 },
+                    position: 'end'
+                  }
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display: !compact, text: 'Frequência (Hz)', color: 'rgba(255,255,255,0.5)', font: { size: 11 } },
+              ticks: { color: 'rgba(255,255,255,0.5)', font: { size: compact ? 9 : 11 } },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            },
+            y: {
+              title: { display: !compact, text: 'Nível Auditivo (dB)', color: 'rgba(255,255,255,0.5)', font: { size: 11 } },
+              reverse: true,
+              min: -10,
+              max: 100,
+              ticks: {
+                color: 'rgba(255,255,255,0.5)',
+                stepSize: compact ? 20 : 10,
+                font: { size: compact ? 9 : 11 }
+              },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      };
+    }
+
+    function updateMiniAudiogram() {
+      var cfg = getAudiogramConfig('mini-audiogram', true);
+      if (miniChart) {
+        miniChart.data = cfg.data;
+        miniChart.update('none');
+      } else {
+        miniChart = new Chart($('mini-audiogram').getContext('2d'), cfg);
+      }
+    }
+
+    function updateOverlayAudiogram() {
+      var cfg = getAudiogramConfig('overlay-audiogram', false);
+      if (overlayChart) {
+        overlayChart.data = cfg.data;
+        overlayChart.update('none');
+      } else {
+        overlayChart = new Chart($('overlay-audiogram').getContext('2d'), cfg);
+      }
+    }
+
+    function buildFullAudiogram() {
+      var cfg = getAudiogramConfig('full-audiogram', false);
+      if (fullChart) {
+        fullChart.data = cfg.data;
+        fullChart.update();
+      } else {
+        fullChart = new Chart($('full-audiogram').getContext('2d'), cfg);
+      }
+    }
+
+    /* ================================================
+       SCREEN 1: INTRO LOGIC
+    ================================================ */
+    $('btn-start').addEventListener('click', function() {
+      userName = ($('user-name').value || '').trim() || 'Utilizador';
+      userAge = parseInt($('user-age').value) || 0;
+      showScreen('screen-calibration');
+    });
+
+    /* ================================================
+       SCREEN 2: CALIBRATION LOGIC
+    ================================================ */
+    var calPlaying = false;
+
+    $('cal-slider').addEventListener('input', function() {
+      var val = parseInt(this.value);
+      $('cal-level').textContent = val + '%';
+      if (calPlaying) {
+        var gain = sliderToGain(val);
+        if (currentGain && audioCtx) {
+          currentGain.gain.linearRampToValueAtTime(gain, audioCtx.currentTime + 0.02);
+        }
+      }
+    });
+
+    $('btn-cal-play').addEventListener('click', function() {
+      initAudio();
+      if (calPlaying) {
+        stopTone();
+        calPlaying = false;
+        this.classList.remove('playing');
+      } else {
+        var val = parseInt($('cal-slider').value);
+        var gain = sliderToGain(val);
+        playTone(1000, gain, 0);
+        calPlaying = true;
+        this.classList.add('playing');
+      }
+    });
+
+    $('btn-cal-ready').addEventListener('click', function() {
+      stopTone();
+      calPlaying = false;
+      $('btn-cal-play').classList.remove('playing');
+
+      // Store calibration reference: the gain at the user's "comfortable" level
+      var calVal = parseInt($('cal-slider').value);
+      calibrationGain = sliderToGain(calVal);
+      if (calibrationGain < 0.0001) calibrationGain = 0.0001;
+
+      // Start test
+      testEar = 'right';
+      testFreqIndex = 0;
+      thresholds = { right: {}, left: {} };
+
+      trackAction('Teste Auditivo: início');
+      showScreen('screen-test');
+      showCurrentFrequency();
+      updateMiniAudiogram();
+    });
+
+    /* ================================================
+       SCREEN 3: TEST LOGIC
+    ================================================ */
+    function getCurrentFreq() {
+      return FREQUENCIES[testFreqIndex];
+    }
+
+    function showCurrentFrequency() {
+      var freq = getCurrentFreq();
+      $('freq-number').textContent = freq;
+      $('vol-slider').value = 50;
+      $('vol-level').textContent = '50';
+
+      // Update ear badge
+      var badge = $('ear-badge');
+      if (testEar === 'right') {
+        badge.className = 'ear-badge right';
+        badge.innerHTML = '&#128066; Ouvido Direito';
+      } else {
+        badge.className = 'ear-badge left';
+        badge.innerHTML = '&#128067; Ouvido Esquerdo';
+      }
+
+      // Update progress
+      var totalSteps = FREQUENCIES.length * 2;
+      var currentStep = (testEar === 'right' ? 0 : FREQUENCIES.length) + testFreqIndex + 1;
+      $('progress-text').textContent = currentStep + ' / ' + totalSteps;
+      $('progress-bar').style.width = (currentStep / totalSteps * 100) + '%';
+
+      // Hide transition if shown
+      $('ear-transition').classList.remove('active');
+
+      // Stop any playing tone
+      stopTone();
+      $('btn-play-tone').classList.remove('playing');
+    }
+
+    // Play/stop tone
+    $('btn-play-tone').addEventListener('click', function() {
+      initAudio();
+      if (isPlaying) {
+        stopTone();
+        this.classList.remove('playing');
+      } else {
+        var freq = getCurrentFreq();
+        var sliderVal = parseInt($('vol-slider').value);
+        var gain = sliderToGain(sliderVal);
+        var pan = testEar === 'right' ? 1 : -1;
+        playTone(freq, gain, pan);
+        this.classList.add('playing');
+      }
+    });
+
+    // Volume slider during test
+    $('vol-slider').addEventListener('input', function() {
+      var val = parseInt(this.value);
+      $('vol-level').textContent = val;
+      if (isPlaying && currentGain && audioCtx) {
+        var gain = sliderToGain(val);
+        currentGain.gain.linearRampToValueAtTime(gain, audioCtx.currentTime + 0.02);
+      }
+    });
+
+    function recordThreshold(heard) {
+      var freq = getCurrentFreq();
+      var sliderVal = parseInt($('vol-slider').value);
+
+      if (heard) {
+        // Map slider position to relative dB
+        var gain = sliderToGain(sliderVal);
+        var relDb = gainToRelativeDb(gain);
+        thresholds[testEar][freq] = relDb;
+      } else {
+        // Could not hear at max volume
+        thresholds[testEar][freq] = 100;
+      }
+
+      stopTone();
+      $('btn-play-tone').classList.remove('playing');
+      updateMiniAudiogram();
+      advanceTest();
+    }
+
+    function advanceTest() {
+      testFreqIndex++;
+      if (testFreqIndex >= FREQUENCIES.length) {
+        if (testEar === 'right') {
+          // Show transition to left ear
+          $('ear-transition').classList.add('active');
+        } else {
+          // Test complete
+          showResults();
+          return;
+        }
+      } else {
+        showCurrentFrequency();
+      }
+    }
+
+    $('btn-hear').addEventListener('click', function() { recordThreshold(true); });
+    $('btn-no-hear').addEventListener('click', function() { recordThreshold(false); });
+
+    // Start left ear after transition
+    $('btn-start-left').addEventListener('click', function() {
+      testEar = 'left';
+      testFreqIndex = 0;
+      showCurrentFrequency();
+    });
+
+    // Mini audiogram overlay
+    $('mini-audiogram-wrap').addEventListener('click', function() {
+      updateOverlayAudiogram();
+      $('audiogram-overlay').classList.add('active');
+    });
+    $('overlay-close').addEventListener('click', function() {
+      $('audiogram-overlay').classList.remove('active');
+    });
+    $('audiogram-overlay').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('active');
+    });
+
+    /* ================================================
+       SCREEN 4: RESULTS
+    ================================================ */
+    function showResults() {
+      showScreen('screen-results');
+
+      $('results-subtitle').textContent = 'Audiograma de ' + userName;
+
+      var ptaR = computePTA(thresholds.right);
+      var ptaL = computePTA(thresholds.left);
+      var classR = classify(ptaR);
+      var classL = classify(ptaL);
+
+      $('pta-right').textContent = ptaR;
+      $('pta-left').textContent = ptaL;
+      $('class-right').textContent = classR;
+      $('class-left').textContent = classL;
+
+      buildFullAudiogram();
+      buildInterpretation(ptaR, ptaL, classR, classL);
+      updateAshaMarker(ptaR, ptaL);
+
+      trackAction('Teste Auditivo: concluído', 'PTA Dir: ' + ptaR + ' dB (' + classR + ') | PTA Esq: ' + ptaL + ' dB (' + classL + ')');
+    }
+
+    function buildInterpretation(ptaR, ptaL, classR, classL) {
+      var text = '';
+      var avgPta = Math.round((ptaR + ptaL) / 2);
+
+      if (avgPta <= 15) {
+        text += 'Os teus resultados sugerem uma audição dentro dos parâmetros normais para ambos os ouvidos. ';
+        text += 'Consegues provavelmente perceber todos os sons da fala humana na "banana da fala" do audiograma. ';
+      } else if (avgPta <= 25) {
+        text += 'Os teus resultados sugerem uma perda auditiva ligeira. ';
+        text += 'Podes ter alguma dificuldade em ouvir sons suaves ou sussurros, especialmente em ambientes ruidosos. ';
+      } else if (avgPta <= 40) {
+        text += 'Os teus resultados sugerem uma perda auditiva leve. ';
+        text += 'Podes ter dificuldade em seguir conversas em grupo ou quando há ruído de fundo. Alguns sons da "banana da fala" podem já estar a escapar-te. ';
+      } else if (avgPta <= 55) {
+        text += 'Os teus resultados sugerem uma perda auditiva moderada. ';
+        text += 'Provavelmente tens dificuldade frequente em conversas normais e perdes partes significativas da fala. ';
+      } else {
+        text += 'Os teus resultados sugerem uma perda auditiva significativa. ';
+        text += 'A comunicação verbal sem amplificação é provavelmente muito difícil. ';
+      }
+
+      if (Math.abs(ptaR - ptaL) >= 15) {
+        text += 'Nota: Há uma diferença assimétrica entre os dois ouvidos, o que pode justificar uma investigação mais detalhada. ';
+      }
+
+      if (userAge && userAge >= 55) {
+        text += 'A presbiacusia (perda auditiva relacionada com a idade) é natural a partir dos 30 anos e acentua-se com o tempo. ';
+      }
+
+      text += 'Lembra-te que estes valores são relativos à calibração do teu dispositivo e têm fins puramente educativos.';
+
+      $('interpretation-text').textContent = text;
+    }
+
+    function updateAshaMarker(ptaR, ptaL) {
+      var avg = Math.round((ptaR + ptaL) / 2);
+      // Scale: 0 = 0%, 100+ = 100%
+      var pct = Math.min(100, Math.max(0, avg));
+      $('asha-marker').style.left = pct + '%';
+      $('asha-marker').setAttribute('data-label', avg + ' dB');
+    }
+
+    /* ================================================
+       PDF GENERATION
+    ================================================ */
+    $('btn-pdf').addEventListener('click', function() {
+      var jsPDF = window.jspdf.jsPDF;
+      var doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+      var pageW = 210;
+      var margin = 20;
+      var contentW = pageW - margin * 2;
+      var y = margin;
+
+      // Header
+      doc.setFontSize(18);
+      doc.setFont(undefined, 'bold');
+      doc.text('McMinsky - Teste Auditivo Educativo', pageW / 2, y, { align: 'center' });
+      y += 10;
+
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(100);
+      doc.text('Apenas para fins educativos - sem validade clinica', pageW / 2, y, { align: 'center' });
+      y += 12;
+
+      // User info
+      doc.setTextColor(0);
+      doc.setFontSize(11);
+      doc.text('Nome: ' + userName, margin, y);
+      doc.text('Idade: ' + (userAge || 'N/A'), margin + 80, y);
+      doc.text('Data: ' + new Date().toLocaleDateString('pt-PT'), margin + 130, y);
+      y += 10;
+
+      // Audiogram image
+      var canvas = $('full-audiogram');
+      try {
+        var imgData = canvas.toDataURL('image/png');
+        var imgW = contentW;
+        var imgH = imgW * 0.55;
+        doc.addImage(imgData, 'PNG', margin, y, imgW, imgH);
+        y += imgH + 8;
+      } catch(e) {
+        doc.setFontSize(10);
+        doc.text('(Audiograma nao disponivel)', margin, y);
+        y += 8;
+      }
+
+      // Thresholds table
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'bold');
+      doc.text('Limiares por Frequencia (dB relativo)', margin, y);
+      y += 6;
+
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(9);
+
+      // Table header
+      var colW = contentW / (FREQ_LABELS.length + 1);
+      doc.setFillColor(240, 240, 240);
+      doc.rect(margin, y - 3, contentW, 6, 'F');
+      doc.text('Hz', margin + 2, y);
+      for (var i = 0; i < FREQ_LABELS.length; i++) {
+        doc.text(FREQ_LABELS[i] + '', margin + colW * (i + 1), y);
+      }
+      y += 6;
+
+      // Right ear row
+      doc.setTextColor(220, 50, 50);
+      doc.text('Dir.', margin + 2, y);
+      for (var j = 0; j < FREQ_LABELS.length; j++) {
+        var val = thresholds.right[FREQ_LABELS[j]];
+        doc.text(typeof val === 'number' ? val + '' : '—', margin + colW * (j + 1), y);
+      }
+      y += 5;
+
+      // Left ear row
+      doc.setTextColor(50, 100, 220);
+      doc.text('Esq.', margin + 2, y);
+      for (var l = 0; l < FREQ_LABELS.length; l++) {
+        var valL = thresholds.left[FREQ_LABELS[l]];
+        doc.text(typeof valL === 'number' ? valL + '' : '—', margin + colW * (l + 1), y);
+      }
+      y += 10;
+
+      // PTA + Classification
+      doc.setTextColor(0);
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'bold');
+      var ptaR = computePTA(thresholds.right);
+      var ptaL = computePTA(thresholds.left);
+      doc.text('PTA Direito: ' + ptaR + ' dB (' + classify(ptaR) + ')', margin, y);
+      y += 6;
+      doc.text('PTA Esquerdo: ' + ptaL + ' dB (' + classify(ptaL) + ')', margin, y);
+      y += 12;
+
+      // Disclaimer
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      var disclaimerText = 'AVISO: Este teste e apenas educativo e nao substitui uma avaliacao audiologica profissional. Os valores apresentados sao relativos ao nivel de calibracao do dispositivo e nao correspondem a dB HL calibrados clinicamente. Se suspeita de perda auditiva, consulte um otorrinolaringologista (ORL) ou audiologista.';
+      var splitDisclaimer = doc.splitTextToSize(disclaimerText, contentW);
+      doc.text(splitDisclaimer, margin, y);
+      y += splitDisclaimer.length * 4 + 8;
+
+      // Footer
+      doc.setFontSize(9);
+      doc.setTextColor(150);
+      doc.text('mcminsky.pt - Testes Educativos Para Toda a Familia', pageW / 2, 285, { align: 'center' });
+
+      doc.save('teste-auditivo-' + userName.toLowerCase().replace(/\s+/g, '-') + '.pdf');
+      trackAction('Teste Auditivo: PDF');
+    });
+
+    /* ================================================
+       RESTART
+    ================================================ */
+    $('btn-restart').addEventListener('click', function() {
+      thresholds = { right: {}, left: {} };
+      testEar = 'right';
+      testFreqIndex = 0;
+      if (miniChart) { miniChart.destroy(); miniChart = null; }
+      if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
+      if (fullChart) { fullChart.destroy(); fullChart = null; }
+      showScreen('screen-intro');
+    });
+
+    /* ================================================
+       INIT
+    ================================================ */
+    buildAnimalChart();
+    buildCarousel();
+
+  })();
+  </script>
+</body>
+</html>
