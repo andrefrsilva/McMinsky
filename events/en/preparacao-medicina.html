@@ -54,7 +54,7 @@
     .quiz-options{display:flex;flex-direction:column;gap:10px}
     .quiz-option{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px 20px;color:var(--white);font-size:0.98rem;text-align:left;cursor:pointer;transition:all 0.2s ease;font-family:inherit;line-height:1.4}
     .quiz-option:hover{border-color:rgba(212,175,55,0.5)}
-    .quiz-option.selected{border-color:var(--gold);background:rgba(212,175,55,0.1);color:var(--gold)}
+    .quiz-option.selected{border-color:var(--gold);background:var(--gold);color:var(--black);font-weight:600}
     .quiz-multi-continue{display:block;margin:var(--space-md) 0 0 auto;padding:12px 32px;background:var(--gold);color:var(--black);border:none;border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:inherit}
     .quiz-multi-continue:hover{opacity:0.9}
 
@@ -142,11 +142,11 @@
     </div>
   </header>
 
-  <div class="event-page">
-    <div class="event-hero">
-      <span class="event-hero-category">Intensive Course</span>
-      <h1 class="event-hero-title">Want to Get Into Medicine?</h1>
-      <p class="event-hero-meta">Intensive National Exam Preparation</p>
+  <article class="article-page">
+    <div class="article-hero">
+      <span class="article-hero-category">Intensive Course</span>
+      <h1 class="article-hero-title">Want to Get Into Medicine?</h1>
+      <p class="article-hero-meta">Intensive National Exam Preparation</p>
     </div>
 
     <div class="course-content" style="max-width:700px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)">
@@ -395,6 +395,12 @@
           </div>
         </div>
 
+        <!-- BONUS: HELPS FOR MEDICINE ITSELF -->
+        <div class="course-section">
+          <h2>And more: you are already preparing for the course</h2>
+          <p>The material you will master for the exams — cell biology, genetics, biochemistry, thermodynamics, kinetics, calculus — is exactly the foundation of the Medicine degree. The examples, exercises and explanations we use are not abstract: they are oriented towards the clinical and scientific reality you will encounter in your first year. You are not just preparing for exams. You are building the foundation for the next 6 years.</p>
+        </div>
+
         <!-- WHAT IT'S NOT -->
         <div class="course-section">
           <h2>This is NOT...</h2>
@@ -490,7 +496,7 @@
       </div><!-- /course-reveal -->
 
     </div><!-- /course-content -->
-  </div><!-- /event-page -->
+  </article>
 
   <footer class="footer">
     <div class="footer-grid">
@@ -766,15 +772,21 @@
         var emailBody = 'Name: ' + name + '\nEmail: ' + email;
         if (phone) emailBody += '\nPhone: ' + phone;
         emailBody += '\n\nCourse: Intensive National Exam Preparation';
-        if (subjects) emailBody += '\nSubjects: ' + subjects;
+        emailBody += '\nTarget course: ' + (answers.course || 'N/A');
+        if (subjects) emailBody += '\nExam subjects: ' + subjects;
         if (grade) emailBody += '\nCurrent grade: ' + grade;
+        emailBody += '\nStudy hours/week: ' + (answers.hours || 'N/A');
+        emailBody += '\nCurrent support: ' + (answers.support || 'N/A');
+        emailBody += '\nStudy preference: ' + (answers.preference || 'N/A');
+        emailBody += '\nIn-person Lumiar: ' + (answers.presencial || 'N/A');
+        emailBody += '\nDecision by: ' + (answers.decision || 'N/A');
         if (message) emailBody += '\n\nMessage: ' + message;
         emailBody += '\n\n---\nSent via the course form on the McMinsky website';
 
         var subject = 'Med Prep Enrolment: ' + name;
         var mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(emailBody);
 
-        trackAction('Med Prep: enrolment', 'Name: ' + name + '\nEmail: ' + email + '\nPhone: ' + (phone || 'N/A') + '\nSubjects: ' + subjects + '\nGrade: ' + grade + '\nMessage: ' + (message || 'N/A'));
+        trackAction('Med Prep: enrolment', 'Name: ' + name + '\nEmail: ' + email + '\nTel: ' + (phone || 'N/A') + '\nCourse: ' + (answers.course || 'N/A') + '\nSubj: ' + subjects + '\nGrade: ' + grade + '\nHours: ' + (answers.hours || 'N/A') + '\nSupport: ' + (answers.support || 'N/A') + '\nPref: ' + (answers.preference || 'N/A') + '\nIn-person: ' + (answers.presencial || 'N/A') + '\nDecision: ' + (answers.decision || 'N/A') + '\nMsg: ' + (message || 'N/A'));
 
         window.location.href = mailtoLink;
       });
