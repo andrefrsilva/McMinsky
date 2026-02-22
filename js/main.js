@@ -1080,6 +1080,74 @@ Enviado através do formulário do evento no website McMinsky`;
   }
 
   // ========================================
+  // ARTICLES LISTING PAGE (from manifest.json)
+  // ========================================
+  const articlesListing = document.querySelector('#articles-listing');
+
+  if (articlesListing) {
+    const listingManifestPath = 'manifest.json';
+    const listingHtmlPath = isEnglish ? 'en/' : '';
+
+    fetch(listingManifestPath)
+      .then(function(response) {
+        if (!response.ok) throw new Error('Failed to load articles manifest');
+        return response.json();
+      })
+      .then(function(slugs) {
+        var fetchPromises = slugs.map(function(slug) {
+          return fetch(listingHtmlPath + slug + '.html')
+            .then(function(response) {
+              if (!response.ok) throw new Error('Failed to load article: ' + slug);
+              return response.text();
+            })
+            .then(function(html) {
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(html, 'text/html');
+
+              var title = doc.querySelector('title') ? doc.querySelector('title').textContent.replace(' | McMinsky', '') : slug;
+              var description = doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').getAttribute('content') : '';
+              var category = doc.querySelector('meta[name="category"]') ? doc.querySelector('meta[name="category"]').getAttribute('content') : '';
+              var readingTime = doc.querySelector('meta[name="reading-time"]') ? doc.querySelector('meta[name="reading-time"]').getAttribute('content') : '5';
+              var image = doc.querySelector('meta[property="og:image"]') ? doc.querySelector('meta[property="og:image"]').getAttribute('content') : '';
+
+              return { slug: slug, title: title, description: description, category: category, readingTime: readingTime, image: image };
+            });
+        });
+
+        return Promise.all(fetchPromises);
+      })
+      .then(function(articles) {
+        articles.forEach(function(article) {
+          var readTimeText = isEnglish ? article.readingTime + ' min read' : article.readingTime + ' min leitura';
+          var href = (isEnglish ? 'en/' : '') + article.slug + '.html';
+
+          var card = document.createElement('a');
+          card.href = href;
+          card.className = 'article-card';
+
+          card.innerHTML =
+            '<div class="article-image">' +
+              '<img src="' + article.image + '" alt="' + article.title + '" loading="lazy">' +
+            '</div>' +
+            '<div class="article-body">' +
+              '<span class="article-category">' + article.category + '</span>' +
+              '<h3 class="article-title">' + article.title + '</h3>' +
+              '<p class="article-excerpt">' + article.description + '</p>' +
+              '<div class="article-meta">' +
+                '<span>' + article.category + '</span>' +
+                '<span>' + readTimeText + '</span>' +
+              '</div>' +
+            '</div>';
+
+          articlesListing.appendChild(card);
+        });
+      })
+      .catch(function(error) {
+        console.error('Error loading articles listing:', error);
+      });
+  }
+
+  // ========================================
   // PAGES/TOOLS LOADER (from manifest.json)
   // ========================================
   const pagesContainer = document.querySelector('#pages-container');

@@ -533,6 +533,8 @@ ul, ol {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   animation: bounce 2s infinite;
+  z-index: 10;
+  text-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7), 0 0 32px rgba(0,0,0,0.5);
 }
 
 .hero-scroll-line {
@@ -1246,6 +1248,21 @@ ul, ol {
 
 .footer-contact a {
   color: var(--gold);
+}
+
+.footer-contact .footer-maps-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: var(--space-sm);
+  font-size: 0.8rem;
+  color: var(--gold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer-contact .footer-maps-btn:hover {
+  color: var(--white);
 }
 
 .footer-bottom {
