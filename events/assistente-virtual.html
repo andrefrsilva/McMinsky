@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Programa de reskilling de 8 semanas: aprenda a usar Inteligência Artificial para se tornar Assistente Virtual. Presencial no Lumiar, sem precisar de saber programar.">
+  <meta name="keywords" content="assistente virtual, inteligência artificial, reskilling, curso presencial, McMinsky, Lumiar">
+  <meta name="author" content="McMinsky">
+  <meta name="category" content="Programa de Reskilling">
+
+  <!-- Event metadata for listing -->
+  <meta name="event-date" content="2026-04-27">
+  <meta name="event-price" content="Desde 176&euro;">
+  <meta name="event-spots-text" content="Vagas limitadas">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Mude de Vida com IA em 8 Semanas | McMinsky">
+  <meta property="og:description" content="Isto não é mais um curso genérico de IA. É um programa de 8 semanas com resultados reais. Presencial no Lumiar.">
+  <meta property="og:image" content="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyZHMxeW1pbzZndnhpcTJlbWt4aW9zOWdmM2dodXhuYzgydTlyZGkxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0dy1zzyjbYTQQM/giphy.gif">
+  <meta property="og:url" content="https://mcminsky.pt/events/assistente-virtual.html">
+  <meta property="og:site_name" content="McMinsky">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mude de Vida com IA em 8 Semanas | McMinsky">
+  <meta name="twitter:description" content="Não é mais um curso genérico. Resultados reais em 8 semanas.">
+  <meta name="twitter:image" content="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyZHMxeW1pbzZndnhpcTJlbWt4aW9zOWdmM2dodXhuYzgydTlyZGkxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0dy1zzyjbYTQQM/giphy.gif">
+
+  <title>Mude de Vida com Inteligência Artificial em 8 Semanas | McMinsky</title>
+
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .hero-gif{width:100%;max-width:420px;display:block;margin:0 auto var(--space-lg);border-radius:16px}
+    .intro-text{font-size:1.1rem;line-height:1.8;color:var(--gray-light);margin-bottom:var(--space-md)}
+    .intro-text strong{color:var(--white)}
+    .intro-highlight{font-size:1.2rem;text-align:center;color:var(--white);font-weight:700;margin:var(--space-lg) 0 var(--space-sm)}
+    .urgency-bar{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:12px;padding:16px 20px;text-align:center;margin:var(--space-md) 0 var(--space-xl);color:var(--gray-light)}
+    .urgency-bar strong{color:var(--gold)}
+
+    .pain-points{display:flex;flex-direction:column;gap:10px;margin:var(--space-md) 0}
+    .pain-item{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--black-lighter);border-radius:10px;border-left:3px solid var(--gold)}
+    .pain-icon{font-size:1.3rem;flex-shrink:0}
+    .pain-label{color:var(--white);font-size:1rem;line-height:1.5}
+
+    #quiz-section h2{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.6rem);margin-bottom:var(--space-lg);text-align:center}
+    .quiz-progress{height:4px;background:var(--black-lighter);border-radius:2px;margin-bottom:var(--space-lg);position:relative}
+    .quiz-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0}
+    .quiz-progress-text{position:absolute;right:0;top:-22px;font-size:0.8rem;color:var(--gray)}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-question{color:var(--white);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    .quiz-hint{color:var(--gray);font-size:0.88rem;margin-bottom:var(--space-md)}
+    .quiz-options{display:flex;flex-direction:column;gap:10px}
+    .quiz-option{position:relative;z-index:1;background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px 20px;color:var(--white);font-size:0.98rem;text-align:left;cursor:pointer;transition:all 0.2s ease;font-family:inherit;line-height:1.4;overflow:hidden}
+    .quiz-option::before{display:none!important}
+    .quiz-option:hover{border-color:rgba(212,175,55,0.5);transform:none;box-shadow:none}
+    .quiz-option.selected{border-color:var(--gold)!important;background:var(--gold)!important;color:#0a0a0a!important;font-weight:700}
+    .quiz-option.selected::before{display:none!important;opacity:0!important}
+
+    #diagnosis-panel{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border-left:4px solid var(--gold);animation:qFadeIn 0.5s ease}
+    .diagnosis-card{background:rgba(212,175,55,0.08);border-radius:8px;padding:16px 20px;margin:var(--space-md) 0}
+    .diagnosis-card p{margin:0;line-height:1.7}
+    #diagnosis-panel>p{color:var(--gray-light);line-height:1.7;margin-top:var(--space-sm)}
+    #diagnosis-panel strong{color:var(--white)}
+
+    #exclusion-panel{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border-left:4px solid var(--gray-dark);animation:qFadeIn 0.5s ease}
+    #exclusion-panel p{color:var(--gray-light);line-height:1.7;margin-top:var(--space-sm)}
+    #exclusion-panel strong{color:var(--white)}
+
+    #course-reveal{animation:qFadeIn 0.6s ease}
+    .course-section{margin-top:var(--space-xl)}
+    .course-section h2{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:var(--space-md)}
+    .course-section>p{color:var(--gray-light);line-height:1.7}
+
+    .check-list,.not-list{list-style:none;padding:0;margin:var(--space-md) 0}
+    .check-list li,.not-list li{padding:10px 0;color:var(--white);font-size:0.98rem;display:flex;align-items:flex-start;gap:12px;line-height:1.5}
+    .check-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+    .not-list li::before{content:'✕';color:#c0392b;font-weight:700;flex-shrink:0}
+
+    .feature-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:var(--space-md)}
+    @media(min-width:600px){.feature-grid{grid-template-columns:1fr 1fr}}
+    .feature-item{display:flex;gap:14px;padding:16px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
+    .feature-icon{font-size:1.6rem;flex-shrink:0;width:36px;text-align:center;line-height:1.6}
+    .feature-text h4{color:var(--white);margin:0 0 4px;font-size:0.92rem}
+    .feature-text p{color:var(--gray-light);margin:0;font-size:0.84rem;line-height:1.5}
+
+    .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:var(--space-lg)}
+    @media(min-width:700px){.pricing-grid{grid-template-columns:repeat(3,1fr)}}
+    .pricing-card{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px 16px;text-align:center;position:relative;transition:border-color 0.2s}
+    .pricing-card.featured{border-color:var(--gold)}
+    .pricing-card.featured::before{content:'Mais popular';position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);padding:4px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;white-space:nowrap}
+    .pricing-card h3{color:var(--white);font-family:var(--font-display);margin:0 0 10px;font-size:1rem}
+    .pricing-price{font-size:2rem;font-weight:700;color:var(--gold);font-family:var(--font-display);line-height:1}
+    .pricing-unit{font-size:0.82rem;color:var(--gray);margin-top:6px}
+    .pricing-savings{font-size:0.85rem;color:var(--gold);margin-top:8px;font-weight:600}
+    .pricing-hourly{font-size:0.78rem;color:var(--gray);margin-top:4px}
+    .pricing-note{font-size:0.82rem;color:var(--gray);margin-top:var(--space-lg);line-height:1.6;text-align:center}
+
+    .group-cta{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:12px;padding:20px 24px;margin-top:var(--space-lg);text-align:center}
+    .group-cta p{color:var(--gray-light);line-height:1.7;margin:0}
+    .group-cta strong{color:var(--white)}
+    .group-cta .gold{color:var(--gold)}
+
+    .form-section{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+    .form-section h2{color:var(--gold);font-family:var(--font-display);font-size:1.5rem;margin-bottom:var(--space-sm);text-align:center}
+    .form-section>p{text-align:center;color:var(--gray-light);margin-bottom:var(--space-md)}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#insights" class="nav-link">Insights</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-page">
+    <div class="article-hero">
+      <span class="article-hero-category">Programa de Reskilling</span>
+      <h1 class="article-hero-title">Mude de Vida com Intelig&ecirc;ncia Artificial &mdash; Resultados Reais em 8 Semanas</h1>
+      <p class="article-hero-meta">Isto n&atilde;o &eacute; mais um curso gen&eacute;rico de IA. &Eacute; um programa que transforma a sua rotina.</p>
+    </div>
+
+    <div class="course-content" style="max-width:700px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)">
+
+      <!-- ==================== INTRO ==================== -->
+      <div id="intro-section">
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyZHMxeW1pbzZndnhpcTJlbWt4aW9zOWdmM2dodXhuYzgydTlyZGkxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0dy1zzyjbYTQQM/giphy.gif" alt="" class="hero-gif">
+
+        <p class="intro-text">H&aacute; pessoas que trabalham o dia inteiro de p&eacute;, a carregar, a cuidar, a limpar &mdash; e quando chegam a casa j&aacute; n&atilde;o t&ecirc;m corpo para mais nada. <strong>Tu sabes do que estamos a falar.</strong></p>
+
+        <p class="intro-text">E se te diss&eacute;ssemos que h&aacute; uma forma de pores a <strong>Intelig&ecirc;ncia Artificial a trabalhar por ti</strong> &mdash; a escrever emails, a organizar tabelas, a criar publica&ccedil;&otilde;es &mdash; enquanto tu s&oacute; tens de lhe dar ordens em portugu&ecirc;s?</p>
+
+        <div class="pain-points">
+          <div class="pain-item">
+            <span class="pain-icon">&#128170;</span>
+            <span class="pain-label">N&atilde;o precisas de saber programar</span>
+          </div>
+          <div class="pain-item">
+            <span class="pain-icon">&#128172;</span>
+            <span class="pain-label">S&oacute; tens de saber falar com a IA &mdash; em portugu&ecirc;s</span>
+          </div>
+          <div class="pain-item">
+            <span class="pain-icon">&#128187;</span>
+            <span class="pain-label">Em 8 semanas, ficas pronta para trabalhar a partir de casa</span>
+          </div>
+        </div>
+
+        <p class="intro-highlight">Vais passar a ser a chefe dos rob&ocirc;s. E ningu&eacute;m vai perceber como &eacute; que fazes tudo t&atilde;o r&aacute;pido.</p>
+
+        <div class="urgency-bar">
+          O programa come&ccedil;a a <strong>27 de Abril</strong>. N&atilde;o &eacute; para toda a gente.
+        </div>
+      </div>
+
+      <!-- ==================== QUIZ ==================== -->
+      <div id="quiz-section">
+        <h2>Primeiro, vamos perceber se isto &eacute; para ti.</h2>
+
+        <div class="quiz-progress">
+          <div class="quiz-progress-fill"></div>
+          <span class="quiz-progress-text">1 / 6</span>
+        </div>
+
+        <!-- Q1: Situação profissional -->
+        <div class="quiz-step active" data-key="work" data-step="0">
+          <h3 class="quiz-question">O teu trabalho actual &eacute; fisicamente exigente?</h3>
+          <p class="quiz-hint">S&ecirc; honesta. &Eacute; isto que nos ajuda a perceber se o programa faz sentido para ti.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="very-physical">Sim, muito &mdash; acabo os dias rebentada</button>
+            <button class="quiz-option" data-value="somewhat-physical">Sim, cansa, mas aguento</button>
+            <button class="quiz-option" data-value="desk">N&atilde;o, trabalho sentada ao computador</button>
+            <button class="quiz-option" data-value="not-working">N&atilde;o estou a trabalhar neste momento</button>
+          </div>
+        </div>
+
+        <!-- Q2: Relação com tecnologia -->
+        <div class="quiz-step" data-key="tech" data-step="1">
+          <h3 class="quiz-question">Como te d&aacute;s com computadores?</h3>
+          <p class="quiz-hint">N&atilde;o h&aacute; respostas erradas. Queremos perceber onde est&aacute;s.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="barely">Mal sei ligar aquilo, mas quero aprender</button>
+            <button class="quiz-option" data-value="basics">Desenrasco-me no b&aacute;sico &mdash; email, WhatsApp, Facebook</button>
+            <button class="quiz-option" data-value="comfortable">Sinto-me &agrave; vontade com tecnologia</button>
+            <button class="quiz-option" data-value="it-pro">Trabalho em inform&aacute;tica / programa&ccedil;&atilde;o</button>
+          </div>
+        </div>
+
+        <!-- Q3: Motivação -->
+        <div class="quiz-step" data-key="motivation" data-step="2">
+          <h3 class="quiz-question">Porque queres aprender a trabalhar com computadores e IA?</h3>
+          <p class="quiz-hint">A tua motiva&ccedil;&atilde;o &eacute; o que vai fazer a diferen&ccedil;a.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="body-limit">O meu corpo n&atilde;o aguenta mais o trabalho que fa&ccedil;o</button>
+            <button class="quiz-option" data-value="remote-income">Quero ganhar dinheiro a partir de casa</button>
+            <button class="quiz-option" data-value="career-change">Quero mudar de &aacute;rea profissional</button>
+            <button class="quiz-option" data-value="curiosity">S&oacute; curiosidade, n&atilde;o tenho urg&ecirc;ncia nenhuma</button>
+          </div>
+        </div>
+
+        <!-- Q4: Disponibilidade presencial -->
+        <div class="quiz-step" data-key="availability" data-step="3">
+          <h3 class="quiz-question">Consegues vir ao Lumiar (Lisboa) 2 horas por semana?</h3>
+          <p class="quiz-hint">O programa &eacute; presencial. &Eacute; isso que faz a diferen&ccedil;a.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="yes">Sim, consigo</button>
+            <button class="quiz-option" data-value="no">N&atilde;o, n&atilde;o consigo</button>
+            <button class="quiz-option" data-value="depends">Depende do hor&aacute;rio</button>
+          </div>
+        </div>
+
+        <!-- Q5: Companhia -->
+        <div class="quiz-step" data-key="companions" data-step="4">
+          <h3 class="quiz-question">Tens amigas ou colegas que possam estar na mesma situa&ccedil;&atilde;o que tu?</h3>
+          <p class="quiz-hint">Aprender em grupo &eacute; mais f&aacute;cil &mdash; e pode sair muito mais em conta.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="many">Sim, v&aacute;rias pessoas</button>
+            <button class="quiz-option" data-value="two-plus">Sim, pelo menos duas</button>
+            <button class="quiz-option" data-value="one">Sim, uma pessoa</button>
+            <button class="quiz-option" data-value="alone">N&atilde;o, seria s&oacute; eu</button>
+          </div>
+        </div>
+
+        <!-- Q6: Decisão -->
+        <div class="quiz-step" data-key="decision" data-step="5">
+          <h3 class="quiz-question">Se isto fizer sentido para ti, quem toma a decis&atilde;o?</h3>
+          <p class="quiz-hint">Queremos garantir que te damos a informa&ccedil;&atilde;o certa.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="self">Eu pr&oacute;pria</button>
+            <button class="quiz-option" data-value="family">Preciso de falar com a fam&iacute;lia</button>
+            <button class="quiz-option" data-value="both">Eu, mas quero a opini&atilde;o de algu&eacute;m pr&oacute;ximo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DIAGNOSIS (hidden) ==================== -->
+      <div id="diagnosis-panel" style="display:none"></div>
+
+      <!-- ==================== EXCLUSION (hidden) ==================== -->
+      <div id="exclusion-panel" style="display:none"></div>
+
+      <!-- ==================== COURSE CONTENT (hidden until quiz passes) ==================== -->
+      <div id="course-reveal" style="display:none">
+
+        <!-- URGENCY REMINDER -->
+        <div class="urgency-bar" style="margin-top:var(--space-xl)">
+          <strong>27 de Abril &rarr; Em 8 semanas, podes estar a ganhar dinheiro a partir de casa.</strong>
+        </div>
+
+        <!-- FOR WHOM -->
+        <div class="course-section">
+          <h2>&Eacute; para quem...</h2>
+          <ul class="check-list">
+            <li>Tem um trabalho fisicamente exigente e sente que o corpo j&aacute; n&atilde;o aguenta como antes</li>
+            <li>Quer aprender a usar Intelig&ecirc;ncia Artificial para trabalhar a partir de casa</li>
+            <li>N&atilde;o precisa de saber programar &mdash; s&oacute; precisa de querer aprender</li>
+            <li>Pode dedicar 2 horas por semana presencialmente no Lumiar</li>
+            <li>Est&aacute; disposta a trabalhar a s&eacute;rio durante as sess&otilde;es e a seguir o m&eacute;todo</li>
+          </ul>
+        </div>
+
+        <!-- WHAT IT IS -->
+        <div class="course-section">
+          <h2>O que vais aprender</h2>
+          <p>Cada elemento deste programa foi pensado para ti. Zero complica&ccedil;&otilde;es, m&aacute;ximo resultado.</p>
+
+          <div class="feature-grid">
+            <div class="feature-item">
+              <span class="feature-icon">&#129302;</span>
+              <div class="feature-text">
+                <h4>Dar Ordens &agrave; IA em Portugu&ecirc;s</h4>
+                <p>Aprendes a falar com ferramentas como o ChatGPT para que elas fa&ccedil;am o trabalho pesado por ti. Escrever emails, organizar dados, criar textos &mdash; tudo em portugu&ecirc;s.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128196;</span>
+              <div class="feature-text">
+                <h4>Excel e Tabelas Sem Dor de Cabe&ccedil;a</h4>
+                <p>A IA cria as f&oacute;rmulas. Tu s&oacute; tens de copiar e colar. Vais saber organizar qualquer tabela que um cliente te pe&ccedil;a.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128231;</span>
+              <div class="feature-text">
+                <h4>Emails e Comunica&ccedil;&atilde;o Profissional</h4>
+                <p>Aprendes a pedir &agrave; IA que escreva emails profissionais, respostas a clientes, e mensagens que parecem ter sido escritas por algu&eacute;m com anos de experi&ecirc;ncia.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128241;</span>
+              <div class="feature-text">
+                <h4>Redes Sociais e Publica&ccedil;&otilde;es</h4>
+                <p>A IA cria os textos e as legendas. Tu aprendes a rever e a publicar. &Eacute; o suficiente para gerir as redes de pequenos neg&oacute;cios.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128188;</span>
+              <div class="feature-text">
+                <h4>Perfil Profissional Pronto a Usar</h4>
+                <p>Sais do programa com o teu perfil criado em plataformas de trabalho freelance. A IA ajuda-te a escrever a descri&ccedil;&atilde;o, a definir pre&ccedil;os, e a responder a clientes.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#127891;</span>
+              <div class="feature-text">
+                <h4>Simula&ccedil;&otilde;es com Clientes Reais</h4>
+                <p>Praticas situa&ccedil;&otilde;es reais: receber um pedido, usar a IA para o resolver, entregar ao cliente. Quando acabares, j&aacute; fizeste isto dezenas de vezes.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#9749;</span>
+              <div class="feature-text">
+                <h4>Ambiente Premium e Acolhedor</h4>
+                <p>Espa&ccedil;o com lanche inclu&iacute;do, ambiente tranquilo, e um grupo pequeno onde toda a gente est&aacute; na mesma situa&ccedil;&atilde;o. Ir aprender passa a ser o melhor momento da semana.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128101;</span>
+              <div class="feature-text">
+                <h4>Grupo Pequeno &mdash; Ningu&eacute;m Fica Para Tr&aacute;s</h4>
+                <p>Aprendes ao teu ritmo, com pessoas que percebem o que est&aacute;s a passar. Sem press&atilde;o, sem julgamento, com toda a orienta&ccedil;&atilde;o de que precisas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- THE SHORTCUT -->
+        <div class="course-section">
+          <h2>O Atalho: Super Poderes que Ningu&eacute;m Te Ensina</h2>
+          <p>Isto n&atilde;o &eacute; aprender a usar o ChatGPT para fazer perguntas b&aacute;sicas. Toda a gente faz isso. O que vais aprender aqui &eacute; <strong>o que as pessoas espertas j&aacute; est&atilde;o a fazer sem dizer a ningu&eacute;m</strong> &mdash; como usar a IA para fazer em 10 minutos o que aos outros demora horas.</p>
+          <p style="margin-top:var(--space-sm)">Trabalhos de faculdade? A IA estrutura, pesquisa e redige &mdash; tu rev&ecirc;s e entregas. Relat&oacute;rios de emprego? Tabelas que demorariam um dia ficam prontas em minutos. Emails profissionais? Escreves como se tivesses um MBA. <strong>E ningu&eacute;m precisa de saber como &eacute; que tu fazes tudo t&atilde;o bem e t&atilde;o depressa.</strong></p>
+          <p style="margin-top:var(--space-sm)">&Eacute; quase batota. S&oacute; que n&atilde;o &eacute; &mdash; &eacute; s&oacute; saber usar as ferramentas certas. E n&oacute;s vamos ensinar-te exactamente como.</p>
+        </div>
+
+        <!-- OUTCOMES -->
+        <div class="course-section">
+          <h2>Depois das 8 semanas, vais conseguir...</h2>
+          <ul class="check-list">
+            <li>Fazer em 10 minutos o que outros demoram horas &mdash; sem ningu&eacute;m perceber como</li>
+            <li>Escrever emails, relat&oacute;rios e textos com qualidade profissional (a IA faz o rascunho, tu ajustas)</li>
+            <li>Organizar tabelas e dados no Excel sem decorar uma &uacute;nica f&oacute;rmula</li>
+            <li>Criar publica&ccedil;&otilde;es para redes sociais de qualquer neg&oacute;cio</li>
+            <li>Responder a clientes e gerir tarefas como uma assistente virtual profissional</li>
+            <li>Ter o teu perfil em plataformas de trabalho freelance, pronto para aceitar clientes</li>
+            <li>Usar estas compet&ecirc;ncias para brilhar em trabalhos de faculdade, no emprego, ou por conta pr&oacute;pria</li>
+            <li>Deixar de depender do corpo para ganhar dinheiro &mdash; e come&ccedil;ar a usar a cabe&ccedil;a (com a ajuda da IA)</li>
+          </ul>
+        </div>
+
+        <!-- WHAT IT'S NOT -->
+        <div class="course-section">
+          <h2>Isto N&Atilde;O &eacute;...</h2>
+          <ul class="not-list">
+            <li><strong>Um curso de inform&aacute;tica tradicional.</strong> Zero teoria, zero PowerPoints infinitos, zero exames. Se quisesses isso, ias para a faculdade.</li>
+            <li><strong>Mais um &ldquo;curso de IA&rdquo; gen&eacute;rico.</strong> N&atilde;o vais ver v&iacute;deos gravados, nem ficar a saber &ldquo;o que &eacute; a IA&rdquo; sem nunca a usar. Aqui, usas a IA a s&eacute;rio desde o primeiro dia.</li>
+            <li><strong>Um curso para quem j&aacute; sabe muito de tecnologia.</strong> Isto foi desenhado para quem tecla devagar e se atrapalha com menus &mdash; e n&atilde;o tem vergonha nenhuma disso.</li>
+            <li><strong>Dinheiro f&aacute;cil sem esfor&ccedil;o.</strong> Vais ter de aparecer, trabalhar durante as 2 horas, e seguir o m&eacute;todo. &Eacute; um compromisso s&eacute;rio &mdash; mas com 2 horas por semana.</li>
+            <li><strong>Uma promessa de emprego.</strong> Damos-te as ferramentas, o perfil, e a pr&aacute;tica. O resto depende de ti &mdash; e do esfor&ccedil;o que meteres.</li>
+            <li><strong>Um bootcamp gen&eacute;rico.</strong> &Eacute; um programa de reskilling de elite, adaptado &agrave; tua velocidade. N&atilde;o te tratamos como se fosses est&uacute;pida. Tratamos-te como uma gestora cujo tempo &eacute; demasiado valioso para perder.</li>
+          </ul>
+        </div>
+
+        <!-- CREDENTIALS -->
+        <div class="course-section">
+          <h2>Quem d&aacute; o programa</h2>
+          <p>Desenhado e orientado pelos fundadores do Centro de Excel&ecirc;ncia do Lumiar &mdash; profissionais com forma&ccedil;&atilde;o em <strong>Medicina</strong> e <strong>Neuroci&ecirc;ncia da Aprendizagem</strong>. O mesmo rigor cient&iacute;fico que aplicamos &agrave; prepara&ccedil;&atilde;o de mais de 1.000 alunos, agora adaptado a reskilling profissional com Intelig&ecirc;ncia Artificial.</p>
+          <p style="color:var(--gray);font-size:0.9rem;margin-top:var(--space-sm)">N&atilde;o &eacute; um formador qualquer. &Eacute; um m&eacute;dico especialista em como o c&eacute;rebro aprende, com um m&eacute;todo constru&iacute;do para pessoas que acham que n&atilde;o conseguem &mdash; e que se surpreendem todas as semanas.</p>
+        </div>
+
+        <!-- PRICING -->
+        <div class="course-section">
+          <h2>Investimento</h2>
+          <p>8 semanas &middot; 1 sess&atilde;o por semana de 2 horas &middot; Presencial no Lumiar</p>
+          <p style="margin-top:var(--space-sm)"><strong style="color:var(--gold)">Quanto mais pessoas trouxeres, menos cada uma paga.</strong> Junta amigas, colegas, quem estiver na mesma situa&ccedil;&atilde;o &mdash; toda a gente ganha.</p>
+
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <h3>1 Pessoa</h3>
+              <div class="pricing-price">480&euro;</div>
+              <p class="pricing-unit">por pessoa</p>
+              <p class="pricing-hourly">30&euro; / hora</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>2 Pessoas</h3>
+              <div class="pricing-price">360&euro;</div>
+              <p class="pricing-unit">por pessoa</p>
+              <p class="pricing-savings">Poupam 120&euro; cada</p>
+              <p class="pricing-hourly">22,50&euro; / hora</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>3 Pessoas</h3>
+              <div class="pricing-price">296&euro;</div>
+              <p class="pricing-unit">por pessoa</p>
+              <p class="pricing-savings">Poupam 184&euro; cada</p>
+              <p class="pricing-hourly">18,50&euro; / hora</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>4 Pessoas</h3>
+              <div class="pricing-price">240&euro;</div>
+              <p class="pricing-unit">por pessoa</p>
+              <p class="pricing-savings">Poupam 240&euro; cada</p>
+              <p class="pricing-hourly">15&euro; / hora</p>
+            </div>
+
+            <div class="pricing-card featured">
+              <h3>5 Pessoas</h3>
+              <div class="pricing-price">208&euro;</div>
+              <p class="pricing-unit">por pessoa</p>
+              <p class="pricing-savings">Poupam 272&euro; cada</p>
+              <p class="pricing-hourly">13&euro; / hora</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>6 Pessoas</h3>
+              <div class="pricing-price">176&euro;</div>
+              <p class="pricing-unit">por pessoa</p>
+              <p class="pricing-savings">Poupam 304&euro; cada</p>
+              <p class="pricing-hourly">11&euro; / hora</p>
+            </div>
+          </div>
+
+          <div class="group-cta">
+            <p><strong>Faz as contas:</strong> como assistente virtual a cobrar 15&euro; por hora, <span class="gold">pagas o programa com menos de duas semanas de trabalho</span> &mdash; mesmo sozinha. Com um grupo de 5 ou 6 pessoas, pagas em poucos dias.</p>
+            <p style="margin-top:var(--space-sm)"><strong>Partilha esta p&aacute;gina</strong> com quem possa estar na mesma situa&ccedil;&atilde;o. Quanto maior o grupo, menos cada uma paga.</p>
+          </div>
+
+          <p class="pricing-note">A inscri&ccedil;&atilde;o &eacute; validada por pagamento &mdash; n&atilde;o por reserva. O grupo forma-se at&eacute; ao in&iacute;cio do programa.</p>
+        </div>
+
+        <!-- FINAL URGENCY -->
+        <div class="urgency-bar" style="margin-top:var(--space-xl)">
+          <strong>O programa come&ccedil;a a 27 de Abril.</strong><br>
+          Se est&aacute;s a ler isto e a pensar &ldquo;vou ver depois&rdquo; &mdash; o depois &eacute; quando o corpo te obrigar a parar. E o corpo n&atilde;o espera.
+        </div>
+
+        <!-- CONTACT FORM -->
+        <div class="form-section" id="course-form-section">
+          <h2>Inscri&ccedil;&atilde;o / Contacto</h2>
+          <p>Preenche o formul&aacute;rio e entramos em contacto contigo em menos de 24 horas.</p>
+
+          <form id="course-contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="course-name" class="form-label">Nome</label>
+              <input type="text" id="course-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="course-email" class="form-label">Email</label>
+              <input type="email" id="course-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="course-phone" class="form-label">Telefone</label>
+              <input type="tel" id="course-phone" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="course-message" class="form-label">Mensagem <span style="color:var(--gray)">(opcional)</span></label>
+              <textarea id="course-message" class="form-textarea" placeholder="Ex: Gostava de saber os hor&aacute;rios. Tenho uma amiga que tamb&eacute;m tem interesse."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">Quero Saber Mais</button>
+            <p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">O seu cliente de email ser&aacute; aberto com a mensagem pr&eacute;-preenchida.</p>
+          </form>
+        </div>
+
+      </div><!-- /course-reveal -->
+
+    </div><!-- /course-content -->
+  </article>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p>Centro de Excel&ecirc;ncia para mentes ambiciosas.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Navega&ccedil;&atilde;o</h4>
+        <ul>
+          <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#programs">Programas</a></li>
+          <li><a href="/#insights">Insights</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Localiza&ccedil;&atilde;o</h4>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisboa</p>
+        <a href="https://share.google/8wcEaRj5rfmvmwiyv" class="footer-maps-btn" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+          Ver no Google Maps
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condi&ccedil;&otilde;es</a>
+        <a href="../legal/privacy.html">Pol&iacute;tica de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclama&ccedil;&otilde;es</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  (function() {
+    // ========================================
+    // TRACKING
+    // ========================================
+    function trackAction(action, body) {
+      try {
+        var uid = '';
+        try { uid = localStorage.getItem('mcminsky_uid') || ''; } catch(e) {}
+        var fd = new FormData();
+        fd.append('entry.1191618802', action);
+        fd.append('entry.97481516', uid);
+        fd.append('entry.1381161689', body || '');
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse', {
+          method: 'POST', mode: 'no-cors', body: fd
+        }).catch(function(){});
+      } catch(e) {}
+    }
+
+    // ========================================
+    // QUIZ STATE
+    // ========================================
+    var currentStep = 0;
+    var totalSteps = 6;
+    var answers = {};
+    var quizSection = document.getElementById('quiz-section');
+    var diagnosisPanel = document.getElementById('diagnosis-panel');
+    var exclusionPanel = document.getElementById('exclusion-panel');
+    var courseReveal = document.getElementById('course-reveal');
+    var progressFill = document.querySelector('.quiz-progress-fill');
+    var progressText = document.querySelector('.quiz-progress-text');
+
+    function showStep(n) {
+      var steps = document.querySelectorAll('.quiz-step');
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].classList.toggle('active', i === n);
+      }
+      var pct = ((n + 1) / totalSteps) * 100;
+      if (progressFill) progressFill.style.width = pct + '%';
+      if (progressText) progressText.textContent = (n + 1) + ' / ' + totalSteps;
+    }
+
+    function advanceStep() {
+      currentStep++;
+      if (currentStep < totalSteps) {
+        showStep(currentStep);
+        quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        computeDiagnosis();
+      }
+    }
+
+    // Single-select handlers
+    var allSteps = document.querySelectorAll('.quiz-step');
+    for (var s = 0; s < allSteps.length; s++) {
+      var opts = allSteps[s].querySelectorAll('.quiz-option');
+      for (var o = 0; o < opts.length; o++) {
+        opts[o].addEventListener('click', function() {
+          var step = this.closest('.quiz-step');
+          var siblings = step.querySelectorAll('.quiz-option');
+          for (var j = 0; j < siblings.length; j++) siblings[j].classList.remove('selected');
+          this.classList.add('selected');
+          answers[step.dataset.key] = this.dataset.value;
+          setTimeout(advanceStep, 350);
+        });
+      }
+    }
+
+    // ========================================
+    // DIAGNOSIS
+    // ========================================
+    function buildQuizSummary() {
+      return [
+        'Trabalho: ' + (answers.work || '?'),
+        'Tecnologia: ' + (answers.tech || '?'),
+        'Motiva\u00e7\u00e3o: ' + (answers.motivation || '?'),
+        'Disponibilidade: ' + (answers.availability || '?'),
+        'Companhia: ' + (answers.companions || '?'),
+        'Decisor: ' + (answers.decision || '?')
+      ].join('\n');
+    }
+
+    function computeDiagnosis() {
+      quizSection.style.display = 'none';
+
+      var fails = [];
+
+      if (answers.tech === 'it-pro') fails.push('tech-too-high');
+      if (answers.motivation === 'curiosity') fails.push('no-urgency');
+      if (answers.availability === 'no') fails.push('availability');
+      if (answers.work === 'desk' && answers.motivation !== 'body-limit') fails.push('no-pain');
+
+      if (fails.length > 0) {
+        showExclusion(fails);
+        trackAction('Assistente Virtual: quiz exclu\u00eddo', 'Falhas: ' + fails.join(', ') + '\n' + buildQuizSummary());
+        return;
+      }
+
+      showDiagnosis();
+      courseReveal.style.display = 'block';
+
+      setTimeout(function() {
+        diagnosisPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+
+      trackAction('Assistente Virtual: quiz aprovado', buildQuizSummary());
+    }
+
+    function showExclusion(fails) {
+      var html = '<h2 style="color:var(--gold);font-family:var(--font-display);margin-bottom:var(--space-md)">Obrigada pelas tuas respostas</h2>';
+
+      if (fails.indexOf('tech-too-high') !== -1) {
+        html += '<p>Este programa foi desenhado especificamente para pessoas que est\u00e3o a come\u00e7ar do zero com tecnologia. Com o teu n\u00edvel de experi\u00eancia em inform\u00e1tica, <strong>n\u00e3o seria o melhor investimento para ti</strong>. Recomendamos cursos mais avan\u00e7ados de especializa\u00e7\u00e3o em IA.</p>';
+      }
+      if (fails.indexOf('no-urgency') !== -1) {
+        html += '<p>Este programa \u00e9 intensivo e exige compromisso. Foi pensado para quem tem <strong>uma necessidade real de mudar de vida profissional</strong>, n\u00e3o para explorar por curiosidade. Se a tua situa\u00e7\u00e3o mudar, estaremos c\u00e1.</p>';
+      }
+      if (fails.indexOf('availability') !== -1) {
+        html += '<p>O programa \u00e9 <strong>presencial</strong>, no Lumiar (Lisboa). O contacto directo, o ambiente e o grupo s\u00e3o o que faz a diferen\u00e7a \u2014 n\u00e3o \u00e9 replic\u00e1vel online.</p>';
+      }
+      if (fails.indexOf('no-pain') !== -1) {
+        html += '<p>Este programa foi criado para quem precisa de <strong>uma sa\u00edda real de trabalhos fisicamente exigentes</strong>. Se j\u00e1 trabalhas num ambiente confort\u00e1vel, existem op\u00e7\u00f5es mais adequadas ao teu perfil.</p>';
+      }
+
+      html += '<p style="margin-top:var(--space-lg);text-align:center"><a href="mailto:mcminsky@gmail.com" style="color:var(--gold);text-decoration:underline">Contacta-nos</a> se tiveres d\u00favidas.</p>';
+
+      exclusionPanel.innerHTML = html;
+      exclusionPanel.style.display = 'block';
+
+      setTimeout(function() {
+        exclusionPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    function showDiagnosis() {
+      var html = '<h2 style="color:var(--gold);font-family:var(--font-display);margin-bottom:var(--space-md)">O Que Vimos Nas Tuas Respostas</h2>';
+
+      var w = answers.work;
+      if (w === 'very-physical') {
+        html += '<div class="diagnosis-card"><p><strong>O teu corpo est\u00e1 a dar-te sinais.</strong> Turnos longos, cansa\u00e7o acumulado, e a sensa\u00e7\u00e3o de que n\u00e3o podes continuar assim para sempre. Este programa foi criado exactamente para pessoas na tua situa\u00e7\u00e3o \u2014 para te dar uma sa\u00edda real.</p></div>';
+      } else if (w === 'somewhat-physical') {
+        html += '<div class="diagnosis-card"><p><strong>Aguenta-se, mas por quanto tempo?</strong> O desgaste acumula-se. A melhor altura para preparar a mudan\u00e7a \u00e9 antes de o corpo obrigar. Est\u00e1s a tempo.</p></div>';
+      } else if (w === 'not-working') {
+        html += '<div class="diagnosis-card"><p><strong>Momento ideal para investir em ti.</strong> Sem a press\u00e3o de um emprego a drenar energia, podes dedicar-te completamente a aprender algo que te abra portas novas.</p></div>';
+      }
+
+      var t = answers.tech;
+      if (t === 'barely') {
+        html += '<p style="margin-top:var(--space-md)">Disseste que mal sabes ligar o computador \u2014 e <strong>isso n\u00e3o \u00e9 problema nenhum</strong>. O programa foi feito para come\u00e7ar exactamente a\u00ed. A IA faz o trabalho t\u00e9cnico. Tu s\u00f3 aprendes a dar-lhe ordens em portugu\u00eas.</p>';
+      } else if (t === 'basics') {
+        html += '<p style="margin-top:var(--space-md)">J\u00e1 sabes o b\u00e1sico \u2014 email, WhatsApp, redes sociais. <strong>\u00c9 o suficiente.</strong> Vamos construir em cima disso. Em 8 semanas, vais fazer coisas no computador que hoje te parecem imposs\u00edveis.</p>';
+      } else if (t === 'comfortable') {
+        html += '<p style="margin-top:var(--space-md)">J\u00e1 te sentes \u00e0 vontade com tecnologia \u2014 <strong>\u00f3ptimo</strong>. Vais avan\u00e7ar mais depressa e tirar o m\u00e1ximo partido das ferramentas de IA desde o primeiro dia.</p>';
+      }
+
+      var m = answers.motivation;
+      if (m === 'body-limit') {
+        html += '<p>Queres sair porque o corpo pede. <strong>\u00c9 a motiva\u00e7\u00e3o mais poderosa que existe.</strong> N\u00e3o vais desistir ao primeiro obst\u00e1culo \u2014 porque sabes o que est\u00e1 em jogo.</p>';
+      } else if (m === 'remote-income') {
+        html += '<p>Queres ganhar dinheiro a partir de casa. <strong>\u00c9 exactamente isso que vamos montar juntas.</strong> No final das 8 semanas, sais com perfil criado e pronta para aceitar clientes.</p>';
+      } else if (m === 'career-change') {
+        html += '<p>Queres mudar de \u00e1rea \u2014 e este programa \u00e9 o primeiro passo concreto. <strong>N\u00e3o \u00e9 uma ideia. \u00c9 um plano de 8 semanas com resultado no final.</strong></p>';
+      }
+
+      var c = answers.companions;
+      if (c === 'many') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Excelente \u2014 com um grupo grande, o programa pode ficar por apenas 176\u20ac por pessoa. V\u00ea a tabela completa abaixo!</p>';
+      } else if (c === 'two-plus') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Muito bom \u2014 com tr\u00eas pessoas, o programa fica por menos de 300\u20ac cada. V\u00ea os detalhes abaixo.</p>';
+      } else if (c === 'one') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Com uma amiga, o investimento baixa para 360\u20ac cada. \u00c9 sempre melhor aprender com companhia.</p>';
+      } else {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Sozinha tamb\u00e9m funciona. Mas se entretanto te lembrares de algu\u00e9m, o pre\u00e7o baixa bastante \u2014 v\u00ea a tabela abaixo.</p>';
+      }
+
+      var d = answers.decision;
+      if (d === 'family') {
+        html += '<p style="margin-top:var(--space-sm)">Mostra esta p\u00e1gina a quem te possa ajudar a decidir. Toda a informa\u00e7\u00e3o est\u00e1 aqui em baixo.</p>';
+      }
+
+      diagnosisPanel.innerHTML = html;
+      diagnosisPanel.style.display = 'block';
+    }
+
+    // ========================================
+    // FORM HANDLING
+    // ========================================
+    var courseForm = document.getElementById('course-contact-form');
+    if (courseForm) {
+      courseForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var name = document.getElementById('course-name').value.trim();
+        var email = document.getElementById('course-email').value.trim();
+        var phone = document.getElementById('course-phone').value.trim();
+        var message = document.getElementById('course-message').value.trim();
+
+        var emailBody = 'Nome: ' + name + '\nEmail: ' + email;
+        if (phone) emailBody += '\nTelefone: ' + phone;
+        emailBody += '\n\nPrograma: Assistente Virtual com IA (8 semanas)';
+        emailBody += '\nTrabalho actual: ' + (answers.work || 'N/A');
+        emailBody += '\nN\u00edvel tecnologia: ' + (answers.tech || 'N/A');
+        emailBody += '\nMotiva\u00e7\u00e3o: ' + (answers.motivation || 'N/A');
+        emailBody += '\nDisponibilidade: ' + (answers.availability || 'N/A');
+        emailBody += '\nCompanhia: ' + (answers.companions || 'N/A');
+        emailBody += '\nDecis\u00e3o: ' + (answers.decision || 'N/A');
+        if (message) emailBody += '\n\nMensagem: ' + message;
+        emailBody += '\n\n---\nEnviado atrav\u00e9s do formul\u00e1rio do curso no website McMinsky';
+
+        var subject = 'Inscri\u00e7\u00e3o Assistente Virtual IA: ' + name;
+        var mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(emailBody);
+
+        trackAction('Assistente Virtual: inscri\u00e7\u00e3o', 'Nome: ' + name + '\nEmail: ' + email + '\nTel: ' + (phone || 'N/A') + '\nTrabalho: ' + (answers.work || 'N/A') + '\nTech: ' + (answers.tech || 'N/A') + '\nMotiva\u00e7\u00e3o: ' + (answers.motivation || 'N/A') + '\nDisp: ' + (answers.availability || 'N/A') + '\nCompanhia: ' + (answers.companions || 'N/A') + '\nDecis\u00e3o: ' + (answers.decision || 'N/A') + '\nMsg: ' + (message || 'N/A'));
+
+        window.location.href = mailtoLink;
+      });
+    }
+
+    // Init
+    showStep(0);
+    trackAction('Assistente Virtual: p\u00e1gina visitada', '');
+  })();
+  </script>
+</body>
+</html>

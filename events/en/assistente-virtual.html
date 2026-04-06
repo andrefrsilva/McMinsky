@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="8-week reskilling programme: learn to use Artificial Intelligence and work as a Virtual Assistant. In-person in Lumiar, no coding required.">
+  <meta name="keywords" content="virtual assistant, artificial intelligence, reskilling, in-person course, McMinsky, Lumiar">
+  <meta name="author" content="McMinsky">
+  <meta name="category" content="Reskilling Programme">
+
+  <!-- Event metadata for listing -->
+  <meta name="event-date" content="2026-04-27">
+  <meta name="event-price" content="From 176EUR">
+  <meta name="event-spots-text" content="Limited places">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Change Your Life with AI in 8 Weeks | McMinsky">
+  <meta property="og:description" content="This is not another generic AI course. It is an 8-week programme with real results. In-person in Lumiar.">
+  <meta property="og:image" content="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyZHMxeW1pbzZndnhpcTJlbWt4aW9zOWdmM2dodXhuYzgydTlyZGkxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0dy1zzyjbYTQQM/giphy.gif">
+  <meta property="og:url" content="https://mcminsky.pt/events/en/assistente-virtual.html">
+  <meta property="og:site_name" content="McMinsky">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Change Your Life with AI in 8 Weeks | McMinsky">
+  <meta name="twitter:description" content="Not another generic course. Real results in 8 weeks.">
+  <meta name="twitter:image" content="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyZHMxeW1pbzZndnhpcTJlbWt4aW9zOWdmM2dodXhuYzgydTlyZGkxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0dy1zzyjbYTQQM/giphy.gif">
+
+  <title>Change Your Life with Artificial Intelligence in 8 Weeks | McMinsky</title>
+
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .hero-gif{width:100%;max-width:420px;display:block;margin:0 auto var(--space-lg);border-radius:16px}
+    .intro-text{font-size:1.1rem;line-height:1.8;color:var(--gray-light);margin-bottom:var(--space-md)}
+    .intro-text strong{color:var(--white)}
+    .intro-highlight{font-size:1.2rem;text-align:center;color:var(--white);font-weight:700;margin:var(--space-lg) 0 var(--space-sm)}
+    .urgency-bar{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:12px;padding:16px 20px;text-align:center;margin:var(--space-md) 0 var(--space-xl);color:var(--gray-light)}
+    .urgency-bar strong{color:var(--gold)}
+
+    .pain-points{display:flex;flex-direction:column;gap:10px;margin:var(--space-md) 0}
+    .pain-item{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--black-lighter);border-radius:10px;border-left:3px solid var(--gold)}
+    .pain-icon{font-size:1.3rem;flex-shrink:0}
+    .pain-label{color:var(--white);font-size:1rem;line-height:1.5}
+
+    #quiz-section h2{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.6rem);margin-bottom:var(--space-lg);text-align:center}
+    .quiz-progress{height:4px;background:var(--black-lighter);border-radius:2px;margin-bottom:var(--space-lg);position:relative}
+    .quiz-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0}
+    .quiz-progress-text{position:absolute;right:0;top:-22px;font-size:0.8rem;color:var(--gray)}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-question{color:var(--white);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    .quiz-hint{color:var(--gray);font-size:0.88rem;margin-bottom:var(--space-md)}
+    .quiz-options{display:flex;flex-direction:column;gap:10px}
+    .quiz-option{position:relative;z-index:1;background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px 20px;color:var(--white);font-size:0.98rem;text-align:left;cursor:pointer;transition:all 0.2s ease;font-family:inherit;line-height:1.4;overflow:hidden}
+    .quiz-option::before{display:none!important}
+    .quiz-option:hover{border-color:rgba(212,175,55,0.5);transform:none;box-shadow:none}
+    .quiz-option.selected{border-color:var(--gold)!important;background:var(--gold)!important;color:#0a0a0a!important;font-weight:700}
+    .quiz-option.selected::before{display:none!important;opacity:0!important}
+
+    #diagnosis-panel{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border-left:4px solid var(--gold);animation:qFadeIn 0.5s ease}
+    .diagnosis-card{background:rgba(212,175,55,0.08);border-radius:8px;padding:16px 20px;margin:var(--space-md) 0}
+    .diagnosis-card p{margin:0;line-height:1.7}
+    #diagnosis-panel>p{color:var(--gray-light);line-height:1.7;margin-top:var(--space-sm)}
+    #diagnosis-panel strong{color:var(--white)}
+
+    #exclusion-panel{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border-left:4px solid var(--gray-dark);animation:qFadeIn 0.5s ease}
+    #exclusion-panel p{color:var(--gray-light);line-height:1.7;margin-top:var(--space-sm)}
+    #exclusion-panel strong{color:var(--white)}
+
+    #course-reveal{animation:qFadeIn 0.6s ease}
+    .course-section{margin-top:var(--space-xl)}
+    .course-section h2{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:var(--space-md)}
+    .course-section>p{color:var(--gray-light);line-height:1.7}
+
+    .check-list,.not-list{list-style:none;padding:0;margin:var(--space-md) 0}
+    .check-list li,.not-list li{padding:10px 0;color:var(--white);font-size:0.98rem;display:flex;align-items:flex-start;gap:12px;line-height:1.5}
+    .check-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+    .not-list li::before{content:'✕';color:#c0392b;font-weight:700;flex-shrink:0}
+
+    .feature-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:var(--space-md)}
+    @media(min-width:600px){.feature-grid{grid-template-columns:1fr 1fr}}
+    .feature-item{display:flex;gap:14px;padding:16px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
+    .feature-icon{font-size:1.6rem;flex-shrink:0;width:36px;text-align:center;line-height:1.6}
+    .feature-text h4{color:var(--white);margin:0 0 4px;font-size:0.92rem}
+    .feature-text p{color:var(--gray-light);margin:0;font-size:0.84rem;line-height:1.5}
+
+    .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:var(--space-lg)}
+    @media(min-width:700px){.pricing-grid{grid-template-columns:repeat(3,1fr)}}
+    .pricing-card{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px 16px;text-align:center;position:relative;transition:border-color 0.2s}
+    .pricing-card.featured{border-color:var(--gold)}
+    .pricing-card.featured::before{content:'Most popular';position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);padding:4px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;white-space:nowrap}
+    .pricing-card h3{color:var(--white);font-family:var(--font-display);margin:0 0 10px;font-size:1rem}
+    .pricing-price{font-size:2rem;font-weight:700;color:var(--gold);font-family:var(--font-display);line-height:1}
+    .pricing-unit{font-size:0.82rem;color:var(--gray);margin-top:6px}
+    .pricing-savings{font-size:0.85rem;color:var(--gold);margin-top:8px;font-weight:600}
+    .pricing-hourly{font-size:0.78rem;color:var(--gray);margin-top:4px}
+    .pricing-note{font-size:0.82rem;color:var(--gray);margin-top:var(--space-lg);line-height:1.6;text-align:center}
+
+    .group-cta{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:12px;padding:20px 24px;margin-top:var(--space-lg);text-align:center}
+    .group-cta p{color:var(--gray-light);line-height:1.7;margin:0}
+    .group-cta strong{color:var(--white)}
+    .group-cta .gold{color:var(--gold)}
+
+    .form-section{margin-top:var(--space-xl);padding:var(--space-lg);background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+    .form-section h2{color:var(--gold);font-family:var(--font-display);font-size:1.5rem;margin-bottom:var(--space-sm);text-align:center}
+    .form-section>p{text-align:center;color:var(--gray-light);margin-bottom:var(--space-md)}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/en/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/en/#about" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="/en/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/en/#programs" class="nav-link">Programmes</a></li>
+          <li class="nav-item"><a href="/en/#insights" class="nav-link">Insights</a></li>
+          <li class="nav-item"><a href="/en/#contact" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="pt">PT</button>
+          <button class="lang-btn active" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-page">
+    <div class="article-hero">
+      <span class="article-hero-category">Reskilling Programme</span>
+      <h1 class="article-hero-title">Change Your Life with Artificial Intelligence &mdash; Real Results in 8 Weeks</h1>
+      <p class="article-hero-meta">This is not another generic AI course. It is a programme that transforms your routine.</p>
+    </div>
+
+    <div class="course-content" style="max-width:700px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)">
+
+      <!-- ==================== INTRO ==================== -->
+      <div id="intro-section">
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyZHMxeW1pbzZndnhpcTJlbWt4aW9zOWdmM2dodXhuYzgydTlyZGkxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0dy1zzyjbYTQQM/giphy.gif" alt="" class="hero-gif">
+
+        <p class="intro-text">Some people spend all day on their feet &mdash; lifting, caring, cleaning, pulling double shifts &mdash; and when they get home, there is nothing left. <strong>You know exactly what we are talking about.</strong></p>
+
+        <p class="intro-text">What if you could make <strong>Artificial Intelligence do the heavy lifting for you</strong> &mdash; writing emails, organising spreadsheets, creating social media posts &mdash; while you just give it instructions in plain language?</p>
+
+        <div class="pain-points">
+          <div class="pain-item">
+            <span class="pain-icon">&#128170;</span>
+            <span class="pain-label">No coding required</span>
+          </div>
+          <div class="pain-item">
+            <span class="pain-icon">&#128172;</span>
+            <span class="pain-label">Just talk to the AI &mdash; in your own words</span>
+          </div>
+          <div class="pain-item">
+            <span class="pain-icon">&#128187;</span>
+            <span class="pain-label">In 8 weeks, you will be ready to work from home</span>
+          </div>
+        </div>
+
+        <p class="intro-highlight">You are about to become the boss of the robots. And nobody will figure out how you do everything so fast.</p>
+
+        <div class="urgency-bar">
+          The programme starts on <strong>27th April</strong>. It is not for everyone.
+        </div>
+      </div>
+
+      <!-- ==================== QUIZ ==================== -->
+      <div id="quiz-section">
+        <h2>First, let us find out if this is right for you.</h2>
+
+        <div class="quiz-progress">
+          <div class="quiz-progress-fill"></div>
+          <span class="quiz-progress-text">1 / 6</span>
+        </div>
+
+        <!-- Q1 -->
+        <div class="quiz-step active" data-key="work" data-step="0">
+          <h3 class="quiz-question">Is your current job physically demanding?</h3>
+          <p class="quiz-hint">Be honest. This helps us understand if the programme makes sense for you.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="very-physical">Yes, very &mdash; I am exhausted by the end of each day</button>
+            <button class="quiz-option" data-value="somewhat-physical">Yes, it is tiring, but I manage</button>
+            <button class="quiz-option" data-value="desk">No, I work at a desk</button>
+            <button class="quiz-option" data-value="not-working">I am not working at the moment</button>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-step" data-key="tech" data-step="1">
+          <h3 class="quiz-question">How comfortable are you with computers?</h3>
+          <p class="quiz-hint">There are no wrong answers. We just need to know where you stand.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="barely">I barely know how to turn one on, but I want to learn</button>
+            <button class="quiz-option" data-value="basics">I manage the basics &mdash; email, WhatsApp, Facebook</button>
+            <button class="quiz-option" data-value="comfortable">I feel comfortable with technology</button>
+            <button class="quiz-option" data-value="it-pro">I work in IT / programming</button>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-step" data-key="motivation" data-step="2">
+          <h3 class="quiz-question">Why do you want to learn to work with computers and AI?</h3>
+          <p class="quiz-hint">Your motivation is what will make the difference.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="body-limit">My body cannot take much more of the work I do</button>
+            <button class="quiz-option" data-value="remote-income">I want to earn money from home</button>
+            <button class="quiz-option" data-value="career-change">I want to change my career</button>
+            <button class="quiz-option" data-value="curiosity">Just curiosity, no real urgency</button>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-step" data-key="availability" data-step="3">
+          <h3 class="quiz-question">Can you attend 2 hours per week in Lumiar (Lisbon)?</h3>
+          <p class="quiz-hint">The programme is in-person. That is what makes it work.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="yes">Yes, I can</button>
+            <button class="quiz-option" data-value="no">No, I cannot</button>
+            <button class="quiz-option" data-value="depends">Depends on the schedule</button>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-step" data-key="companions" data-step="4">
+          <h3 class="quiz-question">Do you have friends or colleagues in a similar situation?</h3>
+          <p class="quiz-hint">Learning in a group is easier &mdash; and can be much more affordable.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="many">Yes, several people</button>
+            <button class="quiz-option" data-value="two-plus">Yes, at least two</button>
+            <button class="quiz-option" data-value="one">Yes, one person</button>
+            <button class="quiz-option" data-value="alone">No, it would just be me</button>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="quiz-step" data-key="decision" data-step="5">
+          <h3 class="quiz-question">If this makes sense for you, who makes the decision?</h3>
+          <p class="quiz-hint">We want to make sure you get the right information.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="self">I decide myself</button>
+            <button class="quiz-option" data-value="family">I need to discuss it with my family</button>
+            <button class="quiz-option" data-value="both">Me, but I want a second opinion</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DIAGNOSIS (hidden) ==================== -->
+      <div id="diagnosis-panel" style="display:none"></div>
+
+      <!-- ==================== EXCLUSION (hidden) ==================== -->
+      <div id="exclusion-panel" style="display:none"></div>
+
+      <!-- ==================== COURSE CONTENT (hidden until quiz passes) ==================== -->
+      <div id="course-reveal" style="display:none">
+
+        <div class="urgency-bar" style="margin-top:var(--space-xl)">
+          <strong>27th April &rarr; In 8 weeks, you could be earning money from home.</strong>
+        </div>
+
+        <!-- FOR WHOM -->
+        <div class="course-section">
+          <h2>This is for you if...</h2>
+          <ul class="check-list">
+            <li>Your job is physically demanding and your body is not what it used to be</li>
+            <li>You want to learn to use Artificial Intelligence to work from home</li>
+            <li>You do not need to know how to code &mdash; you just need to want to learn</li>
+            <li>You can dedicate 2 hours per week in-person in Lumiar</li>
+            <li>You are willing to put in the work during each session and follow the method</li>
+          </ul>
+        </div>
+
+        <!-- WHAT IT IS -->
+        <div class="course-section">
+          <h2>What you will learn</h2>
+          <p>Every element of this programme was designed for you. Zero complications, maximum results.</p>
+
+          <div class="feature-grid">
+            <div class="feature-item">
+              <span class="feature-icon">&#129302;</span>
+              <div class="feature-text">
+                <h4>Give Orders to AI in Plain Language</h4>
+                <p>Learn to talk to tools like ChatGPT so they do the heavy lifting. Writing emails, organising data, creating text &mdash; all in your own words.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128196;</span>
+              <div class="feature-text">
+                <h4>Excel and Spreadsheets Without the Headache</h4>
+                <p>The AI creates the formulas. You just copy and paste. You will know how to organise any spreadsheet a client asks for.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128231;</span>
+              <div class="feature-text">
+                <h4>Professional Emails and Communication</h4>
+                <p>Learn to ask the AI to write professional emails, client responses, and messages that sound like they were written by someone with years of experience.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128241;</span>
+              <div class="feature-text">
+                <h4>Social Media and Content</h4>
+                <p>The AI creates the copy and captions. You learn to review and publish. Enough to manage social media for small businesses.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128188;</span>
+              <div class="feature-text">
+                <h4>Ready-to-Use Professional Profile</h4>
+                <p>You leave the programme with your profile set up on freelance platforms. The AI helps you write your description, set prices, and respond to clients.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#127891;</span>
+              <div class="feature-text">
+                <h4>Real Client Simulations</h4>
+                <p>You practise real situations: receiving a brief, using AI to solve it, delivering to the client. By the end, you will have done this dozens of times.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#9749;</span>
+              <div class="feature-text">
+                <h4>Premium and Welcoming Environment</h4>
+                <p>Space with snacks included, a calm atmosphere, and a small group where everyone is in the same boat. Learning becomes the best part of your week.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">&#128101;</span>
+              <div class="feature-text">
+                <h4>Small Group &mdash; Nobody Gets Left Behind</h4>
+                <p>Learn at your own pace, with people who understand what you are going through. No pressure, no judgement, with all the guidance you need.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- THE SHORTCUT -->
+        <div class="course-section">
+          <h2>The Shortcut: Superpowers Nobody Teaches You</h2>
+          <p>This is not about learning to use ChatGPT for basic questions. Everyone does that. What you will learn here is <strong>what smart people are already doing without telling anyone</strong> &mdash; how to use AI to do in 10 minutes what takes others hours.</p>
+          <p style="margin-top:var(--space-sm)">University assignments? The AI structures, researches and drafts &mdash; you review and submit. Work reports? Spreadsheets that would take a day are done in minutes. Professional emails? You write like you have an MBA. <strong>And nobody needs to know how you do everything so well and so fast.</strong></p>
+          <p style="margin-top:var(--space-sm)">It is almost like cheating. Except it is not &mdash; it is just knowing how to use the right tools. And we are going to teach you exactly how.</p>
+        </div>
+
+        <!-- OUTCOMES -->
+        <div class="course-section">
+          <h2>After the 8 weeks, you will be able to...</h2>
+          <ul class="check-list">
+            <li>Do in 10 minutes what others take hours to do &mdash; without anyone figuring out how</li>
+            <li>Write emails, reports and texts with professional quality (the AI drafts, you adjust)</li>
+            <li>Organise spreadsheets and data in Excel without memorising a single formula</li>
+            <li>Create social media posts for any business</li>
+            <li>Respond to clients and manage tasks like a professional virtual assistant</li>
+            <li>Have your profile on freelance platforms, ready to accept clients</li>
+            <li>Use these skills to shine in university work, at your job, or on your own</li>
+            <li>Stop depending on your body to earn money &mdash; and start using your head (with AI&rsquo;s help)</li>
+          </ul>
+        </div>
+
+        <!-- WHAT IT'S NOT -->
+        <div class="course-section">
+          <h2>This is NOT...</h2>
+          <ul class="not-list">
+            <li><strong>A traditional IT course.</strong> Zero theory, zero endless PowerPoints, zero exams. If you wanted that, you would go to university.</li>
+            <li><strong>Another generic &ldquo;AI course.&rdquo;</strong> You will not watch pre-recorded videos or learn &ldquo;what AI is&rdquo; without ever using it. Here, you use AI for real from day one.</li>
+            <li><strong>A course for people who already know tech.</strong> This was designed for people who type slowly and get confused by menus &mdash; and have absolutely no shame about it.</li>
+            <li><strong>Easy money without effort.</strong> You will need to show up, work during the 2 hours, and follow the method. It is a serious commitment &mdash; but just 2 hours a week.</li>
+            <li><strong>A job guarantee.</strong> We give you the tools, the profile, and the practice. The rest depends on you &mdash; and the effort you put in.</li>
+            <li><strong>A generic bootcamp.</strong> This is an elite reskilling programme, adapted to your pace. We do not treat you as if you are incapable. We treat you as a manager whose time is too valuable to waste.</li>
+          </ul>
+        </div>
+
+        <!-- CREDENTIALS -->
+        <div class="course-section">
+          <h2>Who delivers the programme</h2>
+          <p>Designed and led by the founders of the Centre of Excellence in Lumiar &mdash; professionals with backgrounds in <strong>Medicine</strong> and <strong>Learning Neuroscience</strong>. The same scientific rigour we apply to preparing over 1,000 students, now adapted to professional reskilling with Artificial Intelligence.</p>
+          <p style="color:var(--gray);font-size:0.9rem;margin-top:var(--space-sm)">This is not just any trainer. This is a physician specialised in how the brain learns, with a method built for people who think they cannot do it &mdash; and who surprise themselves every single week.</p>
+        </div>
+
+        <!-- PRICING -->
+        <div class="course-section">
+          <h2>Investment</h2>
+          <p>8 weeks &middot; 1 session per week, 2 hours &middot; In-person in Lumiar</p>
+          <p style="margin-top:var(--space-sm)"><strong style="color:var(--gold)">The more people you bring, the less each person pays.</strong> Gather friends, colleagues, anyone in the same situation &mdash; everyone wins.</p>
+
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <h3>1 Person</h3>
+              <div class="pricing-price">480&euro;</div>
+              <p class="pricing-unit">per person</p>
+              <p class="pricing-hourly">30&euro; / hour</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>2 People</h3>
+              <div class="pricing-price">360&euro;</div>
+              <p class="pricing-unit">per person</p>
+              <p class="pricing-savings">Save 120&euro; each</p>
+              <p class="pricing-hourly">22.50&euro; / hour</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>3 People</h3>
+              <div class="pricing-price">296&euro;</div>
+              <p class="pricing-unit">per person</p>
+              <p class="pricing-savings">Save 184&euro; each</p>
+              <p class="pricing-hourly">18.50&euro; / hour</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>4 People</h3>
+              <div class="pricing-price">240&euro;</div>
+              <p class="pricing-unit">per person</p>
+              <p class="pricing-savings">Save 240&euro; each</p>
+              <p class="pricing-hourly">15&euro; / hour</p>
+            </div>
+
+            <div class="pricing-card featured">
+              <h3>5 People</h3>
+              <div class="pricing-price">208&euro;</div>
+              <p class="pricing-unit">per person</p>
+              <p class="pricing-savings">Save 272&euro; each</p>
+              <p class="pricing-hourly">13&euro; / hour</p>
+            </div>
+
+            <div class="pricing-card">
+              <h3>6 People</h3>
+              <div class="pricing-price">176&euro;</div>
+              <p class="pricing-unit">per person</p>
+              <p class="pricing-savings">Save 304&euro; each</p>
+              <p class="pricing-hourly">11&euro; / hour</p>
+            </div>
+          </div>
+
+          <div class="group-cta">
+            <p><strong>Do the maths:</strong> as a virtual assistant charging 15&euro; per hour, <span class="gold">you pay for the programme with less than two weeks of work</span> &mdash; even on your own. With a group of 5 or 6, you pay it off in days.</p>
+            <p style="margin-top:var(--space-sm)"><strong>Share this page</strong> with anyone who might be in the same situation. The bigger the group, the less each person pays.</p>
+          </div>
+
+          <p class="pricing-note">Enrolment is confirmed by payment &mdash; not by reservation. The group forms until the programme starts.</p>
+        </div>
+
+        <!-- FINAL URGENCY -->
+        <div class="urgency-bar" style="margin-top:var(--space-xl)">
+          <strong>The programme starts on 27th April.</strong><br>
+          If you are reading this and thinking &ldquo;I will look into it later&rdquo; &mdash; later is when your body forces you to stop. And your body does not wait.
+        </div>
+
+        <!-- CONTACT FORM -->
+        <div class="form-section" id="course-form-section">
+          <h2>Registration / Contact</h2>
+          <p>Fill in the form and we will get back to you within 24 hours.</p>
+
+          <form id="course-contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="course-name" class="form-label">Name</label>
+              <input type="text" id="course-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="course-email" class="form-label">Email</label>
+              <input type="email" id="course-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="course-phone" class="form-label">Phone</label>
+              <input type="tel" id="course-phone" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="course-message" class="form-label">Message <span style="color:var(--gray)">(optional)</span></label>
+              <textarea id="course-message" class="form-textarea" placeholder="E.g.: I would like to know the schedule. I have a friend who is also interested."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">I Want to Know More</button>
+            <p style="text-align:center;margin-top:var(--space-sm);color:var(--gray);font-size:0.8rem;">Your email client will be opened with a pre-filled message.</p>
+          </form>
+        </div>
+
+      </div><!-- /course-reveal -->
+
+    </div><!-- /course-content -->
+  </article>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/en/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p>Centre of Excellence for ambitious minds.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="/en/#about">About</a></li>
+          <li><a href="/en/#programs">Programmes</a></li>
+          <li><a href="/en/#insights">Insights</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Location</h4>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisbon</p>
+        <a href="https://share.google/8wcEaRj5rfmvmwiyv" class="footer-maps-btn" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+          View on Google Maps
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../../legal/en/terms.html">Terms and Conditions</a>
+        <a href="../../legal/en/privacy.html">Privacy Policy</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Complaints Book</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2025</span> McMinsky. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+  <script>
+  (function() {
+    function trackAction(action, body) {
+      try {
+        var uid = '';
+        try { uid = localStorage.getItem('mcminsky_uid') || ''; } catch(e) {}
+        var fd = new FormData();
+        fd.append('entry.1191618802', action);
+        fd.append('entry.97481516', uid);
+        fd.append('entry.1381161689', body || '');
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse', {
+          method: 'POST', mode: 'no-cors', body: fd
+        }).catch(function(){});
+      } catch(e) {}
+    }
+
+    var currentStep = 0;
+    var totalSteps = 6;
+    var answers = {};
+    var quizSection = document.getElementById('quiz-section');
+    var diagnosisPanel = document.getElementById('diagnosis-panel');
+    var exclusionPanel = document.getElementById('exclusion-panel');
+    var courseReveal = document.getElementById('course-reveal');
+    var progressFill = document.querySelector('.quiz-progress-fill');
+    var progressText = document.querySelector('.quiz-progress-text');
+
+    function showStep(n) {
+      var steps = document.querySelectorAll('.quiz-step');
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].classList.toggle('active', i === n);
+      }
+      var pct = ((n + 1) / totalSteps) * 100;
+      if (progressFill) progressFill.style.width = pct + '%';
+      if (progressText) progressText.textContent = (n + 1) + ' / ' + totalSteps;
+    }
+
+    function advanceStep() {
+      currentStep++;
+      if (currentStep < totalSteps) {
+        showStep(currentStep);
+        quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        computeDiagnosis();
+      }
+    }
+
+    var allSteps = document.querySelectorAll('.quiz-step');
+    for (var s = 0; s < allSteps.length; s++) {
+      var opts = allSteps[s].querySelectorAll('.quiz-option');
+      for (var o = 0; o < opts.length; o++) {
+        opts[o].addEventListener('click', function() {
+          var step = this.closest('.quiz-step');
+          var siblings = step.querySelectorAll('.quiz-option');
+          for (var j = 0; j < siblings.length; j++) siblings[j].classList.remove('selected');
+          this.classList.add('selected');
+          answers[step.dataset.key] = this.dataset.value;
+          setTimeout(advanceStep, 350);
+        });
+      }
+    }
+
+    function buildQuizSummary() {
+      return [
+        'Work: ' + (answers.work || '?'),
+        'Tech: ' + (answers.tech || '?'),
+        'Motivation: ' + (answers.motivation || '?'),
+        'Availability: ' + (answers.availability || '?'),
+        'Companions: ' + (answers.companions || '?'),
+        'Decision: ' + (answers.decision || '?')
+      ].join('\n');
+    }
+
+    function computeDiagnosis() {
+      quizSection.style.display = 'none';
+      var fails = [];
+
+      if (answers.tech === 'it-pro') fails.push('tech-too-high');
+      if (answers.motivation === 'curiosity') fails.push('no-urgency');
+      if (answers.availability === 'no') fails.push('availability');
+      if (answers.work === 'desk' && answers.motivation !== 'body-limit') fails.push('no-pain');
+
+      if (fails.length > 0) {
+        showExclusion(fails);
+        trackAction('Virtual Assistant: quiz excluded', 'Fails: ' + fails.join(', ') + '\n' + buildQuizSummary());
+        return;
+      }
+
+      showDiagnosis();
+      courseReveal.style.display = 'block';
+      setTimeout(function() {
+        diagnosisPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+      trackAction('Virtual Assistant: quiz approved', buildQuizSummary());
+    }
+
+    function showExclusion(fails) {
+      var html = '<h2 style="color:var(--gold);font-family:var(--font-display);margin-bottom:var(--space-md)">Thank you for your answers</h2>';
+
+      if (fails.indexOf('tech-too-high') !== -1) {
+        html += '<p>This programme was designed specifically for people starting from scratch with technology. With your level of IT experience, <strong>it would not be the best investment for you</strong>. We recommend more advanced AI specialisation courses.</p>';
+      }
+      if (fails.indexOf('no-urgency') !== -1) {
+        html += '<p>This programme is intensive and requires commitment. It was designed for people with <strong>a real need to change their professional life</strong>, not for casual exploration. If your situation changes, we will be here.</p>';
+      }
+      if (fails.indexOf('availability') !== -1) {
+        html += '<p>The programme is <strong>in-person</strong>, in Lumiar (Lisbon). The direct contact, environment and group are what make the difference \u2014 it cannot be replicated online.</p>';
+      }
+      if (fails.indexOf('no-pain') !== -1) {
+        html += '<p>This programme was created for people who need <strong>a real way out of physically demanding jobs</strong>. If you already work in a comfortable environment, there are options better suited to your profile.</p>';
+      }
+
+      html += '<p style="margin-top:var(--space-lg);text-align:center"><a href="mailto:mcminsky@gmail.com" style="color:var(--gold);text-decoration:underline">Contact us</a> if you have any questions.</p>';
+
+      exclusionPanel.innerHTML = html;
+      exclusionPanel.style.display = 'block';
+      setTimeout(function() {
+        exclusionPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    function showDiagnosis() {
+      var html = '<h2 style="color:var(--gold);font-family:var(--font-display);margin-bottom:var(--space-md)">What We Saw in Your Answers</h2>';
+
+      var w = answers.work;
+      if (w === 'very-physical') {
+        html += '<div class="diagnosis-card"><p><strong>Your body is sending you signals.</strong> Long shifts, accumulated exhaustion, and the feeling that you cannot keep going like this forever. This programme was created exactly for people in your situation \u2014 to give you a real way out.</p></div>';
+      } else if (w === 'somewhat-physical') {
+        html += '<div class="diagnosis-card"><p><strong>You are managing, but for how long?</strong> Wear and tear accumulates. The best time to prepare for change is before your body forces you to. You are still in time.</p></div>';
+      } else if (w === 'not-working') {
+        html += '<div class="diagnosis-card"><p><strong>The ideal moment to invest in yourself.</strong> Without a job draining your energy, you can fully dedicate yourself to learning something that opens new doors.</p></div>';
+      }
+
+      var t = answers.tech;
+      if (t === 'barely') {
+        html += '<p style="margin-top:var(--space-md)">You said you barely know how to turn on a computer \u2014 and <strong>that is not a problem at all</strong>. The programme was made to start exactly there. The AI does the technical work. You just learn to give it instructions in plain language.</p>';
+      } else if (t === 'basics') {
+        html += '<p style="margin-top:var(--space-md)">You already know the basics \u2014 email, WhatsApp, social media. <strong>That is enough.</strong> We will build on that. In 8 weeks, you will be doing things on a computer that seem impossible to you today.</p>';
+      } else if (t === 'comfortable') {
+        html += '<p style="margin-top:var(--space-md)">You already feel comfortable with technology \u2014 <strong>excellent</strong>. You will progress faster and get the most out of the AI tools from day one.</p>';
+      }
+
+      var m = answers.motivation;
+      if (m === 'body-limit') {
+        html += '<p>You want out because your body is asking for it. <strong>That is the most powerful motivation there is.</strong> You will not give up at the first obstacle \u2014 because you know what is at stake.</p>';
+      } else if (m === 'remote-income') {
+        html += '<p>You want to earn money from home. <strong>That is exactly what we are going to build together.</strong> At the end of the 8 weeks, you leave with a profile set up and ready to accept clients.</p>';
+      } else if (m === 'career-change') {
+        html += '<p>You want to change your career \u2014 and this programme is the first concrete step. <strong>It is not an idea. It is an 8-week plan with a result at the end.</strong></p>';
+      }
+
+      var c = answers.companions;
+      if (c === 'many') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Excellent \u2014 with a large group, the programme can be as low as \u20ac176 per person. See the full table below!</p>';
+      } else if (c === 'two-plus') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">Great \u2014 with three people, the programme costs less than \u20ac300 each. See the details below.</p>';
+      } else if (c === 'one') {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">With a friend, the investment drops to \u20ac360 each. It is always better to learn with company.</p>';
+      } else {
+        html += '<p style="color:var(--gold);font-style:italic;margin-top:var(--space-md)">On your own works too. But if you think of someone along the way, the price drops significantly \u2014 see the table below.</p>';
+      }
+
+      var d = answers.decision;
+      if (d === 'family') {
+        html += '<p style="margin-top:var(--space-sm)">Show this page to whoever can help you decide. All the information is below.</p>';
+      }
+
+      diagnosisPanel.innerHTML = html;
+      diagnosisPanel.style.display = 'block';
+    }
+
+    var courseForm = document.getElementById('course-contact-form');
+    if (courseForm) {
+      courseForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var name = document.getElementById('course-name').value.trim();
+        var email = document.getElementById('course-email').value.trim();
+        var phone = document.getElementById('course-phone').value.trim();
+        var message = document.getElementById('course-message').value.trim();
+
+        var emailBody = 'Name: ' + name + '\nEmail: ' + email;
+        if (phone) emailBody += '\nPhone: ' + phone;
+        emailBody += '\n\nProgramme: AI-Powered Virtual Assistant (8 weeks)';
+        emailBody += '\nCurrent work: ' + (answers.work || 'N/A');
+        emailBody += '\nTech level: ' + (answers.tech || 'N/A');
+        emailBody += '\nMotivation: ' + (answers.motivation || 'N/A');
+        emailBody += '\nAvailability: ' + (answers.availability || 'N/A');
+        emailBody += '\nCompanions: ' + (answers.companions || 'N/A');
+        emailBody += '\nDecision: ' + (answers.decision || 'N/A');
+        if (message) emailBody += '\n\nMessage: ' + message;
+        emailBody += '\n\n---\nSent via the course form on the McMinsky website';
+
+        var subject = 'Registration AI Virtual Assistant: ' + name;
+        var mailtoLink = 'mailto:mcminsky@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(emailBody);
+
+        trackAction('Virtual Assistant: registration', 'Name: ' + name + '\nEmail: ' + email + '\nPhone: ' + (phone || 'N/A') + '\nWork: ' + (answers.work || 'N/A') + '\nTech: ' + (answers.tech || 'N/A') + '\nMotivation: ' + (answers.motivation || 'N/A') + '\nAvail: ' + (answers.availability || 'N/A') + '\nCompanions: ' + (answers.companions || 'N/A') + '\nDecision: ' + (answers.decision || 'N/A') + '\nMsg: ' + (message || 'N/A'));
+
+        window.location.href = mailtoLink;
+      });
+    }
+
+    showStep(0);
+    trackAction('Virtual Assistant: page visited', '');
+  })();
+  </script>
+</body>
+</html>
