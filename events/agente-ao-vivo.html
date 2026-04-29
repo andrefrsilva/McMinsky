@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Multiplica-te. Offsite prático, Lisboa, quinta 30 Abril 21h. 15 lugares. €150.">
+  <meta property="og:title" content="Multiplica-te — Offsite 30 Abr · Lisboa · 15 lugares">
+  <meta property="og:description" content="Não consegues fazer tudo. Quinta 30 Abril, 21h, Lisboa. 15 lugares. €150.">
+  <meta property="og:url" content="https://mcminsky.pt/events/agente-ao-vivo.html">
+  <meta property="og:site_name" content="McMinsky">
+  <title>Multiplica-te — 30 Abril · Lisboa | McMinsky</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+  <style>
+    /* ── HERO MULTIPLICA-TE ── */
+    .hero-pre{text-align:center;padding:var(--space-xl) var(--space-md) 0;max-width:700px;margin:0 auto}
+    .hero-pre-text{font-size:clamp(1.1rem,3vw,1.4rem);color:var(--gray-light);letter-spacing:0.04em;margin-bottom:var(--space-md);font-style:italic}
+    .hero-img-wrap{position:relative;max-width:600px;margin:0 auto}
+    .hero-img{width:100%;border-radius:12px;display:block}
+    .hero-multiplica{font-family:var(--font-display);font-size:clamp(3rem,10vw,5.5rem);color:var(--gold);text-align:center;letter-spacing:-0.01em;line-height:1;margin:var(--space-md) 0 var(--space-sm);font-weight:700}
+    .hero-sub{text-align:center;color:var(--gray-light);font-size:clamp(1rem,2.5vw,1.15rem);line-height:1.7;max-width:520px;margin:0 auto var(--space-lg)}
+
+    /* URGENCY STRIP */
+    .urgency-strip{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin:var(--space-md) auto;padding:0;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18);border-radius:12px;max-width:560px;overflow:hidden}
+    .urgency-item{flex:1;min-width:100px;text-align:center;padding:14px 10px;border-right:1px solid rgba(212,175,55,0.12)}
+    .urgency-item:last-child{border-right:none}
+    .urgency-item .label{font-size:0.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;display:block}
+    .urgency-item .value{font-size:1rem;font-weight:700;color:var(--gold);display:block;margin-top:3px}
+
+    /* CTA PRE-QUIZ */
+    .pre-quiz-cta{text-align:center;margin:var(--space-md) auto;max-width:560px}
+    .btn-start-quiz{display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:1rem;padding:16px 38px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:0.01em;transition:opacity 0.2s}
+    .btn-start-quiz:hover{opacity:0.87}
+    .pre-quiz-note{color:var(--gray);font-size:0.8rem;margin-top:10px}
+
+    /* QUIZ */
+    #quiz-wrapper{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #quiz-wrapper.active{display:block;animation:qFadeIn 0.4s ease}
+    #quiz-section h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md);text-align:center}
+    .quiz-progress-wrap{margin-bottom:var(--space-md)}
+    .quiz-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;position:relative}
+    .quiz-bar-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0%}
+    .quiz-bar-label{font-size:0.75rem;color:var(--gray);text-align:right;margin-top:6px}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-q{color:var(--white);font-family:var(--font-display);font-size:1.15rem;margin-bottom:6px;line-height:1.4}
+    .quiz-hint{color:var(--gray);font-size:0.82rem;margin-bottom:14px}
+    .quiz-opts{display:flex;flex-direction:column;gap:9px}
+    .qopt{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px 18px;color:var(--white);font-size:0.93rem;text-align:left;cursor:pointer;transition:all 0.18s;font-family:inherit;line-height:1.45}
+    .qopt:hover{border-color:rgba(212,175,55,0.35)}
+    .qopt.sel{border-color:var(--gold)!important;background:var(--gold)!important;color:#0a0a0a!important;font-weight:700}
+    .quiz-nav{display:flex;justify-content:flex-end;margin-top:16px}
+    .btn-qnext{background:var(--gold);color:#0a0a0a;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;opacity:0.35;pointer-events:none;transition:opacity 0.2s}
+    .btn-qnext.on{opacity:1;pointer-events:auto}
+
+    /* LEAD CAPTURE */
+    #lead-capture{display:none;max-width:540px;margin:var(--space-md) auto;animation:qFadeIn 0.4s ease;padding:0 var(--space-md)}
+    #lead-capture h3{color:var(--gold);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    #lead-capture p{color:var(--gray-light);font-size:0.88rem;margin-bottom:16px}
+    .linput{width:100%;background:var(--black-lighter);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:13px 16px;color:var(--white);font-size:0.93rem;font-family:inherit;outline:none;margin-bottom:10px;transition:border-color 0.2s;box-sizing:border-box}
+    .linput:focus{border-color:var(--gold)}
+    .linput::placeholder{color:var(--gray)}
+    .btn-submit-lead{width:100%;background:var(--gold);color:#0a0a0a;border:none;border-radius:10px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+    .btn-submit-lead:hover{opacity:0.88}
+
+    /* RESULT PANELS */
+    #result-box{max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #result-ok{display:none;text-align:center;padding:20px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.25);border-radius:12px;margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-ok h3{color:var(--gold);font-family:var(--font-display);font-size:1.4rem;margin-bottom:8px}
+    #result-ok p{color:var(--gray-light);font-size:0.92rem}
+    #result-out{display:none;padding:20px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.07);margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-out h3{color:var(--white);font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px}
+    #result-out p{color:var(--gray-light);font-size:0.9rem;line-height:1.7}
+    .wl-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .wl-input{flex:1;min-width:180px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:0.88rem;outline:none}
+    .wl-input:focus{border-color:var(--gold)}
+    .btn-wl{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:11px 18px;cursor:pointer;font-family:inherit;font-size:0.88rem;white-space:nowrap;transition:all 0.2s}
+    .btn-wl:hover{background:var(--gold);color:#0a0a0a}
+
+    /* REVEAL */
+    #reveal{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)}
+    .rv-section{margin-top:var(--space-lg)}
+    .rv-title{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md)}
+
+    /* IS / NOT IS */
+    .is-grid{display:grid;gap:16px;margin:var(--space-md) 0}
+    @media(min-width:580px){.is-grid{grid-template-columns:1fr 1fr}}
+    .is-card,.not-card{background:var(--black-lighter);border-radius:12px;padding:18px}
+    .is-card{border-top:3px solid var(--gold)}
+    .not-card{border-top:3px solid #333}
+    .is-card h4{color:var(--gold);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .not-card h4{color:var(--gray);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .tick-list,.cross-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+    .tick-list li{color:var(--white);font-size:0.88rem;display:flex;gap:9px;line-height:1.5}
+    .tick-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+    .cross-list li{color:var(--gray-light);font-size:0.88rem;display:flex;gap:9px;line-height:1.5}
+    .cross-list li::before{content:'✕';color:#555;font-weight:700;flex-shrink:0}
+
+    /* CLONES */
+    .clone-grid{display:flex;flex-direction:column;gap:12px;margin:var(--space-md) 0}
+    .clone-item{background:var(--black-lighter);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,0.05)}
+    .clone-icon{font-size:1.5rem;flex-shrink:0;width:32px;text-align:center}
+    .clone-text strong{color:var(--white);display:block;font-size:0.92rem;margin-bottom:3px}
+    .clone-text span{color:var(--gray-light);font-size:0.82rem;line-height:1.5}
+
+    /* SPEAKERS */
+    .speakers{display:flex;flex-direction:column;gap:14px;margin:var(--space-md) 0}
+    @media(min-width:520px){.speakers{flex-direction:row}}
+    .sp-card{flex:1;background:var(--black-lighter);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.05)}
+    .sp-name{color:var(--gold);font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:6px}
+    .sp-bio{color:var(--gray-light);font-size:0.85rem;line-height:1.6}
+
+    /* LOCAL */
+    .local-box{background:var(--black-lighter);border-radius:10px;padding:18px;border-left:3px solid var(--gold);margin:var(--space-md) 0}
+    .local-box strong{color:var(--white);display:block;margin-bottom:6px}
+    .local-box p{color:var(--gray-light);font-size:0.88rem;line-height:1.7;margin:0}
+
+    /* STRIPE CTA */
+    .cta-box{margin-top:var(--space-xl);padding:var(--space-md);background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:16px;text-align:center}
+    .cta-box h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:8px}
+    .cta-box .sub{color:var(--gray-light);font-size:0.92rem;margin-bottom:var(--space-md)}
+    #stripe-container{display:flex;justify-content:center;margin:var(--space-md) 0}
+    .cta-note{color:var(--gray);font-size:0.78rem;margin-top:10px}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-page">
+
+    <!-- ═══ HERO ═══ -->
+    <div class="hero-pre">
+      <p class="hero-pre-text">N&atilde;o consegues fazer tudo.</p>
+      <div class="hero-img-wrap">
+        <img src="../media/multiplicate.png" alt="Multiplica-te" class="hero-img">
+      </div>
+      <div class="hero-multiplica">Multiplica-te.</div>
+      <p class="hero-sub">
+        H&aacute; coisas que s&oacute; tu consegues fazer &mdash; e coisas que nunca ter&aacute;s tempo de aprender.<br>
+        Um agente trabalha por ti nas duas.
+      </p>
+
+      <div class="urgency-strip">
+        <div class="urgency-item"><span class="label">Quando</span><span class="value">Quinta, 30 Abr</span></div>
+        <div class="urgency-item"><span class="label">Hora</span><span class="value">21h00</span></div>
+        <div class="urgency-item"><span class="label">Onde</span><span class="value">Lumiar, Lisboa</span></div>
+        <div class="urgency-item"><span class="label">Lugares</span><span class="value">15 máx.</span></div>
+        <div class="urgency-item"><span class="label">Valor</span><span class="value">€150</span></div>
+      </div>
+
+      <div class="pre-quiz-cta">
+        <button class="btn-start-quiz" id="btn-open-quiz">Ver se tenho lugar para ti</button>
+        <p class="pre-quiz-note">Leva menos de 2 minutos &middot; Resposta imediata</p>
+      </div>
+    </div>
+
+    <!-- ═══ QUIZ ═══ -->
+    <div id="quiz-wrapper">
+      <div id="quiz-section">
+        <h2>Duas perguntas antes de abrires a p&aacute;gina.</h2>
+
+        <div class="quiz-progress-wrap">
+          <div class="quiz-bar"><div class="quiz-bar-fill" id="qfill"></div></div>
+          <div class="quiz-bar-label" id="qprog">1 / 5</div>
+        </div>
+
+        <!-- P1: PERFIL / FILTRO DURO -->
+        <div class="quiz-step active" data-key="perfil" data-step="0">
+          <h3 class="quiz-q">Qual &eacute; o teu papel actual?</h3>
+          <p class="quiz-hint">Este evento &eacute; para quem tem um neg&oacute;cio ou clientes pr&oacute;prios.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="solo" data-score="1">Trabalho por conta pr&oacute;pria &mdash; consultoria, servi&ccedil;os, coaching, freelance</button>
+            <button class="qopt" data-val="founder" data-score="1">Dirijo ou co-dirijo uma empresa (qualquer dimens&atilde;o)</button>
+            <button class="qopt" data-val="comercial" data-score="1">Sou comercial / gestor com carteira de clientes pr&oacute;pria</button>
+            <button class="qopt" data-val="employee" data-score="0">Trabalho por conta de outr&eacute;m sem clientes pr&oacute;prios</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn0">Continuar</button></div>
+        </div>
+
+        <!-- P2: MAIOR BOTTLENECK (PROFILING) -->
+        <div class="quiz-step" data-key="bottleneck" data-step="1">
+          <h3 class="quiz-q">O que &eacute; que te rouba mais tempo &mdash; e n&atilde;o devia ser tu a fazer?</h3>
+          <p class="quiz-hint">Selecciona t&aacute;s que sentires. &Eacute; isto que o agente resolve na noite.</p>
+          <div class="quiz-opts" id="p2-opts">
+            <button class="qopt multi" data-val="dms" data-score="1">Responder a mensagens, emails, DMs de clientes e leads</button>
+            <button class="qopt multi" data-val="followup" data-score="1">Follow-up de propostas e leads que ficam no ar</button>
+            <button class="qopt multi" data-val="admin" data-score="1">Admin, billing, orçamentos, agendamento</button>
+            <button class="qopt multi" data-val="content" data-score="1">Criar conteúdo, posts, emails de marketing</button>
+            <button class="qopt multi" data-val="meetings" data-score="1">Reuni&otilde;es e coordena&ccedil;&atilde;o que podiam ser um email</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn1">Continuar</button></div>
+        </div>
+
+        <!-- P3: MULTIPLICAR-ME (PROFILING) -->
+        <div class="quiz-step" data-key="multiplicar" data-step="2">
+          <h3 class="quiz-q">Se pudesses ter uma c&oacute;pia tua a trabalhar, o que lhe davas primeiro?</h3>
+          <p class="quiz-hint">A tua resposta define como configuramos o agente contigo na noite.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="vendas_clone" data-score="1">A minha capacidade de vender e fechar neg&oacute;cios</button>
+            <button class="qopt" data-val="expertise_clone" data-score="1">O meu conhecimento t&eacute;cnico ou expertise de nicho</button>
+            <button class="qopt" data-val="presenca_clone" data-score="1">A minha presen&ccedil;a &mdash; responder, aparecer, comunicar</button>
+            <button class="qopt" data-val="followup_clone" data-score="1">A gest&atilde;o de clientes e follow-up que eu sei que funciona</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn2">Continuar</button></div>
+        </div>
+
+        <!-- P4: ACESSO A OUTROS (PROFILING) -->
+        <div class="quiz-step" data-key="acesso" data-step="3">
+          <h3 class="quiz-q">Que skill querias ter dispon&iacute;vel sem ter de contratar algu&eacute;m?</h3>
+          <p class="quiz-hint">Al&eacute;m de multiplicares o que j&aacute; fazes, o agente pode fazer o que tu n&atilde;o fazes.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="outreach" data-score="1">Outreach e vendas automatizadas &mdash; ir buscar leads sem eu estar</button>
+            <button class="qopt" data-val="juridico" data-score="1">Apoio jur&iacute;dico &mdash; contratos, cl&aacute;usulas, an&aacute;lise r&aacute;pida</button>
+            <button class="qopt" data-val="marketing" data-score="1">Copy e marketing &mdash; emails, posts, p&aacute;ginas que vendem</button>
+            <button class="qopt" data-val="financeiro" data-score="1">Gest&atilde;o financeira &mdash; cash flow, alertas, relat&oacute;rios autom&aacute;ticos</button>
+            <button class="qopt" data-val="linguas" data-score="1">Comunica&ccedil;&atilde;o em ingl&ecirc;s &mdash; emails, reuni&otilde;es, clientes internacionais</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn3">Continuar</button></div>
+        </div>
+
+        <!-- P5: DISPONIBILIDADE / FILTRO -->
+        <div class="quiz-step" data-key="disponivel" data-step="4">
+          <h3 class="quiz-q">Consegues estar quinta, 30 de Abril, &agrave;s 21h, no Lumiar &mdash; Lisboa?</h3>
+          <p class="quiz-hint">O evento n&atilde;o ser&aacute; repetido nesta data. Estacionamento f&aacute;cil, 20 min do centro.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="sim" data-score="1">Sim, estou dispon&iacute;vel</button>
+            <button class="qopt" data-val="talvez" data-score="0.5">Tenho de confirmar agenda, mas &eacute; prov&aacute;vel</button>
+            <button class="qopt" data-val="nao" data-score="0">N&atilde;o consigo nesta data</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn4">Ver resultado</button></div>
+        </div>
+
+      </div><!-- /quiz-section -->
+    </div><!-- /quiz-wrapper -->
+
+    <!-- ═══ LEAD CAPTURE ═══ -->
+    <div id="lead-capture">
+      <h3>Quase l&aacute;.</h3>
+      <p>Para enviarmos a confirma&ccedil;&atilde;o (se tiveres lugar dispon&iacute;vel).</p>
+      <input type="text" class="linput" id="lname" placeholder="Nome" autocomplete="name">
+      <input type="email" class="linput" id="lemail" placeholder="Email" autocomplete="email">
+      <input type="tel" class="linput" id="lphone" placeholder="Telef&oacute;ne (opcional)" autocomplete="tel">
+      <button class="btn-submit-lead" id="btn-lead-submit">Ver o meu resultado</button>
+    </div>
+
+    <!-- ═══ RESULTADO ═══ -->
+    <div id="result-box">
+      <div id="result-ok">
+        <h3>H&aacute; lugar para ti.</h3>
+        <p>Aqui est&aacute; o que acontece na noite &mdash; e como garantir o teu lugar agora.</p>
+      </div>
+      <div id="result-out">
+        <h3>Este formato n&atilde;o &eacute; o certo para ti agora.</h3>
+        <p>Sendo directo: ou n&atilde;o tens o perfil que o evento serve, ou n&atilde;o consegues estar presente. Dizer o contr&aacute;rio seria desperdi&ccedil;ar o teu tempo e o nosso.<br><br>Se quiseres ser avisado para a pr&oacute;xima edi&ccedil;&atilde;o:</p>
+        <div class="wl-row">
+          <input type="email" class="wl-input" id="wl-email" placeholder="O teu email">
+          <button class="btn-wl" id="btn-wl">Avisar-me</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ REVEAL ═══ -->
+    <div id="reveal">
+
+      <!-- O QUE ACONTECE -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que acontece na noite</h2>
+        <div class="is-grid">
+          <div class="is-card">
+            <h4>É</h4>
+            <ul class="tick-list">
+              <li>Uma sess&atilde;o de trabalho &mdash; sais com algo feito, n&atilde;o com &ldquo;inspira&ccedil;&atilde;o&rdquo;</li>
+              <li>Configura&ccedil;&atilde;o ao vivo do teu agente, adaptado ao teu neg&oacute;cio</li>
+              <li>15 pessoas &mdash; perguntas reais, n&atilde;o gen&eacute;ricas</li>
+              <li>Espa&ccedil;o calmo, fora do ru&iacute;do de Lisboa, estacionamento &agrave; porta</li>
+              <li>O agente que configuras fica a trabalhar ap&oacute;s a noite</li>
+              <li>Acesso a dois especialistas que j&aacute; usam isto no dia-a-dia</li>
+            </ul>
+          </div>
+          <div class="not-card">
+            <h4>Não é</h4>
+            <ul class="cross-list">
+              <li>Workshop de ChatGPT (isso est&aacute; no YouTube)</li>
+              <li>Apresenta&ccedil;&atilde;o de slides sobre &ldquo;o futuro da IA&rdquo;</li>
+              <li>Teoria sem resultado concreto no fim</li>
+              <li>Para quem quer aprender IA em abstracto</li>
+              <li>Forma&ccedil;&atilde;o com 50 pessoas e microfone ao fundo</li>
+              <li>Produto que se vende todos os meses &mdash; esta edi&ccedil;&atilde;o &eacute; esta</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- O QUE O AGENTE FAZ -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que o agente faz por ti</h2>
+        <div class="clone-grid">
+          <div class="clone-item">
+            <span class="clone-icon">📲</span>
+            <div class="clone-text">
+              <strong>Multiplica a tua presen&ccedil;a</strong>
+              <span>Responde DMs, emails e WhatsApp como tu &mdash; no tom certo, sem atrasar, mesmo quando n&atilde;o est&aacute;s dispon&iacute;vel.</span>
+            </div>
+          </div>
+          <div class="clone-item">
+            <span class="clone-icon">🎯</span>
+            <div class="clone-text">
+              <strong>Multiplica as tuas vendas</strong>
+              <span>Follow-up autom&aacute;tico de leads. Quem n&atilde;o respondeu recebe outro toque &mdash; no momento certo, com o &acirc;ngulo certo.</span>
+            </div>
+          </div>
+          <div class="clone-item">
+            <span class="clone-icon">⚖️</span>
+            <div class="clone-text">
+              <strong>D&aacute;-te acesso ao que n&atilde;o podes contratar</strong>
+              <span>Jur&iacute;dico, marketing, financeiro, ingl&ecirc;s &mdash; o agente cobre o que tu n&atilde;o tens tempo (ou or&ccedil;amento) para ter permanentemente.</span>
+            </div>
+          </div>
+          <div class="clone-item">
+            <span class="clone-icon">🕐</span>
+            <div class="clone-text">
+              <strong>Trabalha quando tu n&atilde;o trabalhas</strong>
+              <span>24 horas por dia. Sem f&eacute;rias, sem fins de semana, sem &ldquo;est&aacute; a fazer outra coisa&rdquo;.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPEAKERS -->
+      <div class="rv-section">
+        <h2 class="rv-title">Quem est&aacute; l&aacute;</h2>
+        <div class="speakers">
+          <div class="sp-card">
+            <div class="sp-name">Andr&eacute; Silva</div>
+            <div class="sp-bio">M&eacute;dico, doutor em neuroci&ecirc;ncias, fundador de startup de sa&uacute;de com IA. Construiu sistemas de agentes que correm 24 horas. N&atilde;o fala de IA como conceito &mdash; mostra como funciona.</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-name">Sara Isabel</div>
+            <div class="sp-bio">Neurocientista. Especialista em como as pessoas adoptam (ou resistem a) novas ferramentas. Garante que o agente que configuras &eacute; um que realmente vais usar.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCAL -->
+      <div class="rv-section">
+        <div class="local-box">
+          <strong>📍 Lumiar, Lisboa &mdash; estacionamento f&aacute;cil, 20 min do centro</strong>
+          <p>Espa&ccedil;o boutique. Sala confort&aacute;vel, sem press&atilde;o de tempo, sem o caos do centro da cidade. Uma noite de trabalho real &mdash; sem logist&iacute;ca.</p>
+        </div>
+      </div>
+
+      <!-- CTA STRIPE -->
+      <div class="cta-box" id="cta-main">
+        <h2>Garante o teu lugar agora.</h2>
+        <p class="sub">Ficam os &uacute;ltimos &middot; O evento n&atilde;o ser&aacute; repetido nesta data</p>
+        <div id="stripe-container"></div>
+        <p class="cta-note">Pagamento seguro via Stripe &middot; Confirma&ccedil;&atilde;o imediata por email &middot; &euro;150</p>
+      </div>
+
+    </div><!-- /reveal -->
+
+  </article>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p class="footer-tagline">Knowledge worth protecting.</p>
+      </div>
+      <p class="footer-copy">&copy; 2026 McMinsky. <a href="/legal/privacy.html" style="color:var(--gray)">Privacidade</a></p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  (function(){
+    // ── REF DE AFILIADO ───────────────────────────────────────────────
+    var ref = new URLSearchParams(window.location.search).get('ref') || '';
+    if(ref){ try{ localStorage.setItem('mcminsky_ref', ref); }catch(e){} }
+    function getRef(){ try{ return localStorage.getItem('mcminsky_ref')||ref||''; }catch(e){ return ref||''; } }
+
+    // ── UID ───────────────────────────────────────────────────────────
+    var uid='';
+    try{
+      uid=localStorage.getItem('mcminsky_uid')||'';
+      if(!uid){ uid='u'+Date.now()+Math.random().toString(36).slice(2,6); localStorage.setItem('mcminsky_uid',uid); }
+    }catch(e){}
+
+    // ── TRACKING ──────────────────────────────────────────────────────
+    var FURL='https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse';
+    function track(action, body){
+      try{
+        var r=getRef();
+        var fd=new FormData();
+        fd.append('entry.1191618802',action);
+        fd.append('entry.97481516',uid);
+        fd.append('entry.1381161689',(body||'')+(r?' ref:'+r:''));
+        fetch(FURL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){});
+      }catch(e){}
+    }
+    track('pageview','agente-ao-vivo'+(getRef()?' ref:'+getRef():''));
+
+    // ── ABRIR QUIZ ────────────────────────────────────────────────────
+    document.getElementById('btn-open-quiz').addEventListener('click',function(){
+      document.getElementById('quiz-wrapper').classList.add('active');
+      document.getElementById('quiz-wrapper').scrollIntoView({behavior:'smooth',block:'start'});
+      track('quiz_start','agente-ao-vivo');
+    });
+
+    // ── QUIZ STATE ────────────────────────────────────────────────────
+    var scores={};
+    var answers={};
+    var steps=document.querySelectorAll('.quiz-step');
+    var total=steps.length;
+
+    function setProgress(n){
+      var pct=((n)/total)*100;
+      document.getElementById('qfill').style.width=pct+'%';
+      document.getElementById('qprog').textContent=(n+1)+' / '+total;
+    }
+
+    function showStep(n){
+      steps.forEach(function(s,i){ s.classList.toggle('active',i===n); });
+      setProgress(n);
+    }
+
+    // Single-choice steps: 0, 2, 3, 4
+    [0,2,3,4].forEach(function(si){
+      var step=steps[si];
+      if(!step) return;
+      var opts=step.querySelectorAll('.qopt');
+      var next=step.querySelector('.btn-qnext');
+      opts.forEach(function(opt){
+        opt.addEventListener('click',function(){
+          opts.forEach(function(o){ o.classList.remove('sel'); });
+          opt.classList.add('sel');
+          scores[si]=parseFloat(opt.getAttribute('data-score'));
+          answers[step.getAttribute('data-key')]=opt.getAttribute('data-val');
+          if(next) next.classList.add('on');
+          setTimeout(function(){ if(next&&next.classList.contains('on')) next.click(); },380);
+        });
+      });
+      if(next){
+        next.addEventListener('click',function(){
+          if(!next.classList.contains('on')) return;
+          if(si<total-1){ showStep(si+1); }
+          else{ doLeadCapture(); }
+        });
+      }
+    });
+
+    // Multi-choice: step 1
+    (function(){
+      var step=steps[1];
+      if(!step) return;
+      var opts=step.querySelectorAll('.qopt.multi');
+      var next=step.querySelector('.btn-qnext');
+      var hasSel=false;
+      opts.forEach(function(opt){
+        opt.addEventListener('click',function(){
+          opt.classList.toggle('sel');
+          var sel=Array.from(opts).filter(function(o){ return o.classList.contains('sel'); });
+          hasSel=sel.length>0;
+          scores[1]=hasSel?1:0;
+          answers['bottleneck']=sel.map(function(o){ return o.getAttribute('data-val'); }).join(',');
+          if(next){ next.style.opacity=hasSel?'1':'0.35'; next.style.pointerEvents=hasSel?'auto':'none'; }
+        });
+      });
+      if(next){
+        next.addEventListener('click',function(){
+          if(!hasSel) return;
+          showStep(2);
+        });
+      }
+    })();
+
+    // ── LEAD CAPTURE ──────────────────────────────────────────────────
+    function doLeadCapture(){
+      document.getElementById('quiz-wrapper').style.display='none';
+      document.getElementById('lead-capture').style.display='block';
+      document.getElementById('lead-capture').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    document.getElementById('btn-lead-submit').addEventListener('click',function(){
+      var name=document.getElementById('lname').value.trim();
+      var email=document.getElementById('lemail').value.trim();
+      var phone=document.getElementById('lphone').value.trim();
+      if(!name||!email){ document.getElementById('lname').focus(); return; }
+      document.getElementById('lead-capture').style.display='none';
+
+      var totalScore=Object.values(scores).reduce(function(a,b){ return a+b; },0);
+      var notAvail=answers['disponivel']==='nao';
+      var notProfile=scores[0]===0;
+      var body='nome:'+name+' email:'+email+(phone?' tel:'+phone:'')
+               +' score:'+totalScore+' '+JSON.stringify(answers);
+      track('quiz_complete',body);
+
+      if(notAvail||notProfile||totalScore<2){
+        showOut(email);
+      } else {
+        showOk(answers['disponivel']==='talvez');
+      }
+    });
+
+    function showOk(isMaybe){
+      var el=document.getElementById('result-ok');
+      el.style.display='block';
+      if(isMaybe){
+        el.querySelector('h3').textContent='H\u00e1 lugar para ti \u2014 mas &eacute; j\u00e1.';
+        el.querySelector('p').textContent='Os lugares est\u00e3o a fechar. Confirma agora.';
+      }
+      document.getElementById('reveal').style.display='block';
+      renderStripe();
+      track('quiz_qualified','score:'+Object.values(scores).reduce(function(a,b){return a+b;},0));
+      setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); },200);
+    }
+
+    function showOut(email){
+      document.getElementById('result-out').style.display='block';
+      track('quiz_excluded','email:'+email);
+      setTimeout(function(){ document.getElementById('result-out').scrollIntoView({behavior:'smooth',block:'start'}); },200);
+    }
+
+    // Waitlist
+    document.getElementById('btn-wl').addEventListener('click',function(){
+      var email=document.getElementById('wl-email').value.trim();
+      if(!email) return;
+      track('waitlist',email);
+      document.getElementById('result-out').innerHTML='<h3 style="color:var(--gold);font-family:var(--font-display)">Anotado.</h3><p style="color:var(--gray-light)">Avisamos para a pr\u00f3xima edi\u00e7\u00e3o.</p>';
+    });
+
+    // ── STRIPE BUY BUTTON (com client-reference-id = ref afiliado) ───
+    function renderStripe(){
+      var container=document.getElementById('stripe-container');
+      var btn=document.createElement('stripe-buy-button');
+      btn.setAttribute('buy-button-id','buy_btn_1TRYeSEcXun88d6enO7usM7G');
+      btn.setAttribute('publishable-key','pk_live_51P2d9GEcXun88d6eBqX7XAka5dSsCOM1AaakfjBmhQ2C15Se58FQeJpBT1DwqciGH3dsnt3K3a4ZIZRjiPLBkNUH00ZbcNJFJa');
+      var r=getRef();
+      if(r) btn.setAttribute('client-reference-id',r);
+      container.appendChild(btn);
+      track('stripe_rendered',r?'ref:'+r:'direct');
+    }
+
+  })();
+  </script>
+</body>
+</html>
