@@ -657,10 +657,10 @@ Enviado através do formulário do website McMinsky`;
             });
         });
 
-        return Promise.all(fetchPromises);
+        return Promise.all(fetchPromises.map(function(p) { return p.catch(function() { return null; }); }));
       })
       .then(function(events) {
-        renderEvents(events);
+        renderEvents(events.filter(function(e) { return e !== null; }));
       })
       .catch(function(error) {
         console.error('Error loading events:', error);
