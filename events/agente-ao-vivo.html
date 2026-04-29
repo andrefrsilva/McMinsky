@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Multiplica-te. Offsite prático, Lisboa, quinta 30 Abril 21h. 15 lugares. €150.">
-  <meta property="og:title" content="Multiplica-te — Offsite 30 Abr · Lisboa · 15 lugares">
-  <meta property="og:description" content="Não consegues fazer tudo. Quinta 30 Abril, 21h, Lisboa. 15 lugares. €150.">
+  <meta name="description" content="Sais com um agente IA configurado para o teu negócio. Offsite presencial, Lisboa, quinta 30 Abr 21h. €150. 15 lugares.">
+  <meta name="category" content="Offsite Exclusivo">
+  <meta name="event-date" content="2026-04-30">
+  <meta name="event-price" content="€150">
+  <meta name="event-spots-text" content="15 lugares · Quinta 30 Abr · 21h">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Agente ao Vivo — Offsite 30 Abr · Lisboa · 15 lugares | McMinsky">
+  <meta property="og:description" content="Sais com um agente IA configurado para o teu negócio. Offsite presencial, Lisboa, quinta 30 Abr 21h. €150. 15 lugares.">
+  <meta property="og:image" content="https://mcminsky.pt/media/multiplicate.png">
   <meta property="og:url" content="https://mcminsky.pt/events/agente-ao-vivo.html">
   <meta property="og:site_name" content="McMinsky">
-  <title>Multiplica-te — 30 Abril · Lisboa | McMinsky</title>
+  <title>Agente ao Vivo — 30 Abril · Lisboa | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
   <script async src="https://js.stripe.com/v3/buy-button.js"></script>
@@ -145,13 +151,25 @@
         <ul class="nav-list">
           <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
           <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#insights" class="nav-link">Insights</a></li>
           <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
         </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
       </nav>
     </div>
   </header>
 
   <article class="article-page">
+
+    <div class="article-hero">
+      <span class="article-hero-category">Offsite Exclusivo &middot; IA em Pr&aacute;tica &middot; 15 Lugares</span>
+      <h1 class="article-hero-title">Agente ao Vivo</h1>
+      <p class="article-hero-meta">Uma noite. Um agente configurado. O teu neg&oacute;cio a funcionar sem ti.</p>
+    </div>
 
     <!-- ═══ HERO ═══ -->
     <div class="hero-pre">
@@ -216,8 +234,31 @@
           <div class="quiz-nav"><button class="btn-qnext" id="qn1">Continuar</button></div>
         </div>
 
+        <!-- P2b: DETALHE (FREE TEXT) -->
+        <div class="quiz-step" data-key="detalhe" data-step="2">
+          <h3 class="quiz-q">D&aacute;-nos mais contexto &mdash; em poucas palavras.</h3>
+          <p class="quiz-hint">N&atilde;o h&aacute; resposta certa. Queremos perceber a tua situa&ccedil;&atilde;o concreta antes da noite.</p>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <label style="color:var(--gray);font-size:0.8rem;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Qual &eacute; a tarefa que mais te consome tempo?</label>
+              <textarea class="linput" id="q-tarefa" placeholder="Ex: responder a leads no WhatsApp, follow-up de propostas, criar conte&uacute;do..." rows="2" maxlength="300" style="resize:none;min-height:64px"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <div style="flex:1;min-width:140px">
+                <label style="color:var(--gray);font-size:0.8rem;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Horas por semana perdidas</label>
+                <input type="text" class="linput" id="q-horas" placeholder="Ex: 10h" maxlength="20" style="margin-bottom:0">
+              </div>
+              <div style="flex:1;min-width:140px">
+                <label style="color:var(--gray);font-size:0.8rem;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Custo mensal estimado (opcional)</label>
+                <input type="text" class="linput" id="q-custo" placeholder="Ex: &euro;500/m&ecirc;s em VA" maxlength="40" style="margin-bottom:0">
+              </div>
+            </div>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext on" id="qn2b">Continuar</button></div>
+        </div>
+
         <!-- P3: MULTIPLICAR-ME (PROFILING) -->
-        <div class="quiz-step" data-key="multiplicar" data-step="2">
+        <div class="quiz-step" data-key="multiplicar" data-step="3">
           <h3 class="quiz-q">Se pudesses ter uma c&oacute;pia tua a trabalhar, o que lhe davas primeiro?</h3>
           <p class="quiz-hint">A tua resposta define como configuramos o agente contigo na noite.</p>
           <div class="quiz-opts">
@@ -230,7 +271,7 @@
         </div>
 
         <!-- P4: ACESSO A OUTROS (PROFILING) -->
-        <div class="quiz-step" data-key="acesso" data-step="3">
+        <div class="quiz-step" data-key="acesso" data-step="4">
           <h3 class="quiz-q">Que skill querias ter dispon&iacute;vel sem ter de contratar algu&eacute;m?</h3>
           <p class="quiz-hint">Al&eacute;m de multiplicares o que j&aacute; fazes, o agente pode fazer o que tu n&atilde;o fazes.</p>
           <div class="quiz-opts">
@@ -244,7 +285,7 @@
         </div>
 
         <!-- P5: DISPONIBILIDADE / FILTRO -->
-        <div class="quiz-step" data-key="disponivel" data-step="4">
+        <div class="quiz-step" data-key="disponivel" data-step="5">
           <h3 class="quiz-q">Consegues estar quinta, 30 de Abril, &agrave;s 21h, no Lumiar &mdash; Lisboa?</h3>
           <p class="quiz-hint">O evento n&atilde;o ser&aacute; repetido nesta data. Estacionamento f&aacute;cil, 20 min do centro.</p>
           <div class="quiz-opts">
@@ -390,15 +431,37 @@
   </article>
 
   <footer class="footer">
-    <div class="footer-inner">
+    <div class="footer-grid">
       <div class="footer-brand">
         <a href="/" class="logo">
           <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky">
           <span class="logo-text">McMinsky</span>
         </a>
-        <p class="footer-tagline">Knowledge worth protecting.</p>
+        <p>Centro de Excel&ecirc;ncia para mentes ambiciosas.</p>
       </div>
-      <p class="footer-copy">&copy; 2026 McMinsky. <a href="/legal/privacy.html" style="color:var(--gray)">Privacidade</a></p>
+      <div class="footer-links">
+        <h4>Navega&ccedil;&atilde;o</h4>
+        <ul>
+          <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#programs">Programas</a></li>
+          <li><a href="/#insights">Insights</a></li>
+          <li><a href="/#offers">Agenda</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Localiza&ccedil;&atilde;o</h4>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisboa</p>
+        <a href="https://share.google/8wcEaRj5rfmvmwiyv" class="footer-maps-btn" target="_blank">Ver no Google Maps</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condi&ccedil;&otilde;es</a>
+        <a href="../legal/privacy.html">Pol&iacute;tica de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclama&ccedil;&otilde;es</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2026</span> McMinsky. Todos os direitos reservados.</p>
     </div>
   </footer>
 
@@ -455,8 +518,8 @@
       setProgress(n);
     }
 
-    // Single-choice steps: 0, 2, 3, 4
-    [0,2,3,4].forEach(function(si){
+    // Single-choice steps: 0, 3, 4, 5
+    [0,3,4,5].forEach(function(si){
       var step=steps[si];
       if(!step) return;
       var opts=step.querySelectorAll('.qopt');
@@ -501,6 +564,21 @@
         next.addEventListener('click',function(){
           if(!hasSel) return;
           showStep(2);
+        });
+      }
+    })();
+
+    // Detalhe step (free text): step 2
+    (function(){
+      var step=steps[2];
+      if(!step) return;
+      var next=step.querySelector('.btn-qnext');
+      if(next){
+        next.addEventListener('click',function(){
+          answers['tarefa']=((document.getElementById('q-tarefa')||{}).value||'').trim();
+          answers['horas']=((document.getElementById('q-horas')||{}).value||'').trim();
+          answers['custo']=((document.getElementById('q-custo')||{}).value||'').trim();
+          showStep(3);
         });
       }
     })();
