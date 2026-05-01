@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neurociência do ADHD para Pais. Workshop presencial com médico PhD. Lisboa, 16 Maio, 10h. €120. 12 lugares.">
+  <meta name="category" content="Workshop Parental">
+  <meta name="event-date" content="2026-05-16">
+  <meta name="event-price" content="€120">
+  <meta name="event-spots-text" content="12 lugares · Sáb 16 Mai · 10h">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Neurociência do ADHD para Pais — 16 Mai · Lisboa · 12 lugares | McMinsky">
+  <meta property="og:description" content="Não é mais um workshop de psicólogo. É um médico com PhD em neurociências a explicar o cérebro do seu filho — e o que realmente funciona em casa.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="800">
+  <meta property="og:url" content="https://mcminsky.pt/events/adhd-pais.html">
+  <meta property="og:site_name" content="McMinsky">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Neurociência do ADHD para Pais — 16 Mai · Lisboa | McMinsky">
+  <meta name="twitter:description" content="Não é mais um workshop de psicólogo. É um médico com PhD em neurociências a explicar o cérebro do seu filho — e o que realmente funciona em casa.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80">
+  <title>Neurociência do ADHD para Pais — 16 de Maio · Lisboa | McMinsky</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+  <style>
+    /* ── HERO ADHD ── */
+    .hero-pre{text-align:center;padding:var(--space-xl) var(--space-md) 0;max-width:700px;margin:0 auto}
+    .hero-pre-text{font-size:clamp(1.1rem,3vw,1.4rem);color:var(--gray-light);letter-spacing:0.04em;margin-bottom:var(--space-md);font-style:italic}
+    .hero-img-wrap{position:relative;max-width:600px;margin:0 auto}
+    .hero-img{width:100%;border-radius:12px;display:block;max-height:380px;object-fit:cover}
+    .hero-title{font-family:var(--font-display);font-size:clamp(2.2rem,8vw,4.5rem);color:var(--gold);text-align:center;letter-spacing:-0.01em;line-height:1.1;margin:var(--space-md) 0 var(--space-sm);font-weight:700}
+    .hero-sub{text-align:center;color:var(--gray-light);font-size:clamp(1rem,2.5vw,1.15rem);line-height:1.7;max-width:520px;margin:0 auto var(--space-lg)}
+
+    /* URGENCY STRIP */
+    .urgency-strip{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin:var(--space-md) auto;padding:0;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18);border-radius:12px;max-width:560px;overflow:hidden}
+    .urgency-item{flex:1;min-width:90px;text-align:center;padding:14px 10px;border-right:1px solid rgba(212,175,55,0.12)}
+    .urgency-item:last-child{border-right:none}
+    .urgency-item .label{font-size:0.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;display:block}
+    .urgency-item .value{font-size:0.95rem;font-weight:700;color:var(--gold);display:block;margin-top:3px}
+
+    /* STAT BOXES */
+    .stat-boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:680px;margin:var(--space-md) auto var(--space-lg)}
+    .stat-box{background:var(--black-lighter);border-radius:10px;padding:16px;text-align:center;border-top:3px solid var(--gold)}
+    .stat-num{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1;display:block}
+    .stat-desc{font-size:0.78rem;color:var(--gray-light);line-height:1.4;margin-top:5px;display:block}
+    .stat-source{font-size:0.65rem;color:var(--gray);margin-top:4px;display:block;font-style:italic}
+
+    /* CTA PRE-QUIZ */
+    .pre-quiz-cta{text-align:center;margin:var(--space-md) auto;max-width:560px}
+    .btn-start-quiz{display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:1rem;padding:16px 38px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:0.01em;transition:opacity 0.2s}
+    .btn-start-quiz:hover{opacity:0.87}
+    .pre-quiz-note{color:var(--gray);font-size:0.8rem;margin-top:10px}
+
+    /* QUIZ */
+    #quiz-wrapper{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #quiz-wrapper.active{display:block;animation:qFadeIn 0.4s ease}
+    .quiz-progress-wrap{margin-bottom:var(--space-md)}
+    .quiz-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;position:relative}
+    .quiz-bar-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0%}
+    .quiz-bar-label{font-size:0.75rem;color:var(--gray);text-align:right;margin-top:6px}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-q{color:var(--white);font-family:var(--font-display);font-size:1.15rem;margin-bottom:6px;line-height:1.4}
+    .quiz-hint{color:var(--gray);font-size:0.82rem;margin-bottom:14px}
+    .quiz-opts{display:flex;flex-direction:column;gap:9px}
+    .qopt{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px 18px;color:var(--white);font-size:0.93rem;text-align:left;cursor:pointer;transition:all 0.18s;font-family:inherit;line-height:1.45}
+    .qopt:hover{border-color:rgba(212,175,55,0.35)}
+    .qopt.sel{border-color:var(--gold)!important;background:var(--gold)!important;color:#0a0a0a!important;font-weight:700}
+    .quiz-nav{display:flex;justify-content:flex-end;margin-top:16px}
+    .btn-qnext{background:var(--gold);color:#0a0a0a;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;opacity:0.35;pointer-events:none;transition:opacity 0.2s}
+    .btn-qnext.on{opacity:1;pointer-events:auto}
+
+    /* LEAD CAPTURE */
+    #lead-capture{display:none;max-width:540px;margin:var(--space-md) auto;animation:qFadeIn 0.4s ease;padding:0 var(--space-md)}
+    #lead-capture h3{color:var(--gold);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    #lead-capture p{color:var(--gray-light);font-size:0.88rem;margin-bottom:16px}
+    .linput{width:100%;background:var(--black-lighter);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:13px 16px;color:var(--white);font-size:0.93rem;font-family:inherit;outline:none;margin-bottom:10px;transition:border-color 0.2s;box-sizing:border-box}
+    .linput:focus{border-color:var(--gold)}
+    .linput::placeholder{color:var(--gray)}
+    .btn-submit-lead{width:100%;background:var(--gold);color:#0a0a0a;border:none;border-radius:10px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+    .btn-submit-lead:hover{opacity:0.88}
+
+    /* RESULT PANELS */
+    #result-box{max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #result-ok{display:none;text-align:center;padding:20px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.25);border-radius:12px;margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-ok h3{color:var(--gold);font-family:var(--font-display);font-size:1.4rem;margin-bottom:8px}
+    #result-ok p{color:var(--gray-light);font-size:0.92rem}
+    #result-out{display:none;padding:20px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.07);margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-out h3{color:var(--white);font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px}
+    #result-out p{color:var(--gray-light);font-size:0.9rem;line-height:1.7}
+    .wl-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .wl-input{flex:1;min-width:180px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:0.88rem;outline:none}
+    .wl-input:focus{border-color:var(--gold)}
+    .btn-wl{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:11px 18px;cursor:pointer;font-family:inherit;font-size:0.88rem;white-space:nowrap;transition:all 0.2s}
+    .btn-wl:hover{background:var(--gold);color:#0a0a0a}
+
+    /* REVEAL */
+    #reveal{display:none;max-width:720px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)}
+    .rv-section{margin-top:var(--space-lg)}
+    .rv-title{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md)}
+
+    /* MYTH / TRUTH */
+    .myth-grid{display:flex;flex-direction:column;gap:14px;margin:var(--space-md) 0}
+    .myth-card{background:var(--black-lighter);border-radius:12px;padding:18px;border-left:3px solid #555}
+    .myth-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#777;margin-bottom:6px;display:block}
+    .myth-text{color:var(--gray-light);font-size:0.92rem;line-height:1.6;font-style:italic;margin-bottom:8px}
+    .truth-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:5px;display:block}
+    .truth-text{color:var(--white);font-size:0.92rem;line-height:1.6}
+
+    /* AGENDA */
+    .agenda-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;margin:var(--space-md) 0}
+    .agenda-item{background:var(--black-lighter);border-radius:10px;padding:15px 18px;display:flex;gap:14px;align-items:flex-start;border:1px solid rgba(255,255,255,0.04)}
+    .agenda-time{color:var(--gold);font-weight:700;font-size:0.85rem;white-space:nowrap;flex-shrink:0;width:60px}
+    .agenda-text strong{color:var(--white);font-size:0.92rem;display:block;margin-bottom:3px}
+    .agenda-text span{color:var(--gray-light);font-size:0.82rem;line-height:1.5}
+
+    /* LOCAL */
+    .local-box{background:var(--black-lighter);border-radius:10px;padding:18px;border-left:3px solid var(--gold);margin:var(--space-md) 0}
+    .local-box strong{color:var(--white);display:block;margin-bottom:6px}
+    .local-box p{color:var(--gray-light);font-size:0.88rem;line-height:1.7;margin:0}
+
+    /* SPEAKER */
+    .speaker-card{background:var(--black-lighter);border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,0.05);margin:var(--space-md) 0}
+    .sp-name{color:var(--gold);font-family:var(--font-display);font-size:1.05rem;font-weight:600;margin-bottom:6px}
+    .sp-bio{color:var(--gray-light);font-size:0.87rem;line-height:1.7}
+
+    /* CTA BOX */
+    .cta-box{margin-top:var(--space-xl);padding:var(--space-md);background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:16px;text-align:center}
+    .cta-box h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:8px}
+    .cta-box .sub{color:var(--gray-light);font-size:0.92rem;margin-bottom:var(--space-md)}
+    .btn-stripe{display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:800;font-size:1.05rem;padding:18px 46px;border-radius:12px;text-decoration:none;letter-spacing:0.01em;transition:opacity 0.2s;margin-bottom:10px}
+    .btn-stripe:hover{opacity:0.87}
+    .cta-note{color:var(--gray);font-size:0.78rem;margin-top:10px}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#insights" class="nav-link">Insights</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-page">
+
+    <div class="article-hero">
+      <span class="article-hero-category">Workshop Parental &middot; Neuroci&ecirc;ncia Aplicada &middot; 12 Lugares</span>
+      <h1 class="article-hero-title">Neuroci&ecirc;ncia do ADHD para Pais</h1>
+      <p class="article-hero-meta">O c&eacute;rebro do seu filho n&atilde;o est&aacute; partido. Est&aacute; apenas configurado de forma diferente — e h&aacute; ci&ecirc;ncia real sobre o que funciona.</p>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero-pre">
+      <p class="hero-pre-text">N&atilde;o &eacute; falta de vontade. N&atilde;o &eacute; m&aacute; educa&ccedil;&atilde;o. N&atilde;o &eacute; culpa sua.</p>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80" alt="Criança com ADHD a estudar" class="hero-img">
+      </div>
+      <div class="hero-title">Perceba o c&eacute;rebro do seu filho.</div>
+      <p class="hero-sub">
+        Uma tarde com um m&eacute;dico com PhD em Neuroci&ecirc;ncias.<br>
+        Sem psicologia de revista. Sem ju&iacute;zo. Com dados reais e ferramentas que usa amanha.
+      </p>
+
+      <div class="urgency-strip">
+        <div class="urgency-item"><span class="label">Quando</span><span class="value">S&aacute;bado, 16 Mai</span></div>
+        <div class="urgency-item"><span class="label">Hora</span><span class="value">10h00&ndash;12h00</span></div>
+        <div class="urgency-item"><span class="label">Onde</span><span class="value">Lumiar, Lisboa</span></div>
+        <div class="urgency-item"><span class="label">Lugares</span><span class="value">12 m&aacute;x.</span></div>
+        <div class="urgency-item"><span class="label">Valor</span><span class="value">&euro;120</span></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-boxes">
+      <div class="stat-box">
+        <span class="stat-num">5&ndash;7%</span>
+        <span class="stat-desc">das crian&ccedil;as em Portugal t&ecirc;m ADHD — cerca de 80.000 em idade escolar</span>
+        <span class="stat-source">SciELO / neuropsiquiatria.pt 2025</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">4,4&times;</span>
+        <span class="stat-desc">maior risco de burnout para pais de crian&ccedil;as com ADHD vs. outros pais</span>
+        <span class="stat-source">Journal of Pediatric Health Care, 2024</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">67,8%</span>
+        <span class="stat-desc">das crian&ccedil;as com ADHD n&atilde;o completam o secund&aacute;rio no prazo esperado</span>
+        <span class="stat-source">PMC — estudo sueco, 657k alunos</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">+80%</span>
+        <span class="stat-desc">aumento de prescri&ccedil;&otilde;es em Portugal em apenas 4 anos — e o subdiagn&oacute;stico continua</span>
+        <span class="stat-source">SciELO / IMS-Health Portugal</span>
+      </div>
+    </div>
+
+    <!-- QUIZ CTA -->
+    <div class="pre-quiz-cta">
+      <button class="btn-start-quiz" id="btn-start">Verificar se este workshop &eacute; para mim &rarr;</button>
+      <p class="pre-quiz-note">5 perguntas &middot; 90 segundos &middot; conte&uacute;do completo desbloqueado no final</p>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quiz-wrapper">
+      <div class="quiz-progress-wrap">
+        <div class="quiz-bar"><div class="quiz-bar-fill" id="qbar"></div></div>
+        <div class="quiz-bar-label" id="qbar-label">Pergunta 1 de 5</div>
+      </div>
+
+      <div class="quiz-step active" id="qs1">
+        <div class="quiz-q">O seu filho tem diagn&oacute;stico de ADHD/PHDA?</div>
+        <div class="quiz-hint">Qual a situa&ccedil;&atilde;o actual?</div>
+        <div class="quiz-opts">
+          <button class="qopt" data-step="1">Sim, diagn&oacute;stico confirmado por especialista</button>
+          <button class="qopt" data-step="1">Em processo de avalia&ccedil;&atilde;o — ainda n&atilde;o temos resposta definitiva</button>
+          <button class="qopt" data-step="1">N&atilde;o, mas reconhe&ccedil;o muitos dos sinais no meu filho</button>
+          <button class="qopt" data-step="1">Tenho d&uacute;vidas — n&atilde;o sei se &eacute; ADHD ou outra coisa</button>
+        </div>
+        <div class="quiz-nav"><button class="btn-qnext" id="qn1" data-next="2">Pr&oacute;xima &rarr;</button></div>
+      </div>
+
+      <div class="quiz-step" id="qs2">
+        <div class="quiz-q">H&aacute; quanto tempo lida com este desafio em casa?</div>
+        <div class="quiz-hint">N&atilde;o existe resposta certa ou errada</div>
+        <div class="quiz-opts">
+          <button class="qopt" data-step="2">Ainda estamos no in&iacute;cio — menos de 1 ano</button>
+          <button class="qopt" data-step="2">1 a 3 anos — ainda &agrave; procura do que funciona</button>
+          <button class="qopt" data-step="2">M&aacute;is de 3 anos — j&aacute; tentei muita coisa</button>
+        </div>
+        <div class="quiz-nav"><button class="btn-qnext" id="qn2" data-next="3">Pr&oacute;xima &rarr;</button></div>
+      </div>
+
+      <div class="quiz-step" id="qs3">
+        <div class="quiz-q">Qual a maior dificuldade que enfrenta actualmente?</div>
+        <div class="quiz-hint">Escolha a que mais ressoa neste momento</div>
+        <div class="quiz-opts">
+          <button class="qopt" data-step="3">Comportamento e explosões emocionais em casa</button>
+          <button class="qopt" data-step="3">Concentração e desempenho na escola</button>
+          <button class="qopt" data-step="3">A questão da medicação — se sim, qual, quando, como</button>
+          <button class="qopt" data-step="3">Comunicar com professores, médicos e terapeutas</button>
+          <button class="qopt" data-step="3">O meu próprio esgotamento como pai/mãe</button>
+        </div>
+        <div class="quiz-nav"><button class="btn-qnext" id="qn3" data-next="4">Pr&oacute;xima &rarr;</button></div>
+      </div>
+
+      <div class="quiz-step" id="qs4">
+        <div class="quiz-q">O que j&aacute; experimentou at&eacute; agora?</div>
+        <div class="quiz-hint">Pode escolher v&aacute;rias</div>
+        <div class="quiz-opts">
+          <button class="qopt" data-step="4">Terapia com psic&oacute;logo ou terapeuta</button>
+          <button class="qopt" data-step="4">Medica&ccedil;&atilde;o (metilfenidato ou outros)</button>
+          <button class="qopt" data-step="4">Livros, podcasts e pesquisa pr&oacute;pria</button>
+          <button class="qopt" data-step="4">Workshops ou formações para pais</button>
+          <button class="qopt" data-step="4">Ainda nada — estamos no in&iacute;cio</button>
+        </div>
+        <div class="quiz-nav"><button class="btn-qnext" id="qn4" data-next="5">Pr&oacute;xima &rarr;</button></div>
+      </div>
+
+      <div class="quiz-step" id="qs5">
+        <div class="quiz-q">Consegue estar no Lumiar, Lisboa, no s&aacute;bado dia 16 de Maio, &agrave;s 10h?</div>
+        <div class="quiz-hint">O workshop dura 2 horas — termina &agrave;s 12h</div>
+        <div class="quiz-opts">
+          <button class="qopt" data-step="5" data-result="ok">Sim, consigo estar l&aacute;</button>
+          <button class="qopt" data-step="5" data-result="maybe">Talvez — depende de como estiver nessa semana</button>
+          <button class="qopt" data-step="5" data-result="out">N&atilde;o posso nessa data, mas tenho interesse em futuras edi&ccedil;&otilde;es</button>
+        </div>
+        <div class="quiz-nav"><button class="btn-qnext" id="qn5" data-next="lead">Continuar &rarr;</button></div>
+      </div>
+    </div>
+
+    <!-- LEAD CAPTURE -->
+    <div id="lead-capture">
+      <h3>Quase l&aacute; &mdash; &uacute;ltimo passo</h3>
+      <p>Desbloqueie o programa completo, os temas abordados e a forma de reservar o seu lugar.</p>
+      <input type="text" class="linput" id="l-name" placeholder="O seu nome">
+      <input type="email" class="linput" id="l-email" placeholder="O seu email">
+      <button class="btn-submit-lead" id="btn-lead">Ver o programa completo &rarr;</button>
+    </div>
+
+    <!-- RESULT BOXES -->
+    <div id="result-box">
+      <div id="result-ok">
+        <h3>&#10003; Tudo alinhado &mdash; este workshop &eacute; para si</h3>
+        <p>Reserv&aacute;mos mentalmente o seu lugar. Leia o programa abaixo e garanta a sua vaga &mdash; os 12 lugares s&atilde;o os 12 &uacute;nicos.</p>
+      </div>
+      <div id="result-out">
+        <h3>Percebemos &mdash; a data n&atilde;o encaixa</h3>
+        <p>Deixe o seu email e avisamo-lo antes de abrirmos a pr&oacute;xima edi&ccedil;&atilde;o. O conte&uacute;do abaixo fica dispon&iacute;vel na mesma.</p>
+        <div class="wl-row">
+          <input type="email" class="wl-input" placeholder="O seu email">
+          <button class="btn-wl">Avisar-me</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL CONTENT REVEAL -->
+    <div id="reveal">
+
+      <!-- MITOS -->
+      <div class="rv-section">
+        <h2 class="rv-title">Os 3 maiores mitos sobre o ADHD &mdash; e o que a neuroci&ecirc;ncia diz de facto</h2>
+        <div class="myth-grid">
+          <div class="myth-card">
+            <span class="myth-label">Mito</span>
+            <p class="myth-text">&ldquo;O meu filho &eacute; pris&oacute;neiro quando quer &mdash; o ADHD &eacute; desculpa para n&atilde;o se esfor&ccedil;ar.&rdquo;</p>
+            <span class="truth-label">O que a neuroci&ecirc;ncia diz</span>
+            <p class="truth-text">O c&eacute;rebro com ADHD tem dificuldade em <strong>regular a aten&ccedil;&atilde;o de forma consistente</strong>, n&atilde;o em prestar aten&ccedil;&atilde;o em geral. A crian&ccedil;a consegue focar-se em videojogos durante horas porque o c&eacute;rebro liberta dopamina de forma diferente quando o est&iacute;mulo &eacute; imediato e imprevis&iacute;vel. N&atilde;o &eacute; escolha &mdash; &eacute; biologia.</p>
+          </div>
+          <div class="myth-card">
+            <span class="myth-label">Mito</span>
+            <p class="myth-text">&ldquo;Se medicarem logo vou perder a personalidade do meu filho.&rdquo;</p>
+            <span class="truth-label">O que a neuroci&ecirc;ncia diz</span>
+            <p class="truth-text">A medica&ccedil;&atilde;o &eacute; uma das v&aacute;rias ferramentas &mdash; n&atilde;o &eacute; obrigat&oacute;ria nem &eacute; a &uacute;nica resposta. Para algumas crian&ccedil;as &eacute; transformadora. Para outras, outras abordagens resultam melhor. A decis&atilde;o &eacute; sua e do pediatra. O que n&atilde;o faz sentido &eacute; decidir sem perceber o mecanismo &mdash; e &eacute; o que vamos cobrir.</p>
+          </div>
+          <div class="myth-card">
+            <span class="myth-label">Mito</span>
+            <p class="myth-text">&ldquo;&Eacute; culpa da escola, dos ecr&atilde;s, da alimenta&ccedil;&atilde;o.&rdquo;</p>
+            <span class="truth-label">O que a neuroci&ecirc;ncia diz</span>
+            <p class="truth-text">O ADHD tem heritabilidade de 70&ndash;80% &mdash; &eacute; uma das condi&ccedil;&otilde;es neurol&oacute;gicas com maior componente gen&eacute;tica que existe. Os ecr&atilde;s e o stress podem <strong>agravar</strong> os sintomas, n&atilde;o <strong>causar</strong> a condi&ccedil;&atilde;o. Perceber esta distinção muda completamente como aborda o problema em casa.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRAMA -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que acontece nas 2 horas</h2>
+        <ul class="agenda-list">
+          <li class="agenda-item">
+            <span class="agenda-time">10h00</span>
+            <div class="agenda-text">
+              <strong>O c&eacute;rebro com ADHD &mdash; o que &eacute; de facto (e o que n&atilde;o &eacute;)</strong>
+              <span>Neurobiologia sem jarg&atilde;o. Porque &eacute; que a sua crian&ccedil;a age como age &mdash; e porque isso faz todo o sentido. Incluindo os mitos mais comuns que provavelmente j&aacute; ouviu.</span>
+            </div>
+          </li>
+          <li class="agenda-item">
+            <span class="agenda-time">10h45</span>
+            <div class="agenda-text">
+              <strong>O que a ci&ecirc;ncia diz que funciona &mdash; e o que n&atilde;o funciona</strong>
+              <span>Revis&atilde;o das evid&ecirc;ncias sobre interven&ccedil;&otilde;es comportamentais, medica&ccedil;&atilde;o, dieta, exerc&iacute;cio e estrutura. Sem opini&otilde;es de blog. Com dados de estudos reais.</span>
+            </div>
+          </li>
+          <li class="agenda-item">
+            <span class="agenda-time">11h30</span>
+            <div class="agenda-text">
+              <strong>3 ferramentas pr&aacute;ticas para usar amanha &mdash; adaptadas ao seu caso</strong>
+              <span>N&atilde;o receitas gen&eacute;ricas. Ferramentas que se adaptam ao perfil do seu filho e &agrave; din&acirc;mica da sua fam&iacute;lia. Sa&iacute; com um plano espec&iacute;fico, n&atilde;o com uma lista de princ&iacute;pios.</span>
+            </div>
+          </li>
+          <li class="agenda-item">
+            <span class="agenda-time">11h50</span>
+            <div class="agenda-text">
+              <strong>Q&amp;A &mdash; as suas perguntas, respostas directas</strong>
+              <span>Grupo de 12 pessoas m&aacute;ximo. Todas as perguntas t&ecirc;m espa&ccedil;o. Sem julgamentos, sem respostas de manual.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SPEAKER -->
+      <div class="rv-section">
+        <h2 class="rv-title">Quem orienta</h2>
+        <div class="speaker-card">
+          <div class="sp-name">Andr&eacute; Rodrigues &mdash; MD, PhD Neuroci&ecirc;ncias</div>
+          <p class="sp-bio">M&eacute;dico formado pela Faculdade de Medicina da Universidade de Lisboa. PhD em Neuroci&ecirc;ncias pela Universidade de Munique. Pr&eacute;mio Inova&ccedil;&atilde;o em Sa&uacute;de 2025.<br><br>N&atilde;o &eacute; psic&oacute;logo. N&atilde;o &eacute; coach. N&atilde;o tem livro de auto-ajuda para vender. Tem dados, tem contexto cl&iacute;nico, e sabe explicar neuroci&ecirc;ncia complexa de forma que chega a quem importa: o pai ou m&atilde;e que chega a casa &agrave;s 19h e precisa de uma ferramenta que funcione.</p>
+        </div>
+      </div>
+
+      <!-- LOCAL -->
+      <div class="rv-section">
+        <h2 class="rv-title">Local</h2>
+        <div class="local-box">
+          <strong>McMinsky &mdash; Lumiar, Lisboa</strong>
+          <p>Espa&ccedil;o calmo, confort&aacute;vel, sem o ambiente de congresso. Estacionamento f&aacute;cil. A poucos minutos do Odi&aacute;xere e do Campo Grande. Fora do tr&acirc;nsito do centro. O tipo de s&iacute;tio onde se consegue pensar.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h2>Garantir o meu lugar &mdash; 16 de Maio, 10h</h2>
+        <p class="sub">12 lugares. Uma vez cheio, fecha. N&atilde;o h&aacute; lista de espera para esta edi&ccedil;&atilde;o.</p>
+        <a href="https://buy.stripe.com/4gM4gz4tz0h95aZ1Gg1sQ0f" class="btn-stripe" target="_blank">Reservar vaga &mdash; &euro;120</a>
+        <p class="cta-note">Pagamento seguro via Stripe. Lugar confirmado imediatamente ap&oacute;s pagamento.<br>D&uacute;vidas: <a href="mailto:andre@medicinup.com" style="color:var(--gold)">andre@medicinup.com</a></p>
+      </div>
+
+    </div><!-- /reveal -->
+
+  </article>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="footer-logo">
+        <span class="footer-name">McMinsky</span>
+      </div>
+      <nav class="footer-nav">
+        <ul>
+          <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#offers">Agenda</a></li>
+          <li><a href="/#contact">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // ── QUIZ LOGIC ──
+    const btnStart = document.getElementById('btn-start');
+    const quizWrapper = document.getElementById('quiz-wrapper');
+    const leadCapture = document.getElementById('lead-capture');
+    const resultBox = document.getElementById('result-box');
+    const resultOk = document.getElementById('result-ok');
+    const resultOut = document.getElementById('result-out');
+    const reveal = document.getElementById('reveal');
+
+    let currentResult = 'ok';
+    const answers = {};
+
+    btnStart.addEventListener('click', function() {
+      document.querySelector('.pre-quiz-cta').style.display = 'none';
+      quizWrapper.classList.add('active');
+      quizWrapper.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // Option selection
+    document.querySelectorAll('.qopt').forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        const step = this.dataset.step;
+        document.querySelectorAll('[data-step="' + step + '"]').forEach(function(o){ o.classList.remove('sel'); });
+        this.classList.add('sel');
+        const nextBtn = document.getElementById('qn' + step);
+        if(nextBtn) nextBtn.classList.add('on');
+        if(this.dataset.result) currentResult = this.dataset.result;
+        answers[step] = this.textContent.trim();
+      });
+    });
+
+    // Step navigation
+    document.querySelectorAll('.btn-qnext').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const next = this.dataset.next;
+        const currentStep = this.closest('.quiz-step');
+        currentStep.classList.remove('active');
+
+        if(next === 'lead') {
+          quizWrapper.classList.remove('active');
+          leadCapture.style.display = 'block';
+          leadCapture.scrollIntoView({behavior:'smooth', block:'start'});
+        } else {
+          const nextStep = document.getElementById('qs' + next);
+          nextStep.classList.add('active');
+          const stepNum = parseInt(next);
+          document.getElementById('qbar').style.width = ((stepNum-1)/5*100) + '%';
+          document.getElementById('qbar-label').textContent = 'Pergunta ' + stepNum + ' de 5';
+          nextStep.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      });
+    });
+
+    // Lead submit
+    document.getElementById('btn-lead').addEventListener('click', function() {
+      const name = document.getElementById('l-name').value.trim();
+      const email = document.getElementById('l-email').value.trim();
+      if(!email.includes('@')) { alert('Por favor introduza um email válido.'); return; }
+
+      leadCapture.style.display = 'none';
+
+      if(currentResult === 'ok' || currentResult === 'maybe') {
+        resultOk.style.display = 'block';
+      } else {
+        resultOut.style.display = 'block';
+      }
+
+      reveal.style.display = 'block';
+      reveal.scrollIntoView({behavior:'smooth', block:'start'});
+
+      // Funnel tracking
+      if(typeof gtag !== 'undefined') {
+        gtag('event', 'quiz_complete', {event_category:'adhd_pais', event_label:currentResult});
+        gtag('event', 'lead_capture', {event_category:'adhd_pais', event_label:email});
+      }
+    });
+
+    // Waitlist button
+    document.querySelector('.btn-wl') && document.querySelector('.btn-wl').addEventListener('click', function() {
+      const email = document.querySelector('.wl-input').value;
+      if(email && email.includes('@')) {
+        this.textContent = '✓ Avisaremos quando abrirmos';
+        this.style.borderColor = 'var(--gold)';
+        this.style.color = 'var(--gold)';
+        this.disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>
