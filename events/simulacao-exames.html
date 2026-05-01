@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simulação presencial de exame nacional em ambiente real. Correcção imediata e feedback de médico FMUL. Sábado 16 Mai · 15h · Lumiar Lisboa · €65.">
+  <meta name="category" content="Preparação Académica">
+  <meta name="event-date" content="2026-05-16">
+  <meta name="event-price" content="€65">
+  <meta name="event-spots-text" content="8 lugares/exame · Sáb 16 Mai · 15h">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Simulação Exames Nacionais — 16 Mai · Lumiar Lisboa · €65 | McMinsky">
+  <meta property="og:description" content="Ambiente real. Correcção imediata. Feedback de médico FMUL. Sábado 16 de Maio, 15h, Lumiar Lisboa. €65. 8 lugares por exame.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="800">
+  <meta property="og:url" content="https://mcminsky.pt/events/simulacao-exames.html">
+  <meta property="og:site_name" content="McMinsky">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Simulação Exames Nacionais — 16 Mai · Lumiar Lisboa · €65 | McMinsky">
+  <meta name="twitter:description" content="Ambiente real. Correcção imediata. Feedback de médico FMUL. Sábado 16 de Maio, 15h, Lumiar Lisboa. €65.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80">
+  <title>Simulação Exames Nacionais — 16 de Maio · Lisboa | McMinsky</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* ── HERO SIMULAÇÃO ── */
+    .hero-pre{text-align:center;padding:var(--space-xl) var(--space-md) 0;max-width:700px;margin:0 auto}
+    .hero-pre-text{font-size:clamp(1.1rem,3vw,1.4rem);color:var(--gray-light);letter-spacing:0.04em;margin-bottom:var(--space-md);font-style:italic}
+    .hero-img-wrap{position:relative;max-width:680px;margin:0 auto}
+    .hero-img{width:100%;border-radius:12px;display:block;object-fit:cover;max-height:420px}
+    .hero-title{font-family:var(--font-display);font-size:clamp(1.6rem,5vw,2.8rem);color:var(--white);text-align:center;line-height:1.2;margin:var(--space-md) 0 var(--space-sm);font-weight:700}
+    .hero-title span{color:var(--gold)}
+    .hero-sub{text-align:center;color:var(--gray-light);font-size:clamp(1rem,2.5vw,1.15rem);line-height:1.7;max-width:520px;margin:0 auto var(--space-md)}
+
+    /* COUNTDOWN */
+    .countdown-box{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:14px;padding:20px 24px;text-align:center;max-width:420px;margin:0 auto var(--space-md)}
+    .countdown-label{font-size:0.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+    .countdown-days{font-family:var(--font-display);font-size:clamp(3rem,10vw,5rem);color:var(--gold);line-height:1;font-weight:700}
+    .countdown-suffix{color:var(--gray-light);font-size:0.9rem;margin-top:6px}
+
+    /* URGENCY STRIP */
+    .urgency-strip{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin:var(--space-md) auto;padding:0;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18);border-radius:12px;max-width:620px;overflow:hidden}
+    .urgency-item{flex:1;min-width:90px;text-align:center;padding:14px 10px;border-right:1px solid rgba(212,175,55,0.12)}
+    .urgency-item:last-child{border-right:none}
+    .urgency-item .label{font-size:0.68rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;display:block}
+    .urgency-item .value{font-size:0.95rem;font-weight:700;color:var(--gold);display:block;margin-top:3px}
+
+    /* CTA PRE-QUIZ */
+    .pre-quiz-cta{text-align:center;margin:var(--space-md) auto;max-width:560px}
+    .btn-start-quiz{display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:1rem;padding:16px 38px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:0.01em;transition:opacity 0.2s}
+    .btn-start-quiz:hover{opacity:0.87}
+    .pre-quiz-note{color:var(--gray);font-size:0.8rem;margin-top:10px}
+
+    /* QUIZ */
+    #quiz-wrapper{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #quiz-wrapper.active{display:block;animation:qFadeIn 0.4s ease}
+    #quiz-section h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md);text-align:center}
+    .quiz-progress-wrap{margin-bottom:var(--space-md)}
+    .quiz-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;position:relative}
+    .quiz-bar-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0%}
+    .quiz-bar-label{font-size:0.75rem;color:var(--gray);text-align:right;margin-top:6px}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-q{color:var(--white);font-family:var(--font-display);font-size:1.15rem;margin-bottom:6px;line-height:1.4}
+    .quiz-hint{color:var(--gray);font-size:0.82rem;margin-bottom:14px}
+    .quiz-opts{display:flex;flex-direction:column;gap:9px}
+    .qopt{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px 18px;color:var(--white);font-size:0.93rem;text-align:left;cursor:pointer;transition:all 0.18s;font-family:inherit;line-height:1.45}
+    .qopt:hover{border-color:rgba(212,175,55,0.35)}
+    .qopt.sel{border-color:var(--gold)!important;background:var(--gold)!important;color:#0a0a0a!important;font-weight:700}
+    .quiz-nav{display:flex;justify-content:flex-end;margin-top:16px}
+    .btn-qnext{background:var(--gold);color:#0a0a0a;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;opacity:0.35;pointer-events:none;transition:opacity 0.2s}
+    .btn-qnext.on{opacity:1;pointer-events:auto}
+
+    /* LEAD CAPTURE */
+    #lead-capture{display:none;max-width:540px;margin:var(--space-md) auto;animation:qFadeIn 0.4s ease;padding:0 var(--space-md)}
+    #lead-capture h3{color:var(--gold);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    #lead-capture p{color:var(--gray-light);font-size:0.88rem;margin-bottom:16px}
+    .linput{width:100%;background:var(--black-lighter);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:13px 16px;color:var(--white);font-size:0.93rem;font-family:inherit;outline:none;margin-bottom:10px;transition:border-color 0.2s;box-sizing:border-box}
+    .linput:focus{border-color:var(--gold)}
+    .linput::placeholder{color:var(--gray)}
+    .radio-group{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+    .radio-opt{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-light);font-size:0.88rem}
+    .radio-opt input{accent-color:var(--gold);width:16px;height:16px;cursor:pointer}
+    .btn-submit-lead{width:100%;background:var(--gold);color:#0a0a0a;border:none;border-radius:10px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+    .btn-submit-lead:hover{opacity:0.88}
+
+    /* RESULT PANELS */
+    #result-box{max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #result-ok{display:none;text-align:center;padding:20px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.25);border-radius:12px;margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-ok h3{color:var(--gold);font-family:var(--font-display);font-size:1.4rem;margin-bottom:8px}
+    #result-ok p{color:var(--gray-light);font-size:0.92rem}
+    #result-out{display:none;padding:20px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.07);margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-out h3{color:var(--white);font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px}
+    #result-out p{color:var(--gray-light);font-size:0.9rem;line-height:1.7}
+    .wl-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .wl-input{flex:1;min-width:180px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:0.88rem;outline:none}
+    .wl-input:focus{border-color:var(--gold)}
+    .btn-wl{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:11px 18px;cursor:pointer;font-family:inherit;font-size:0.88rem;white-space:nowrap;transition:all 0.2s}
+    .btn-wl:hover{background:var(--gold);color:#0a0a0a}
+
+    /* REVEAL */
+    #reveal{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)}
+    .rv-section{margin-top:var(--space-lg)}
+    .rv-title{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md)}
+
+    /* IS / NOT IS */
+    .is-grid{display:grid;gap:16px;margin:var(--space-md) 0}
+    @media(min-width:580px){.is-grid{grid-template-columns:1fr 1fr}}
+    .is-card,.not-card{background:var(--black-lighter);border-radius:12px;padding:18px}
+    .is-card{border-top:3px solid var(--gold)}
+    .not-card{border-top:3px solid #333}
+    .is-card h4{color:var(--gold);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .not-card h4{color:var(--gray);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .tick-list,.cross-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+    .tick-list li{color:var(--white);font-size:0.88rem;display:flex;gap:9px;line-height:1.5}
+    .tick-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+    .cross-list li{color:var(--gray-light);font-size:0.88rem;display:flex;gap:9px;line-height:1.5}
+    .cross-list li::before{content:'✕';color:#555;font-weight:700;flex-shrink:0}
+
+    /* TIMELINE */
+    .timeline{display:flex;flex-direction:column;gap:0;margin:var(--space-md) 0}
+    .tl-item{display:flex;gap:16px;position:relative}
+    .tl-item:not(:last-child)::before{content:'';position:absolute;left:19px;top:40px;bottom:0;width:2px;background:rgba(212,175,55,0.18)}
+    .tl-dot{width:40px;height:40px;border-radius:50%;background:rgba(212,175,55,0.12);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem;color:var(--gold);font-weight:700}
+    .tl-body{padding:0 0 var(--space-md) 0}
+    .tl-body strong{color:var(--white);display:block;font-size:0.92rem;margin-bottom:3px}
+    .tl-body span{color:var(--gray-light);font-size:0.83rem;line-height:1.6}
+
+    /* STAT */
+    .stat-box{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:20px 24px;margin:var(--space-md) 0;text-align:center}
+    .stat-number{font-family:var(--font-display);font-size:clamp(2.5rem,8vw,4rem);color:var(--gold);line-height:1;font-weight:700}
+    .stat-desc{color:var(--gray-light);font-size:0.88rem;margin-top:8px;line-height:1.6}
+
+    /* NEURO BOX */
+    .neuro-box{background:var(--black-lighter);border-radius:12px;padding:20px 24px;border-left:3px solid var(--gold);margin:var(--space-md) 0}
+    .neuro-box .neuro-title{color:var(--gold);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .neuro-box p{color:var(--gray-light);font-size:0.88rem;line-height:1.7;margin:0}
+
+    /* ERROS COMUNS */
+    .error-list{display:flex;flex-direction:column;gap:10px;margin:var(--space-md) 0}
+    .error-item{background:var(--black-lighter);border-radius:10px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,0.05)}
+    .error-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+    .error-item strong{color:var(--white);display:block;font-size:0.9rem;margin-bottom:3px}
+    .error-item span{color:var(--gray-light);font-size:0.82rem;line-height:1.5}
+
+    /* SPEAKER */
+    .speakers{display:flex;flex-direction:column;gap:14px;margin:var(--space-md) 0}
+    .sp-card{flex:1;background:var(--black-lighter);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.05)}
+    .sp-name{color:var(--gold);font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:6px}
+    .sp-bio{color:var(--gray-light);font-size:0.85rem;line-height:1.6}
+
+    /* LOCAL */
+    .local-box{background:var(--black-lighter);border-radius:10px;padding:18px;border-left:3px solid var(--gold);margin:var(--space-md) 0}
+    .local-box strong{color:var(--white);display:block;margin-bottom:6px}
+    .local-box p{color:var(--gray-light);font-size:0.88rem;line-height:1.7;margin:0}
+
+    /* CHECKOUT INFO */
+    .checkout-info{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:18px 20px;margin:var(--space-md) 0}
+    .checkout-info strong{color:var(--white);display:block;margin-bottom:8px;font-size:0.95rem}
+    .checkout-info p{color:var(--gray-light);font-size:0.87rem;line-height:1.7;margin:0}
+
+    /* STRIPE CTA */
+    .cta-box{margin-top:var(--space-xl);padding:var(--space-md);background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:16px;text-align:center}
+    .cta-box h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:8px}
+    .cta-box .sub{color:var(--gray-light);font-size:0.92rem;margin-bottom:var(--space-md)}
+    .cta-stripe-link{display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:1.05rem;padding:18px 42px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;letter-spacing:0.01em}
+    .cta-stripe-link:hover{opacity:0.87}
+    .cta-note{color:var(--gray);font-size:0.78rem;margin-top:12px}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#insights" class="nav-link">Insights</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-page">
+
+    <div class="article-hero">
+      <span class="article-hero-category">Prepara&ccedil;&atilde;o Acad&eacute;mica &middot; Exames Nacionais &middot; 8 Lugares/Exame</span>
+      <h1 class="article-hero-title">Simula&ccedil;&atilde;o Presencial de Exames</h1>
+      <p class="article-hero-meta">Ambiente real. Correc&ccedil;&atilde;o imediata. Feedback de m&eacute;dico FMUL.</p>
+    </div>
+
+    <!-- ═══ HERO ═══ -->
+    <div class="hero-pre">
+      <p class="hero-pre-text">Estudar n&atilde;o chega. Tens de treinar o exame.</p>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80" alt="Aluno a estudar focado" class="hero-img">
+      </div>
+      <h2 class="hero-title">O Exame &eacute; a 23 de Junho.<br><span>Esta &eacute; a tua &uacute;ltima simula&ccedil;&atilde;o real.</span></h2>
+      <p class="hero-sub">
+        Ambiente real. Cron&oacute;metro a contar. Correc&ccedil;&atilde;o imediata por Andr&eacute; Rodrigues, MD FMUL.<br>
+        N&atilde;o &eacute; m&aacute;is um teste em casa. &Eacute; o treino que faltava.
+      </p>
+
+      <!-- COUNTDOWN -->
+      <div class="countdown-box">
+        <div class="countdown-label">Contagem decrescente para Matem&aacute;tica A</div>
+        <div class="countdown-days" id="countdown-days">--</div>
+        <div class="countdown-suffix" id="countdown-suffix">dias at&eacute; 23 de Junho</div>
+      </div>
+
+      <div class="urgency-strip">
+        <div class="urgency-item"><span class="label">Quando</span><span class="value">S&aacute;b, 16 Mai</span></div>
+        <div class="urgency-item"><span class="label">Hora</span><span class="value">15h00</span></div>
+        <div class="urgency-item"><span class="label">Onde</span><span class="value">Lumiar, Lisboa</span></div>
+        <div class="urgency-item"><span class="label">Capacidade</span><span class="value">8/exame</span></div>
+        <div class="urgency-item"><span class="label">Valor</span><span class="value">&euro;65</span></div>
+      </div>
+
+      <div class="pre-quiz-cta">
+        <button class="btn-start-quiz" id="btn-open-quiz">Ver se faz sentido para mim</button>
+        <p class="pre-quiz-note">5 perguntas &middot; menos de 2 minutos &middot; resposta imediata</p>
+      </div>
+    </div>
+
+    <!-- ═══ QUIZ ═══ -->
+    <div id="quiz-wrapper">
+      <div id="quiz-section">
+        <h2>Antes de abrires a p&aacute;gina, 5 perguntas r&aacute;pidas.</h2>
+
+        <div class="quiz-progress-wrap">
+          <div class="quiz-bar"><div class="quiz-bar-fill" id="qfill"></div></div>
+          <div class="quiz-bar-label" id="qprog">1 / 5</div>
+        </div>
+
+        <!-- P1: EXAME -->
+        <div class="quiz-step active" data-key="exame" data-step="0">
+          <h3 class="quiz-q">Qual o exame que te preocupa mais?</h3>
+          <p class="quiz-hint">Cada sess&atilde;o &eacute; dedicada a um exame espec&iacute;fico.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="mat_a" data-score="1">Matem&aacute;tica A</button>
+            <button class="qopt" data-val="bio_geo" data-score="1">Biologia e Geologia</button>
+            <button class="qopt" data-val="fq" data-score="1">F&iacute;sica e Qu&iacute;mica A</button>
+            <button class="qopt" data-val="port" data-score="1">Portugu&ecirc;s</button>
+            <button class="qopt" data-val="outro" data-score="1">Outro exame</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn0">Continuar</button></div>
+        </div>
+
+        <!-- P2: ANO -->
+        <div class="quiz-step" data-key="ano" data-step="1">
+          <h3 class="quiz-q">Em que ano est&aacute;s?</h3>
+          <p class="quiz-hint">Ajuda-nos a perceber o teu contexto.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="11" data-score="1">11.&ordm; ano</button>
+            <button class="qopt" data-val="12" data-score="1">12.&ordm; ano</button>
+            <button class="qopt" data-val="rep" data-score="1">Repetente &mdash; j&aacute; fiz o exame antes</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn1">Continuar</button></div>
+        </div>
+
+        <!-- P3: DIFICULDADE -->
+        <div class="quiz-step" data-key="dificuldade" data-step="2">
+          <h3 class="quiz-q">Qual a tua maior dificuldade neste momento?</h3>
+          <p class="quiz-hint">Ser honesto ajuda-nos a preparar melhor a sess&atilde;o.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="tempo" data-score="1">N&atilde;o consigo acabar a tempo</button>
+            <button class="qopt" data-val="topicos" data-score="1">Erro em t&oacute;picos espec&iacute;ficos</button>
+            <button class="qopt" data-val="bloqueio" data-score="1">Bloqueio em ambiente de exame</button>
+            <button class="qopt" data-val="estudo" data-score="1">N&atilde;o sei o que estudar nestas semanas</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn2">Continuar</button></div>
+        </div>
+
+        <!-- P4: SIMULAÇÕES -->
+        <div class="quiz-step" data-key="simulacoes" data-step="3">
+          <h3 class="quiz-q">Quantas simula&ccedil;&otilde;es fizeste at&eacute; agora?</h3>
+          <p class="quiz-hint">Sem julgamento &mdash; &eacute; para calibrar o que precisas.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="nenhuma" data-score="1">Nenhuma</button>
+            <button class="qopt" data-val="1_2" data-score="1">1-2 simula&ccedil;&otilde;es</button>
+            <button class="qopt" data-val="3_mais" data-score="1">3 ou mais</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn3">Continuar</button></div>
+        </div>
+
+        <!-- P5: DISPONIBILIDADE -->
+        <div class="quiz-step" data-key="disponivel" data-step="4">
+          <h3 class="quiz-q">Consegues estar no Lumiar, Lisboa, a 16 de Maio &agrave;s 15h?</h3>
+          <p class="quiz-hint">Estacionamento f&aacute;cil. 20 minutos do centro de Lisboa.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="sim" data-score="1">Sim, estou dispon&iacute;vel</button>
+            <button class="qopt" data-val="talvez" data-score="0.5">Tenho de confirmar, mas &eacute; prov&aacute;vel</button>
+            <button class="qopt" data-val="nao" data-score="0">N&atilde;o posso nessa data</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn4">Ver resultado</button></div>
+        </div>
+
+      </div><!-- /quiz-section -->
+    </div><!-- /quiz-wrapper -->
+
+    <!-- ═══ LEAD CAPTURE ═══ -->
+    <div id="lead-capture">
+      <h3>Quase l&aacute;.</h3>
+      <p>Para enviarmos os detalhes e confirmarmos o teu lugar.</p>
+      <input type="text" class="linput" id="lname" placeholder="Nome" autocomplete="name">
+      <input type="email" class="linput" id="lemail" placeholder="Email" autocomplete="email">
+      <input type="text" class="linput" id="lexame" placeholder="Qual o teu exame? (ex: Matem&aacute;tica A)">
+      <div style="margin-bottom:10px">
+        <p style="color:var(--gray);font-size:0.8rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Quem preenche este formul&aacute;rio?</p>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="quem" value="aluno"> Sou o aluno</label>
+          <label class="radio-opt"><input type="radio" name="quem" value="pai_mae"> Sou pai/m&atilde;e</label>
+        </div>
+      </div>
+      <button class="btn-submit-lead" id="btn-lead-submit">Ver o meu resultado</button>
+    </div>
+
+    <!-- ═══ RESULTADO ═══ -->
+    <div id="result-box">
+      <div id="result-ok">
+        <h3>H&aacute; lugar para ti.</h3>
+        <p>Aqui est&aacute; o que acontece nas 3 horas &mdash; e como garantir o teu lugar agora.</p>
+      </div>
+      <div id="result-out">
+        <h3>Esta data n&atilde;o encaixa na tua agenda.</h3>
+        <p>N&atilde;o faz sentido guardares lugar para uma data em que n&atilde;o podes estar. Deixa o teu email e avisamos para a pr&oacute;xima edi&ccedil;&atilde;o.</p>
+        <div class="wl-row">
+          <input type="email" class="wl-input" id="wl-email" placeholder="O teu email">
+          <button class="btn-wl" id="btn-wl">Avisar-me</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ REVEAL ═══ -->
+    <div id="reveal">
+
+      <!-- O QUE ACONTECE NAS 3 HORAS -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que acontece nas 3 horas</h2>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot">15h</div>
+            <div class="tl-body">
+              <strong>Setup como sala de exame real</strong>
+              <span>Cada aluno senta-se com a folha de exame, folha de rascunho e o cron&oacute;metro. Sem telef&oacute;ne, sem distrac&ccedil;&otilde;es. O ambiente &eacute; deliberadamente igual ao do dia 23.</span>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">15h</div>
+            <div class="tl-body">
+              <strong>Exame com cotação IAVE real</strong>
+              <span>Resolvem o exame com o mesmo tempo oficial, a mesma cota&ccedil;&atilde;o, as mesmas regras. Sem facilitismos.</span>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">17h</div>
+            <div class="tl-body">
+              <strong>Correc&ccedil;&atilde;o imediata por Andr&eacute;</strong>
+              <span>Correc&ccedil;&atilde;o pergunta a pergunta, com crit&eacute;rios de classifica&ccedil;&atilde;o. Cada aluno fica a saber exactamente onde perdeu pontos.</span>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">17h</div>
+            <div class="tl-body">
+              <strong>An&aacute;lise de erros e relat&oacute;rio personalizado</strong>
+              <span>An&aacute;lise dos padr&otilde;es de erro de cada aluno. O que &eacute; erro de conhecimento, o que &eacute; erro de gest&atilde;o de tempo, o que &eacute; bloqueio. E o plano para as 5 semanas seguintes.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMO ESCOLHER O EXAME -->
+      <div class="rv-section">
+        <div class="checkout-info">
+          <strong>Como seleccionar o teu exame</strong>
+          <p>No checkout Stripe h&aacute; um campo para seleccionares o exame que queres simular. &Eacute; nesse momento que escolhes &mdash; Matem&aacute;tica A, Biologia e Geologia, F&iacute;sica e Qu&iacute;mica A, Portugu&ecirc;s, ou outro. N&atilde;o precisas de escolher agora.</p>
+        </div>
+      </div>
+
+      <!-- ESTATÍSTICA DRAMÁTICA -->
+      <div class="rv-section">
+        <div class="stat-box">
+          <div class="stat-number">~40%</div>
+          <div class="stat-desc">dos alunos n&atilde;o atingiu classifica&ccedil;&atilde;o positiva em Matem&aacute;tica A em 2025 (dados IAVE).<br>A maioria estudou. Poucos simularam em ambiente real.</div>
+        </div>
+      </div>
+
+      <!-- O QUE A MAIORIA FAZ ERRADO -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que a maioria faz errado na prepara&ccedil;&atilde;o final</h2>
+        <div class="error-list">
+          <div class="error-item">
+            <span class="error-icon">📚</span>
+            <div>
+              <strong>Estudar muito, simular pouco</strong>
+              <span>Saber a mat&eacute;ria n&atilde;o &eacute; o mesmo que conseguir resolver sob press&atilde;o e a tempo. S&atilde;o duas compet&ecirc;ncias diferentes.</span>
+            </div>
+          </div>
+          <div class="error-item">
+            <span class="error-icon">🏠</span>
+            <div>
+              <strong>Simular em casa sem ambiente de exame</strong>
+              <span>Resolver exerc&iacute;cios no sof&aacute;, com o telef&oacute;ne ao lado e sem cron&oacute;metro, n&atilde;o prepara para o que vai acontecer em Junho.</span>
+            </div>
+          </div>
+          <div class="error-item">
+            <span class="error-icon">🎯</span>
+            <div>
+              <strong>N&atilde;o saber onde est&atilde;o os pontos fracos</strong>
+              <span>Sem correc&ccedil;&atilde;o rigorosa, &eacute; imposs&iacute;vel saber o que estudar nas &uacute;ltimas semanas. Estudar ao acaso &eacute; ineficaz.</span>
+            </div>
+          </div>
+          <div class="error-item">
+            <span class="error-icon">📖</span>
+            <div>
+              <strong>Estudar mat&eacute;ria nova em vez de consolidar</strong>
+              <span>A 3 semanas do exame, nova mat&eacute;ria raramente ajuda. Consolidar o que j&aacute; se sabe &eacute; onde est&atilde;o os pontos.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEUROCIÊNCIA -->
+      <div class="rv-section">
+        <div class="neuro-box">
+          <div class="neuro-title">Neuroci&ecirc;ncia da performance sob press&atilde;o</div>
+          <p>Stress controlado melhora a mem&oacute;ria de trabalho e o foco &mdash; &eacute; o princ&iacute;pio de Yerkes-Dodson. O problema &eacute; que o pico de performance s&oacute; acontece quando o n&iacute;vel de stress j&aacute; &eacute; familiar. Simular em ambiente real reduz o efeito de surpresa no dia do exame. O c&eacute;rebro &ldquo;reconhece&rdquo; a situa&ccedil;&atilde;o e activa o modo certo, em vez de entrar em p&acirc;nico.</p>
+        </div>
+      </div>
+
+      <!-- QUEM ESTÁ LÁ -->
+      <div class="rv-section">
+        <h2 class="rv-title">Quem d&aacute; o feedback</h2>
+        <div class="speakers">
+          <div class="sp-card">
+            <div class="sp-name">Andr&eacute; Rodrigues</div>
+            <div class="sp-bio">M&eacute;dico (FMUL). PhD em Neuroci&ecirc;ncias pela Universidade de Munique. Professor de Matem&aacute;tica A a candidatos a Medicina &mdash; alunos que precisam de notas reais, n&atilde;o de aprecia&ccedil;&atilde;o. A correc&ccedil;&atilde;o &eacute; feita com os crit&eacute;rios do IAVE e com feedback que te diz exactamente o que mudar.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCAL -->
+      <div class="rv-section">
+        <div class="local-box">
+          <strong>&#128205; McMinsky Lumiar &mdash; configurado como sala de exame real</strong>
+          <p>Azinhaga da Cidade 24A r/c, 1750-063 Lisboa. Estacionamento f&aacute;cil &agrave; porta. 20 minutos do centro. A sala fica organizada exactamente como uma sala de exame nacional: secretarias individuais, silêncio, cronômetro visível.</p>
+        </div>
+      </div>
+
+      <!-- IS / NOT IS -->
+      <div class="rv-section">
+        <div class="is-grid">
+          <div class="is-card">
+            <h4>&Eacute;</h4>
+            <ul class="tick-list">
+              <li>Ambiente id&ecirc;ntico ao exame real &mdash; sem facilitismos</li>
+              <li>Correc&ccedil;&atilde;o com crit&eacute;rios IAVE oficiais</li>
+              <li>Feedback individual e relat&oacute;rio personalizado</li>
+              <li>M&aacute;ximo 8 alunos por exame &mdash; aten&ccedil;&atilde;o real</li>
+              <li>Plano concreto para as semanas seguintes</li>
+            </ul>
+          </div>
+          <div class="not-card">
+            <h4>N&atilde;o &eacute;</h4>
+            <ul class="cross-list">
+              <li>Aula de mat&eacute;ria (isso est&aacute; nas explicações)</li>
+              <li>Teste corrigido apenas com a nota final</li>
+              <li>Grupo grande sem aten&ccedil;&atilde;o individual</li>
+              <li>Mais um teste que fazes em casa</li>
+              <li>Teoria sobre como estudar melhor</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA STRIPE -->
+      <div class="cta-box" id="cta-main">
+        <h2>Garante o teu lugar agora.</h2>
+        <p class="sub">8 lugares por exame &middot; A simula&ccedil;&atilde;o n&atilde;o ser&aacute; repetida antes dos exames</p>
+        <div style="margin:var(--space-md) 0">
+          <a href="https://buy.stripe.com/dRmbJ1gch4xpdHvdoY1sQ0h" target="_blank" class="cta-stripe-link" id="btn-stripe">Inscrição &mdash; &euro;65 &middot; Selecciona o teu exame no checkout</a>
+        </div>
+        <p class="cta-note">Pagamento seguro via Stripe &middot; Confirma&ccedil;&atilde;o imediata por email &middot; Selecciona o exame no pr&oacute;ximo passo</p>
+      </div>
+
+      <!-- LISTA DE ESPERA -->
+      <div class="rv-section" style="text-align:center;padding:var(--space-md);background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+        <h3 style="color:var(--white);font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px">N&atilde;o podes vir em Maio?</h3>
+        <p style="color:var(--gray-light);font-size:0.88rem;margin-bottom:16px">Deixa o email e avisamos para a pr&oacute;xima edi&ccedil;&atilde;o de simula&ccedil;&otilde;es.</p>
+        <div class="wl-row" style="max-width:420px;margin:0 auto">
+          <input type="email" class="wl-input" id="wl-email-bottom" placeholder="O teu email">
+          <button class="btn-wl" id="btn-wl-bottom">Avisar-me</button>
+        </div>
+        <div id="wl-bottom-confirm" style="display:none;color:var(--gold);font-size:0.88rem;margin-top:10px">Anotado. Avisamos na pr&oacute;xima edi&ccedil;&atilde;o.</div>
+      </div>
+
+    </div><!-- /reveal -->
+
+  </article>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p>Centro de Excel&ecirc;ncia para mentes ambiciosas.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navega&ccedil;&atilde;o</h4>
+        <ul>
+          <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#programs">Programas</a></li>
+          <li><a href="/#insights">Insights</a></li>
+          <li><a href="/#offers">Agenda</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Localiza&ccedil;&atilde;o</h4>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisboa</p>
+        <a href="https://share.google/8wcEaRj5rfmvmwiyv" class="footer-maps-btn" target="_blank">Ver no Google Maps</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condi&ccedil;&otilde;es</a>
+        <a href="../legal/privacy.html">Pol&iacute;tica de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclama&ccedil;&otilde;es</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2026</span> McMinsky. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  (function(){
+    // ── COUNTDOWN ─────────────────────────────────────────────────────
+    (function(){
+      var examDate = new Date('2026-06-23T09:30:00');
+      var now = new Date();
+      var days = Math.ceil((examDate - now) / (1000*60*60*24));
+      var el = document.getElementById('countdown-days');
+      var suf = document.getElementById('countdown-suffix');
+      if(el){
+        if(days > 0){
+          el.textContent = days;
+          suf.textContent = days === 1 ? 'dia até 23 de Junho' : 'dias até 23 de Junho';
+        } else if(days === 0){
+          el.textContent = 'Hoje';
+          suf.textContent = 'É o dia do exame';
+        } else {
+          el.textContent = '0';
+          suf.textContent = 'O exame já passou';
+        }
+      }
+    })();
+
+    // ── REF DE AFILIADO ───────────────────────────────────────────────
+    var ref = new URLSearchParams(window.location.search).get('ref') || '';
+    if(ref){ try{ localStorage.setItem('mcminsky_ref', ref); }catch(e){} }
+    function getRef(){ try{ return localStorage.getItem('mcminsky_ref')||ref||''; }catch(e){ return ref||''; } }
+
+    // ── UID ───────────────────────────────────────────────────────────
+    var uid='';
+    try{
+      uid=localStorage.getItem('mcminsky_uid')||'';
+      if(!uid){ uid='u'+Date.now()+Math.random().toString(36).slice(2,6); localStorage.setItem('mcminsky_uid',uid); }
+    }catch(e){}
+
+    // ── TRACKING ──────────────────────────────────────────────────────
+    var FURL='https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse';
+    function track(action, body){
+      try{
+        var r=getRef();
+        var fd=new FormData();
+        fd.append('entry.1191618802',action);
+        fd.append('entry.97481516',uid);
+        fd.append('entry.1381161689',(body||'')+(r?' ref:'+r:''));
+        fetch(FURL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){});
+      }catch(e){}
+    }
+    track('pageview','simulacao-exames'+(getRef()?' ref:'+getRef():''));
+
+    // ── ABRIR QUIZ ────────────────────────────────────────────────────
+    document.getElementById('btn-open-quiz').addEventListener('click',function(){
+      document.getElementById('quiz-wrapper').classList.add('active');
+      document.getElementById('quiz-wrapper').scrollIntoView({behavior:'smooth',block:'start'});
+      track('quiz_start','simulacao-exames');
+    });
+
+    // ── QUIZ STATE ────────────────────────────────────────────────────
+    var scores={};
+    var answers={};
+    var steps=document.querySelectorAll('.quiz-step');
+    var total=steps.length;
+
+    function setProgress(n){
+      var pct=((n)/total)*100;
+      document.getElementById('qfill').style.width=pct+'%';
+      document.getElementById('qprog').textContent=(n+1)+' / '+total;
+    }
+
+    function showStep(n){
+      steps.forEach(function(s,i){ s.classList.toggle('active',i===n); });
+      setProgress(n);
+    }
+
+    // Todas as perguntas são single-choice: 0, 1, 2, 3, 4
+    [0,1,2,3,4].forEach(function(si){
+      var step=steps[si];
+      if(!step) return;
+      var opts=step.querySelectorAll('.qopt');
+      var next=step.querySelector('.btn-qnext');
+      opts.forEach(function(opt){
+        opt.addEventListener('click',function(){
+          opts.forEach(function(o){ o.classList.remove('sel'); });
+          opt.classList.add('sel');
+          scores[si]=parseFloat(opt.getAttribute('data-score'));
+          answers[step.getAttribute('data-key')]=opt.getAttribute('data-val');
+          if(next) next.classList.add('on');
+          setTimeout(function(){ if(next&&next.classList.contains('on')) next.click(); },380);
+        });
+      });
+      if(next){
+        next.addEventListener('click',function(){
+          if(!next.classList.contains('on')) return;
+          if(si<total-1){ showStep(si+1); }
+          else{ doLeadCapture(); }
+        });
+      }
+    });
+
+    // ── LEAD CAPTURE ──────────────────────────────────────────────────
+    function doLeadCapture(){
+      document.getElementById('quiz-wrapper').style.display='none';
+      document.getElementById('lead-capture').style.display='block';
+      document.getElementById('lead-capture').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    document.getElementById('btn-lead-submit').addEventListener('click',function(){
+      var name=document.getElementById('lname').value.trim();
+      var email=document.getElementById('lemail').value.trim();
+      var exame=document.getElementById('lexame').value.trim();
+      var quemSel=document.querySelector('input[name="quem"]:checked');
+      var quem=quemSel?quemSel.value:'';
+      if(!name||!email){ document.getElementById('lname').focus(); return; }
+      document.getElementById('lead-capture').style.display='none';
+
+      var notAvail=answers['disponivel']==='nao';
+      var totalScore=Object.values(scores).reduce(function(a,b){ return a+b; },0);
+      var body='nome:'+name+' email:'+email+' exame:'+exame+' quem:'+quem+' score:'+totalScore+' '+JSON.stringify(answers);
+      track('quiz_complete',body);
+
+      if(notAvail){
+        showOut(email);
+      } else {
+        showOk(answers['disponivel']==='talvez');
+      }
+    });
+
+    function showOk(isMaybe){
+      var el=document.getElementById('result-ok');
+      el.style.display='block';
+      if(isMaybe){
+        el.querySelector('h3').textContent='H\u00e1 lugar para ti \u2014 mas confirma j\u00e1.';
+        el.querySelector('p').textContent='Os lugares s\u00e3o apenas 8 por exame. Confirma agora para garantir o teu.';
+      }
+      document.getElementById('reveal').style.display='block';
+      track('quiz_qualified','score:'+Object.values(scores).reduce(function(a,b){return a+b;},0));
+      setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); },200);
+    }
+
+    function showOut(email){
+      document.getElementById('result-out').style.display='block';
+      track('quiz_excluded','email:'+email);
+      setTimeout(function(){ document.getElementById('result-out').scrollIntoView({behavior:'smooth',block:'start'}); },200);
+    }
+
+    // Waitlist (result-out)
+    document.getElementById('btn-wl').addEventListener('click',function(){
+      var email=document.getElementById('wl-email').value.trim();
+      if(!email) return;
+      track('waitlist',email);
+      document.getElementById('result-out').innerHTML='<h3 style="color:var(--gold);font-family:var(--font-display)">Anotado.</h3><p style="color:var(--gray-light)">Avisamos para a pr\u00f3xima edi\u00e7\u00e3o.</p>';
+    });
+
+    // Waitlist (bottom)
+    document.getElementById('btn-wl-bottom').addEventListener('click',function(){
+      var email=document.getElementById('wl-email-bottom').value.trim();
+      if(!email) return;
+      track('waitlist_bottom',email);
+      document.getElementById('wl-bottom-confirm').style.display='block';
+      document.getElementById('wl-email-bottom').style.display='none';
+      document.getElementById('btn-wl-bottom').style.display='none';
+    });
+
+    // Tracking no CTA Stripe
+    var stripeBtn=document.getElementById('btn-stripe');
+    if(stripeBtn){
+      stripeBtn.addEventListener('click',function(){
+        track('stripe_click',getRef()?'ref:'+getRef():'direct');
+      });
+    }
+
+  })();
+  </script>
+</body>
+</html>

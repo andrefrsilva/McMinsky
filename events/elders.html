@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Um dia para ver de perto o que é possível para os seus pais. Sessão presencial, McMinsky Lumiar, Lisboa, sábado 9 Mai 9h30-12h30. €9,90. 15 lugares.">
+  <meta name="category" content="Saúde Sénior">
+  <meta name="event-date" content="2026-05-09">
+  <meta name="event-price" content="€9,90">
+  <meta name="event-spots-text" content="15 lugares · Sáb 9 Mai · 9h30">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="McMinsky Elders — Sáb 9 Mai · Lisboa · 15 Lugares | McMinsky">
+  <meta property="og:description" content="Um dia para ver de perto o que é possível para os seus pais. Sessão presencial, McMinsky Lumiar, Lisboa, 9h30-12h30. €9,90 entrada.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="800">
+  <meta property="og:url" content="https://mcminsky.pt/events/elders.html">
+  <meta property="og:site_name" content="McMinsky">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="McMinsky Elders — Sáb 9 Mai · Lisboa · 15 Lugares | McMinsky">
+  <meta name="twitter:description" content="Um dia para ver de perto o que é possível para os seus pais. McMinsky Lumiar, Lisboa, 9h30-12h30. €9,90 entrada.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80">
+  <title>McMinsky Elders — 9 de Maio · Lisboa | McMinsky</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+  <style>
+    /* ── HERO ELDERS ── */
+    .hero-pre{text-align:center;padding:var(--space-xl) var(--space-md) 0;max-width:700px;margin:0 auto}
+    .hero-pre-text{font-size:clamp(1.1rem,3vw,1.4rem);color:var(--gray-light);letter-spacing:0.04em;margin-bottom:var(--space-md);font-style:italic}
+    .hero-img-wrap{position:relative;max-width:680px;margin:0 auto}
+    .hero-img{width:100%;border-radius:12px;display:block;object-fit:cover;max-height:420px}
+    .hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,8vw,4.5rem);color:var(--gold);text-align:center;letter-spacing:-0.01em;line-height:1.05;margin:var(--space-md) 0 var(--space-sm);font-weight:700}
+    .hero-sub{text-align:center;color:var(--gray-light);font-size:clamp(1rem,2.5vw,1.15rem);line-height:1.7;max-width:520px;margin:0 auto var(--space-lg)}
+
+    /* URGENCY STRIP */
+    .urgency-strip{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin:var(--space-md) auto;padding:0;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18);border-radius:12px;max-width:640px;overflow:hidden}
+    .urgency-item{flex:1;min-width:90px;text-align:center;padding:14px 10px;border-right:1px solid rgba(212,175,55,0.12)}
+    .urgency-item:last-child{border-right:none}
+    .urgency-item .label{font-size:0.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;display:block}
+    .urgency-item .value{font-size:0.95rem;font-weight:700;color:var(--gold);display:block;margin-top:3px}
+
+    /* CTA PRE-QUIZ */
+    .pre-quiz-cta{text-align:center;margin:var(--space-md) auto;max-width:560px}
+    .btn-start-quiz{display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:1rem;padding:16px 38px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:0.01em;transition:opacity 0.2s}
+    .btn-start-quiz:hover{opacity:0.87}
+    .pre-quiz-note{color:var(--gray);font-size:0.8rem;margin-top:10px}
+
+    /* QUIZ */
+    #quiz-wrapper{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #quiz-wrapper.active{display:block;animation:qFadeIn 0.4s ease}
+    #quiz-section h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md);text-align:center}
+    .quiz-progress-wrap{margin-bottom:var(--space-md)}
+    .quiz-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;position:relative}
+    .quiz-bar-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease;width:0%}
+    .quiz-bar-label{font-size:0.75rem;color:var(--gray);text-align:right;margin-top:6px}
+    .quiz-step{display:none;animation:qFadeIn 0.3s ease}
+    .quiz-step.active{display:block}
+    .quiz-q{color:var(--white);font-family:var(--font-display);font-size:1.15rem;margin-bottom:6px;line-height:1.4}
+    .quiz-hint{color:var(--gray);font-size:0.82rem;margin-bottom:14px}
+    .quiz-opts{display:flex;flex-direction:column;gap:9px}
+    .qopt{background:var(--black-lighter);border:2px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px 18px;color:var(--white);font-size:0.93rem;text-align:left;cursor:pointer;transition:all 0.18s;font-family:inherit;line-height:1.45}
+    .qopt:hover{border-color:rgba(212,175,55,0.35)}
+    .qopt.sel{border-color:var(--gold)!important;background:var(--gold)!important;color:#0a0a0a!important;font-weight:700}
+    .quiz-nav{display:flex;justify-content:flex-end;margin-top:16px}
+    .btn-qnext{background:var(--gold);color:#0a0a0a;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;opacity:0.35;pointer-events:none;transition:opacity 0.2s}
+    .btn-qnext.on{opacity:1;pointer-events:auto}
+
+    /* LEAD CAPTURE */
+    #lead-capture{display:none;max-width:540px;margin:var(--space-md) auto;animation:qFadeIn 0.4s ease;padding:0 var(--space-md)}
+    #lead-capture h3{color:var(--gold);font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px}
+    #lead-capture p{color:var(--gray-light);font-size:0.88rem;margin-bottom:16px}
+    .linput{width:100%;background:var(--black-lighter);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:13px 16px;color:var(--white);font-size:0.93rem;font-family:inherit;outline:none;margin-bottom:10px;transition:border-color 0.2s;box-sizing:border-box}
+    .linput:focus{border-color:var(--gold)}
+    .linput::placeholder{color:var(--gray)}
+    .btn-submit-lead{width:100%;background:var(--gold);color:#0a0a0a;border:none;border-radius:10px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+    .btn-submit-lead:hover{opacity:0.88}
+
+    /* RESULT PANELS */
+    #result-box{max-width:680px;margin:0 auto;padding:0 var(--space-md)}
+    #result-ok{display:none;text-align:center;padding:20px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.25);border-radius:12px;margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-ok h3{color:var(--gold);font-family:var(--font-display);font-size:1.4rem;margin-bottom:8px}
+    #result-ok p{color:var(--gray-light);font-size:0.92rem}
+    #result-out{display:none;padding:20px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.07);margin-bottom:var(--space-md);animation:qFadeIn 0.4s ease}
+    #result-out h3{color:var(--white);font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px}
+    #result-out p{color:var(--gray-light);font-size:0.9rem;line-height:1.7}
+    .wl-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .wl-input{flex:1;min-width:180px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:0.88rem;outline:none}
+    .wl-input:focus{border-color:var(--gold)}
+    .btn-wl{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:11px 18px;cursor:pointer;font-family:inherit;font-size:0.88rem;white-space:nowrap;transition:all 0.2s}
+    .btn-wl:hover{background:var(--gold);color:#0a0a0a}
+
+    /* REVEAL */
+    #reveal{display:none;max-width:680px;margin:0 auto;padding:0 var(--space-md) var(--space-xl)}
+    .rv-section{margin-top:var(--space-lg)}
+    .rv-title{color:var(--gold);font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:var(--space-md)}
+
+    /* IS / NOT IS */
+    .is-grid{display:grid;gap:16px;margin:var(--space-md) 0}
+    @media(min-width:580px){.is-grid{grid-template-columns:1fr 1fr}}
+    .is-card,.not-card{background:var(--black-lighter);border-radius:12px;padding:18px}
+    .is-card{border-top:3px solid var(--gold)}
+    .not-card{border-top:3px solid #333}
+    .is-card h4{color:var(--gold);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .not-card h4{color:var(--gray);font-family:var(--font-display);font-size:1rem;margin-bottom:10px}
+    .tick-list,.cross-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+    .tick-list li{color:var(--white);font-size:0.88rem;display:flex;gap:9px;line-height:1.5}
+    .tick-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+    .cross-list li{color:var(--gray-light);font-size:0.88rem;display:flex;gap:9px;line-height:1.5}
+    .cross-list li::before{content:'✕';color:#555;font-weight:700;flex-shrink:0}
+
+    /* FEATURE ITEMS */
+    .feature-grid{display:flex;flex-direction:column;gap:12px;margin:var(--space-md) 0}
+    .feature-item{background:var(--black-lighter);border-radius:10px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;border:1px solid rgba(255,255,255,0.05)}
+    .feature-icon{font-size:1.5rem;flex-shrink:0;width:32px;text-align:center;margin-top:2px}
+    .feature-text strong{color:var(--white);display:block;font-size:0.92rem;margin-bottom:3px}
+    .feature-text span{color:var(--gray-light);font-size:0.82rem;line-height:1.5}
+
+    /* SCIENCE BOX */
+    .science-box{background:var(--black-lighter);border-radius:12px;padding:20px;border-left:4px solid var(--gold);margin:var(--space-md) 0}
+    .science-box h4{color:var(--gold);font-family:var(--font-display);font-size:1rem;margin-bottom:12px}
+    .science-box ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+    .science-box li{color:var(--gray-light);font-size:0.87rem;line-height:1.6;display:flex;gap:10px}
+    .science-box li::before{content:'→';color:var(--gold);font-weight:700;flex-shrink:0}
+
+    /* PRICING TABLE */
+    .pricing-table{display:flex;flex-direction:column;gap:10px;margin:var(--space-md) 0}
+    @media(min-width:580px){.pricing-table{display:grid;grid-template-columns:1fr 1fr}}
+    .price-card{background:var(--black-lighter);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.05)}
+    .price-card.highlight{border:2px solid var(--gold)}
+    .price-card .pc-name{color:var(--gray);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+    .price-card.highlight .pc-name{color:var(--gold)}
+    .price-card .pc-price{color:var(--white);font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:8px}
+    .price-card.highlight .pc-price{color:var(--gold)}
+    .price-card .pc-desc{color:var(--gray-light);font-size:0.82rem;line-height:1.6}
+
+    /* PULSEIRA BOX */
+    .pulseira-box{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.25);border-radius:12px;padding:22px;margin:var(--space-md) 0}
+    .pulseira-box h4{color:var(--gold);font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px}
+    .pulseira-box p{color:var(--gray-light);font-size:0.88rem;line-height:1.7;margin:0 0 10px}
+    .pulseira-box .pulseira-tag{display:inline-block;background:rgba(212,175,55,0.15);color:var(--gold);font-size:0.78rem;padding:5px 12px;border-radius:20px;font-weight:600;letter-spacing:0.04em}
+
+    /* SPEAKERS */
+    .speakers{display:flex;flex-direction:column;gap:14px;margin:var(--space-md) 0}
+    .sp-card{background:var(--black-lighter);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.05)}
+    .sp-name{color:var(--gold);font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:6px}
+    .sp-bio{color:var(--gray-light);font-size:0.85rem;line-height:1.6}
+
+    /* LOCAL */
+    .local-box{background:var(--black-lighter);border-radius:10px;padding:18px;border-left:3px solid var(--gold);margin:var(--space-md) 0}
+    .local-box strong{color:var(--white);display:block;margin-bottom:6px}
+    .local-box p{color:var(--gray-light);font-size:0.88rem;line-height:1.7;margin:0}
+
+    /* STRIPE CTA */
+    .cta-box{margin-top:var(--space-xl);padding:var(--space-md);background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:16px;text-align:center}
+    .cta-box h2{color:var(--white);font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:8px}
+    .cta-box .sub{color:var(--gray-light);font-size:0.92rem;margin-bottom:var(--space-md)}
+    #stripe-container{display:flex;justify-content:center;margin:var(--space-md) 0}
+    .cta-note{color:var(--gray);font-size:0.78rem;margin-top:10px}
+
+    /* WAITLIST SECTION */
+    .waitlist-section{margin-top:var(--space-xl);padding:var(--space-md);background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.07);text-align:center;max-width:680px;margin-left:auto;margin-right:auto}
+    .waitlist-section h3{color:var(--white);font-family:var(--font-display);font-size:1.1rem;margin-bottom:6px}
+    .waitlist-section p{color:var(--gray-light);font-size:0.88rem;margin-bottom:14px}
+
+    @keyframes qFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="loading">
+
+  <div class="loader">
+    <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="loader-logo">
+    <span class="loader-text">McMinsky</span>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky Logo">
+        <span class="logo-text">McMinsky</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/#about" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="/#offers" class="nav-link">Agenda</a></li>
+          <li class="nav-item"><a href="/#programs" class="nav-link">Programas</a></li>
+          <li class="nav-item"><a href="/#insights" class="nav-link">Insights</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="pt">PT</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-page">
+
+    <div class="article-hero">
+      <span class="article-hero-category">Sa&uacute;de S&eacute;nior &middot; Programa Elders &middot; 15 Lugares</span>
+      <h1 class="article-hero-title">McMinsky Elders</h1>
+      <p class="article-hero-meta">Uma manh&atilde; para ver de perto o que &eacute; poss&iacute;vel para os seus pais.</p>
+    </div>
+
+    <!-- ═══ HERO ═══ -->
+    <div class="hero-pre">
+      <p class="hero-pre-text">Sente a culpa de n&atilde;o estar mais presente?</p>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80" alt="Idosos activos e felizes" class="hero-img">
+      </div>
+      <div class="hero-title">Um Dia para Ver de Perto.</div>
+      <p class="hero-sub">
+        Traga os seus pais. Veja o que &eacute; poss&iacute;vel.<br>
+        N&atilde;o &eacute; uma palestra. &Eacute; tr&ecirc;s horas que mudam a conversa.
+      </p>
+
+      <div class="urgency-strip">
+        <div class="urgency-item"><span class="label">Quando</span><span class="value">S&aacute;b, 9 Mai</span></div>
+        <div class="urgency-item"><span class="label">Hora</span><span class="value">9h30&ndash;12h30</span></div>
+        <div class="urgency-item"><span class="label">Onde</span><span class="value">Lumiar, Lisboa</span></div>
+        <div class="urgency-item"><span class="label">Lugares</span><span class="value">15 m&aacute;x.</span></div>
+        <div class="urgency-item"><span class="label">Entrada</span><span class="value">&euro;9,90</span></div>
+      </div>
+
+      <div class="pre-quiz-cta">
+        <button class="btn-start-quiz" id="btn-open-quiz">Ver se h&aacute; lugar para si</button>
+        <p class="pre-quiz-note">Leva menos de 2 minutos &middot; Resposta imediata</p>
+      </div>
+    </div>
+
+    <!-- ═══ QUIZ ═══ -->
+    <div id="quiz-wrapper">
+      <div id="quiz-section">
+        <h2>Cinco perguntas antes de abrires a p&aacute;gina.</h2>
+
+        <div class="quiz-progress-wrap">
+          <div class="quiz-bar"><div class="quiz-bar-fill" id="qfill"></div></div>
+          <div class="quiz-bar-label" id="qprog">1 / 5</div>
+        </div>
+
+        <!-- P1: PARA QUEM -->
+        <div class="quiz-step active" data-key="destinatario" data-step="0">
+          <h3 class="quiz-q">Para quem est&aacute; a considerar este programa?</h3>
+          <p class="quiz-hint">Este programa &eacute; dirigido a filhos e familiares de pessoas com mais de 65 anos.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="pais" data-score="1">Para os meus pais</button>
+            <button class="qopt" data-val="familiar" data-score="1">Para um familiar pr&oacute;ximo (av&oacute;s, tio/a, etc.)</button>
+            <button class="qopt" data-val="proprio" data-score="0.5">Para mim pr&oacute;prio &mdash; tenho mais de 65 anos</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn0">Continuar</button></div>
+        </div>
+
+        <!-- P2: MAIOR PREOCUPAÇÃO -->
+        <div class="quiz-step" data-key="preocupacao" data-step="1">
+          <h3 class="quiz-q">Qual a maior preocupa&ccedil;&atilde;o actual?</h3>
+          <p class="quiz-hint">A preocupa&ccedil;&atilde;o que mais pesa quando pensa neles.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="isolamento" data-score="1">Isolamento social &mdash; est&atilde;o cada vez mais sozinhos</button>
+            <button class="qopt" data-val="cognitivo" data-score="1">Decl&iacute;nio cognitivo ou mem&oacute;ria &mdash; noto mudan&ccedil;as</button>
+            <button class="qopt" data-val="queda" data-score="1">Risco de quedas ou mobilidade &mdash; tenho medo que ca&iacute;am</button>
+            <button class="qopt" data-val="sentido" data-score="1">Falta de actividade com sentido &mdash; n&atilde;o t&ecirc;m para onde ir</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn1">Continuar</button></div>
+        </div>
+
+        <!-- P3: COM QUE FREQUÊNCIA -->
+        <div class="quiz-step" data-key="frequencia" data-step="2">
+          <h3 class="quiz-q">Com que frequ&ecirc;ncia v&ecirc; os seus pais ou familiar?</h3>
+          <p class="quiz-hint">N&atilde;o h&aacute; resposta certa &mdash; &eacute; s&oacute; para perceber o contexto.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="diario" data-score="1">Diariamente</button>
+            <button class="qopt" data-val="semana" data-score="1">Algumas vezes por semana</button>
+            <button class="qopt" data-val="mes" data-score="1">1-2x por m&ecirc;s</button>
+            <button class="qopt" data-val="raramente" data-score="0.5">Raramente &mdash; vivemos longe</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn2">Continuar</button></div>
+        </div>
+
+        <!-- P4: JÁ EXPERIMENTOU -->
+        <div class="quiz-step" data-key="tentativas" data-step="3">
+          <h3 class="quiz-q">O que j&aacute; experimentou para este problema?</h3>
+          <p class="quiz-hint">O que tentou at&eacute; agora para os manter activos ou seguros.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="nada" data-score="0.5">Nada ainda &mdash; &eacute; altura de come&ccedil;ar</button>
+            <button class="qopt" data-val="universidade" data-score="1">Universidade S&eacute;nior &mdash; mas falta estrutura e acompanhamento</button>
+            <button class="qopt" data-val="ginasio" data-score="1">Gin&aacute;sio ou actividade f&iacute;sica &mdash; mas sem monitoriza&ccedil;&atilde;o m&eacute;dica</button>
+            <button class="qopt" data-val="medico" data-score="1">Acompanhamento m&eacute;dico &mdash; mas s&oacute; quando h&aacute; problema</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn3">Continuar</button></div>
+        </div>
+
+        <!-- P5: DISPONIBILIDADE -->
+        <div class="quiz-step" data-key="disponivel" data-step="4">
+          <h3 class="quiz-q">Conseguem estar no Lumiar, Lisboa, no dia 9 de Maio &agrave;s 9h30?</h3>
+          <p class="quiz-hint">Estacionamento f&aacute;cil, sem escadas, espa&ccedil;o acess&iacute;vel. 20 min do centro.</p>
+          <div class="quiz-opts">
+            <button class="qopt" data-val="sim_levo" data-score="1">Sim, consigo lev&aacute;-los</button>
+            <button class="qopt" data-val="sim_proprios" data-score="1">Eles t&ecirc;m transporte pr&oacute;prio &mdash; v&atilde;o sozinhos</button>
+            <button class="qopt" data-val="nao" data-score="0">N&atilde;o consigo nessa data</button>
+          </div>
+          <div class="quiz-nav"><button class="btn-qnext" id="qn4">Ver resultado</button></div>
+        </div>
+
+      </div><!-- /quiz-section -->
+    </div><!-- /quiz-wrapper -->
+
+    <!-- ═══ LEAD CAPTURE ═══ -->
+    <div id="lead-capture">
+      <h3>Quase l&aacute;.</h3>
+      <p>Para enviarmos a confirma&ccedil;&atilde;o e detalhes do programa.</p>
+      <input type="text" class="linput" id="lname" placeholder="O seu nome" autocomplete="name">
+      <input type="email" class="linput" id="lemail" placeholder="Email" autocomplete="email">
+      <input type="text" class="linput" id="lfamiliar" placeholder="Nome do familiar que vir&aacute;" autocomplete="off">
+      <input type="tel" class="linput" id="lphone" placeholder="Telef&oacute;ne (opcional)" autocomplete="tel">
+      <button class="btn-submit-lead" id="btn-lead-submit">Ver o que acontece nas 3 horas</button>
+    </div>
+
+    <!-- ═══ RESULTADO ═══ -->
+    <div id="result-box">
+      <div id="result-ok">
+        <h3>H&aacute; lugar para si.</h3>
+        <p>Aqui est&aacute; o que acontece nas 3 horas &mdash; e como garantir o lugar agora.</p>
+      </div>
+      <div id="result-out">
+        <h3>Esta data n&atilde;o &eacute; poss&iacute;vel para si.</h3>
+        <p>Percebemos &mdash; as agendas nem sempre batem certo. Deixe o email e avisamos para a pr&oacute;xima edi&ccedil;&atilde;o:</p>
+        <div class="wl-row">
+          <input type="email" class="wl-input" id="wl-email" placeholder="O seu email">
+          <button class="btn-wl" id="btn-wl">Avisar-me</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ REVEAL ═══ -->
+    <div id="reveal">
+
+      <!-- O QUE ACONTECE NAS 3 HORAS -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que acontece nas 3 horas</h2>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="feature-icon">🏃</span>
+            <div class="feature-text">
+              <strong>Actividades f&iacute;sicas com evid&ecirc;ncia cient&iacute;fica</strong>
+              <span>Exerc&iacute;cio aer&oacute;bico e de equil&iacute;brio adaptado &mdash; baseado nas interven&ccedil;&otilde;es que reduzem risco de queda e declínio cognitivo. N&atilde;o &eacute; gin&aacute;stica. &Eacute; protocolo m&eacute;dico.</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⌚</span>
+            <div class="feature-text">
+              <strong>Monitoriza&ccedil;&atilde;o biom&eacute;trica MedicinUp</strong>
+              <span>Cada participante usa a pulseira MedicinUp durante a sess&atilde;o. Ritmo card&iacute;aco, satura&ccedil;&atilde;o, stress f&iacute;sico em tempo real &mdash; com m&eacute;dico presente a interpretar os dados.</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🧠</span>
+            <div class="feature-text">
+              <strong>Avalia&ccedil;&atilde;o cognitiva r&aacute;pida</strong>
+              <span>Quiz cognitivo validado &mdash; mem&oacute;ria de trabalho, aten&ccedil;&atilde;o, velocidade de processamento. N&atilde;o &eacute; para assustar. &Eacute; para ter uma base de compara&ccedil;&atilde;o clara.</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">☕</span>
+            <div class="feature-text">
+              <strong>Coffee break &mdash; conversa real</strong>
+              <span>Filhos e pais no mesmo espa&ccedil;o. Tempo para perguntas directas ao m&eacute;dico, sem press&atilde;o de consulta. A conversa dif&iacute;cil fica mais f&aacute;cil aqui.</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📋</span>
+            <div class="feature-text">
+              <strong>Proposta do clube mensal</strong>
+              <span>No final, explicamos o que &eacute; o clube McMinsky Elders &mdash; sem press&atilde;o. Cada fam&iacute;lia decide no seu tempo.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A PULSEIRA MEDICINUP -->
+      <div class="rv-section">
+        <h2 class="rv-title">A Pulseira MedicinUp</h2>
+        <div class="pulseira-box">
+          <h4>O diferenciador que nenhum gin&aacute;sio s&eacute;nior em Portugal tem.</h4>
+          <p>
+            Cada participante usa uma pulseira com n&uacute;mero &uacute;nico. Em caso de emerg&ecirc;ncia, qualquer m&eacute;dico ou familiar entra em <strong>medicinup.com</strong>, coloca o n&uacute;mero, e v&ecirc; os dados de sa&uacute;de em tempo real &mdash; hist&oacute;rico card&iacute;aco, medicação, condi&ccedil;&otilde;es cr&oacute;nicas.
+          </p>
+          <p>
+            <strong>Para si, filho:</strong> recebe alerta no telef&oacute;ne se os dados sa&iacute;rem do normal. Mesmo que esteja a trabalhar, a 300 km, ou no estrangeiro. N&atilde;o &eacute; vigil&acirc;ncia. &Eacute; paz de esp&iacute;rito.
+          </p>
+          <span class="pulseira-tag">Incluída na sess&atilde;o de entrada</span>
+        </div>
+      </div>
+
+      <!-- CIÊNCIA -->
+      <div class="rv-section">
+        <h2 class="rv-title">O que a ci&ecirc;ncia diz sobre envelhecimento activo</h2>
+        <div class="science-box">
+          <h4>N&atilde;o &eacute; opini&atilde;o. S&atilde;o dados.</h4>
+          <ul>
+            <li>As zonas azuis &mdash; Sardenha, Okinawa, Loma Linda &mdash; t&ecirc;m em comum actividade f&iacute;sica di&aacute;ria de baixa intensidade e forte liga&ccedil;&atilde;o social. N&atilde;o &eacute; gen&eacute;tica. &Eacute; rotina.</li>
+            <li>Exerc&iacute;cio aer&oacute;bico regular reduz o risco de dem&ecirc;ncia em 30&ndash;40%. <em>(Lancet, 2020)</em></li>
+            <li>Solid&atilde;o aumenta a mortalidade tanto quanto fumar 15 cigarros por dia. <em>(Holt-Lunstad, PLOS Medicine)</em></li>
+            <li>Interven&ccedil;&otilde;es de equil&iacute;brio estruturadas reduzem quedas em at&eacute; 35% em pessoas com mais de 70 anos. <em>(Cochrane Review, 2019)</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- O QUE É / NÃO É -->
+      <div class="rv-section">
+        <div class="is-grid">
+          <div class="is-card">
+            <h4>&Eacute;</h4>
+            <ul class="tick-list">
+              <li>Uma sess&atilde;o presencial com actividade real &mdash; n&atilde;o uma palestra</li>
+              <li>M&eacute;dico e doutor em neuroci&ecirc;ncias presente durante todo o programa</li>
+              <li>Monitoriza&ccedil;&atilde;o biom&eacute;trica em tempo real (n&atilde;o h&aacute; outro s&iacute;tio assim em Lisboa)</li>
+              <li>Espa&ccedil;o calmo, sem escadas, acess&iacute;vel, estacionamento &agrave; porta</li>
+              <li>15 pessoas &mdash; aten&ccedil;&atilde;o individualizada, n&atilde;o turma de 50</li>
+              <li>Avalia&ccedil;&atilde;o cognitiva que fica registada para compara&ccedil;&atilde;o futura</li>
+            </ul>
+          </div>
+          <div class="not-card">
+            <h4>N&atilde;o &eacute;</h4>
+            <ul class="cross-list">
+              <li>Universidade s&eacute;nior sem estrutura de sa&uacute;de</li>
+              <li>Gin&aacute;sio gen&eacute;rico sem m&eacute;dico nem dados</li>
+              <li>Apresenta&ccedil;&atilde;o de slides sobre &ldquo;envelhecer bem&rdquo;</li>
+              <li>Evento de entretenimento sem resultado m&eacute;dico</li>
+              <li>Para quem n&atilde;o est&aacute; dispon&iacute;vel a 9 de Maio</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLUBE MENSAL -->
+      <div class="rv-section">
+        <h2 class="rv-title">Clube McMinsky Elders &mdash; &euro;250/m&ecirc;s</h2>
+        <p style="color:var(--gray-light);font-size:0.9rem;line-height:1.7;margin-bottom:var(--space-md)">
+          A sess&atilde;o de entrada &eacute; para conhecer. O clube &eacute; para quem quer resultados cont&iacute;nuos.
+        </p>
+        <div class="pricing-table">
+          <div class="price-card highlight">
+            <div class="pc-name">McMinsky Elders</div>
+            <div class="pc-price">&euro;250/m&ecirc;s</div>
+            <div class="pc-desc">
+              2x/semana actividades presenciais &middot; Monitoriza&ccedil;&atilde;o biom&eacute;trica cont&iacute;nua &middot; M&eacute;dico dispon&iacute;vel &middot; Alertas Telegram para familiares &middot; Avalia&ccedil;&atilde;o cognitiva mensal &middot; Comunidade de 15 pessoas.
+            </div>
+          </div>
+          <div class="price-card">
+            <div class="pc-name">Holmes Place Sénior</div>
+            <div class="pc-price">&euro;80/m&ecirc;s</div>
+            <div class="pc-desc">
+              Gin&aacute;sio gen&eacute;rico. Sem m&eacute;dico. Sem dados. Sem alertas para familiares. Instrutores n&atilde;o s&atilde;o m&eacute;dicos. Sem avalia&ccedil;&atilde;o cognitiva.
+            </div>
+          </div>
+          <div class="price-card">
+            <div class="pc-name">Personal Trainer</div>
+            <div class="pc-price">&euro;800/m&ecirc;s</div>
+            <div class="pc-desc">
+              Apenas exerc&iacute;cio. Sem componente cognitiva. Sem dados m&eacute;dicos. Sem comunidade. Sem monitoriza&ccedil;&atilde;o card&iacute;aca cont&iacute;nua.
+            </div>
+          </div>
+          <div class="price-card">
+            <div class="pc-name">Universidade S&eacute;nior</div>
+            <div class="pc-price">Vari&aacute;vel</div>
+            <div class="pc-desc">
+              Actividades culturais. Sem dados m&eacute;dicos. Sem m&eacute;dico. Sem estrutura de sa&uacute;de. Sem alertas para familiares.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPEAKER -->
+      <div class="rv-section">
+        <h2 class="rv-title">Quem est&aacute; l&aacute;</h2>
+        <div class="speakers">
+          <div class="sp-card">
+            <div class="sp-name">Andr&eacute; Rodrigues, MD</div>
+            <div class="sp-bio">
+              M&eacute;dico e doutor em Neuroci&ecirc;ncias pela Universidade de Munique. Pr&eacute;mio Inova&ccedil;&atilde;o em Sa&uacute;de 2025. Especialista em envelhecimento cognitivo e protocolos de sa&uacute;de preventiva para s&eacute;niores. Constr&oacute;i sistemas de monitoriza&ccedil;&atilde;o que ligam dados em tempo real &agrave;s fam&iacute;lias. N&atilde;o &eacute; mais um m&eacute;dico que aparece quando j&aacute; &eacute; tarde.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCAL -->
+      <div class="rv-section">
+        <div class="local-box">
+          <strong>📍 McMinsky Lumiar &mdash; Azinhaga da Cidade 24A r/c, 1750-063 Lisboa</strong>
+          <p>Espa&ccedil;o no piso r&eacute;s-do-ch&atilde;o, sem escadas, totalmente acess&iacute;vel. Estacionamento &agrave; porta sem custos. A 20 minutos do centro de Lisboa. Um ambiente calmo &mdash; n&atilde;o um gin&aacute;sio, n&atilde;o um hospital. Um s&iacute;tio onde os seus pais v&atilde;o querer voltar.</p>
+        </div>
+      </div>
+
+      <!-- CTA STRIPE -->
+      <div class="cta-box" id="cta-main">
+        <h2>Garanta o lugar deles agora.</h2>
+        <p class="sub">15 lugares m&aacute;ximo &middot; N&atilde;o ser&aacute; repetido nesta data &middot; Entrada &euro;9,90</p>
+        <div id="stripe-container"></div>
+        <p class="cta-note">Pagamento seguro via Stripe &middot; Confirma&ccedil;&atilde;o imediata por email</p>
+        <p style="margin-top:14px;color:var(--gray-light);font-size:0.85rem;line-height:1.6">
+          O &euro;9,90 &eacute; a entrada para a sess&atilde;o. O clube mensal (&euro;250/m&ecirc;s) &eacute; apresentado no final &mdash; cada fam&iacute;lia decide sem press&atilde;o.
+        </p>
+      </div>
+
+      <!-- LISTA DE ESPERA -->
+      <div class="waitlist-section">
+        <h3>N&atilde;o consegue a 9 de Maio?</h3>
+        <p>Deixe o email e avisamos quando abrirmos a pr&oacute;xima edi&ccedil;&atilde;o.</p>
+        <div class="wl-row" style="justify-content:center">
+          <input type="email" class="wl-input" id="wl-bottom-email" placeholder="O seu email" style="max-width:280px">
+          <button class="btn-wl" id="btn-wl-bottom">Avisar-me</button>
+        </div>
+      </div>
+
+    </div><!-- /reveal -->
+
+  </article>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p>Centro de Excel&ecirc;ncia para mentes ambiciosas.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navega&ccedil;&atilde;o</h4>
+        <ul>
+          <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#programs">Programas</a></li>
+          <li><a href="/#insights">Insights</a></li>
+          <li><a href="/#offers">Agenda</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Localiza&ccedil;&atilde;o</h4>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisboa</p>
+        <a href="https://share.google/8wcEaRj5rfmvmwiyv" class="footer-maps-btn" target="_blank">Ver no Google Maps</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condi&ccedil;&otilde;es</a>
+        <a href="../legal/privacy.html">Pol&iacute;tica de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclama&ccedil;&otilde;es</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2026</span> McMinsky. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  (function(){
+    // ── REF DE AFILIADO ───────────────────────────────────────────────
+    var ref = new URLSearchParams(window.location.search).get('ref') || '';
+    if(ref){ try{ localStorage.setItem('mcminsky_ref', ref); }catch(e){} }
+    function getRef(){ try{ return localStorage.getItem('mcminsky_ref')||ref||''; }catch(e){ return ref||''; } }
+
+    // ── UID ───────────────────────────────────────────────────────────
+    var uid='';
+    try{
+      uid=localStorage.getItem('mcminsky_uid')||'';
+      if(!uid){ uid='u'+Date.now()+Math.random().toString(36).slice(2,6); localStorage.setItem('mcminsky_uid',uid); }
+    }catch(e){}
+
+    // ── TRACKING ──────────────────────────────────────────────────────
+    var FURL='https://docs.google.com/forms/d/e/1FAIpQLSe2I3Jy2hNkzlCcPS7oy5hKtpvJQKPCGGyHSUq9H8iab0nBBw/formResponse';
+    function track(action, body){
+      try{
+        var r=getRef();
+        var fd=new FormData();
+        fd.append('entry.1191618802',action);
+        fd.append('entry.97481516',uid);
+        fd.append('entry.1381161689',(body||'')+(r?' ref:'+r:''));
+        fetch(FURL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){});
+      }catch(e){}
+    }
+    track('pageview','elders'+(getRef()?' ref:'+getRef():''));
+
+    // ── ABRIR QUIZ ────────────────────────────────────────────────────
+    document.getElementById('btn-open-quiz').addEventListener('click',function(){
+      document.getElementById('quiz-wrapper').classList.add('active');
+      document.getElementById('quiz-wrapper').scrollIntoView({behavior:'smooth',block:'start'});
+      track('quiz_start','elders');
+    });
+
+    // ── QUIZ STATE ────────────────────────────────────────────────────
+    var scores={};
+    var answers={};
+    var steps=document.querySelectorAll('.quiz-step');
+    var total=steps.length;
+
+    function setProgress(n){
+      var pct=((n)/total)*100;
+      document.getElementById('qfill').style.width=pct+'%';
+      document.getElementById('qprog').textContent=(n+1)+' / '+total;
+    }
+
+    function showStep(n){
+      steps.forEach(function(s,i){ s.classList.toggle('active',i===n); });
+      setProgress(n);
+    }
+
+    // Todos os steps são single-choice: 0, 1, 2, 3, 4
+    [0,1,2,3,4].forEach(function(si){
+      var step=steps[si];
+      if(!step) return;
+      var opts=step.querySelectorAll('.qopt');
+      var next=step.querySelector('.btn-qnext');
+      opts.forEach(function(opt){
+        opt.addEventListener('click',function(){
+          opts.forEach(function(o){ o.classList.remove('sel'); });
+          opt.classList.add('sel');
+          scores[si]=parseFloat(opt.getAttribute('data-score'));
+          answers[step.getAttribute('data-key')]=opt.getAttribute('data-val');
+          if(next) next.classList.add('on');
+          setTimeout(function(){ if(next&&next.classList.contains('on')) next.click(); },380);
+        });
+      });
+      if(next){
+        next.addEventListener('click',function(){
+          if(!next.classList.contains('on')) return;
+          if(si<total-1){ showStep(si+1); }
+          else{ doLeadCapture(); }
+        });
+      }
+    });
+
+    // ── LEAD CAPTURE ──────────────────────────────────────────────────
+    function doLeadCapture(){
+      document.getElementById('quiz-wrapper').style.display='none';
+      document.getElementById('lead-capture').style.display='block';
+      document.getElementById('lead-capture').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    document.getElementById('btn-lead-submit').addEventListener('click',function(){
+      var name=document.getElementById('lname').value.trim();
+      var email=document.getElementById('lemail').value.trim();
+      var familiar=document.getElementById('lfamiliar').value.trim();
+      var phone=document.getElementById('lphone').value.trim();
+      if(!name||!email){ document.getElementById('lname').focus(); return; }
+      document.getElementById('lead-capture').style.display='none';
+
+      var totalScore=Object.values(scores).reduce(function(a,b){ return a+b; },0);
+      var notAvail=answers['disponivel']==='nao';
+      var body='nome:'+name+' email:'+email+(familiar?' familiar:'+familiar:'')+(phone?' tel:'+phone:'')
+               +' score:'+totalScore+' '+JSON.stringify(answers);
+      track('quiz_complete',body);
+
+      if(notAvail||totalScore<1.5){
+        showOut(email);
+      } else {
+        showOk();
+      }
+    });
+
+    function showOk(){
+      var el=document.getElementById('result-ok');
+      el.style.display='block';
+      document.getElementById('reveal').style.display='block';
+      renderStripe();
+      track('quiz_qualified','score:'+Object.values(scores).reduce(function(a,b){return a+b;},0));
+      setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); },200);
+    }
+
+    function showOut(email){
+      document.getElementById('result-out').style.display='block';
+      track('quiz_excluded','email:'+email);
+      setTimeout(function(){ document.getElementById('result-out').scrollIntoView({behavior:'smooth',block:'start'}); },200);
+    }
+
+    // Waitlist inline (result-out)
+    document.getElementById('btn-wl').addEventListener('click',function(){
+      var email=document.getElementById('wl-email').value.trim();
+      if(!email) return;
+      track('waitlist',email);
+      document.getElementById('result-out').innerHTML='<h3 style="color:var(--gold);font-family:var(--font-display)">Anotado.</h3><p style="color:var(--gray-light)">Avisamos para a pr\u00f3xima edi\u00e7\u00e3o.</p>';
+    });
+
+    // Waitlist bottom (reveal section)
+    var btnWlBottom=document.getElementById('btn-wl-bottom');
+    if(btnWlBottom){
+      btnWlBottom.addEventListener('click',function(){
+        var email=document.getElementById('wl-bottom-email').value.trim();
+        if(!email) return;
+        track('waitlist_bottom',email);
+        document.querySelector('.waitlist-section').innerHTML='<h3 style="color:var(--gold);font-family:var(--font-display)">Anotado.</h3><p style="color:var(--gray-light)">Avisamos quando abrirmos a pr\u00f3xima edi\u00e7\u00e3o.</p>';
+      });
+    }
+
+    // ── STRIPE BUY BUTTON ─────────────────────────────────────────────
+    function renderStripe(){
+      var container=document.getElementById('stripe-container');
+      var btn=document.createElement('a');
+      btn.href='https://buy.stripe.com/8x24gz8JP9RJgTH0Cc1sQ0g';
+      btn.target='_blank';
+      btn.rel='noopener noreferrer';
+      btn.style.cssText='display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:1rem;padding:16px 38px;border-radius:10px;text-decoration:none;font-family:inherit;letter-spacing:0.01em;transition:opacity 0.2s';
+      btn.textContent='Inscrição para a sessão — €9,90';
+      btn.onmouseover=function(){ this.style.opacity='0.87'; };
+      btn.onmouseout=function(){ this.style.opacity='1'; };
+      var r=getRef();
+      if(r){ btn.href+='?client_reference_id='+encodeURIComponent(r); }
+      container.appendChild(btn);
+      track('stripe_rendered',r?'ref:'+r:'direct');
+    }
+
+  })();
+  </script>
+</body>
+</html>
