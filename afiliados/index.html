@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>McMinsky · Menu de Afiliados</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f1117;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 48px 24px 32px;
+      border-bottom: 1px solid #1e2235;
+    }
+    .logo {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+    .logo span { color: #22c55e; }
+    .subtitle {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── Banner sem ref ── */
+    .no-ref-banner {
+      max-width: 560px;
+      margin: 48px auto 0;
+      background: #1a1d2e;
+      border: 1px solid #2a2f4a;
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+    }
+    .no-ref-banner h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .no-ref-banner p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .ref-url-example {
+      background: #0f1117;
+      border: 1px solid #2a2f4a;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #22c55e;
+      margin-bottom: 24px;
+      word-break: break-all;
+    }
+    .ref-input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ref-input {
+      flex: 1;
+      min-width: 180px;
+      background: #0f1117;
+      border: 1px solid #2a2f4a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ref-input:focus { border-color: #22c55e; }
+    .ref-input::placeholder { color: #475569; }
+    .btn-go {
+      background: #22c55e;
+      color: #0f1117;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-go:hover { background: #16a34a; }
+
+    /* ── Greeting ── */
+    .greeting {
+      max-width: 1040px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .greeting-badge {
+      background: #22c55e22;
+      border: 1px solid #22c55e55;
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      color: #22c55e;
+      font-weight: 600;
+    }
+    .greeting-text {
+      font-size: 1.1rem;
+      color: #94a3b8;
+    }
+    .greeting-text strong { color: #fff; }
+
+    /* ── Grid ── */
+    .grid {
+      max-width: 1040px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #1a1d2e;
+      border: 1px solid #2a2f4a;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: #3b4275;
+      transform: translateY(-2px);
+    }
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    .card-body {
+      padding: 20px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 6px;
+      padding: 3px 9px;
+      margin-bottom: 10px;
+    }
+    .badge-event {
+      background: #1e3a5f;
+      color: #60a5fa;
+    }
+    .badge-service {
+      background: #1e3a2e;
+      color: #4ade80;
+    }
+    .badge-product {
+      background: #3b1e5f;
+      color: #c084fc;
+    }
+    .card-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      line-height: 1.55;
+      margin-bottom: 12px;
+      flex: 1;
+    }
+    .card-price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #22c55e;
+      margin-bottom: 16px;
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-copy, .btn-view {
+      flex: 1;
+      min-width: 120px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, color 0.2s;
+      text-align: center;
+    }
+    .btn-copy {
+      background: #22c55e;
+      color: #0f1117;
+    }
+    .btn-copy:hover { background: #16a34a; }
+    .btn-copy.copied {
+      background: #14532d;
+      color: #4ade80;
+    }
+    .btn-view {
+      background: #1e2235;
+      color: #94a3b8;
+      border: 1px solid #2a2f4a;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-view:hover {
+      background: #2a2f4a;
+      color: #e2e8f0;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      color: #475569;
+      font-size: 0.8rem;
+    }
+    .footer a { color: #64748b; text-decoration: none; }
+    .footer a:hover { color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="logo">Mc<span>Minsky</span></div>
+    <div class="subtitle">Menu de Afiliados</div>
+  </header>
+
+  <!-- Banner sem ref -->
+  <div id="no-ref-section" style="display:none;">
+    <div class="no-ref-banner">
+      <h2>Bem-vindo, afiliado!</h2>
+      <p>Adicione o seu nome ao URL para gerar os seus links de afiliado personalizados:</p>
+      <div class="ref-url-example">mcminsky.pt/afiliados/?ref=o-seu-nome</div>
+      <div class="ref-input-row">
+        <input
+          class="ref-input"
+          id="ref-input"
+          type="text"
+          placeholder="o-seu-nome"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="btn-go" onclick="goWithRef()">Gerar links →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo com ref -->
+  <div id="ref-section" style="display:none;">
+    <div class="greeting">
+      <div class="greeting-badge">Afiliado activo</div>
+      <div class="greeting-text">Olá, <strong id="greeting-name"></strong>! Os seus links de afiliado:</div>
+    </div>
+
+    <div class="grid" id="cards-grid">
+      <!-- Cards injectados por JS -->
+    </div>
+  </div>
+
+  <footer class="footer">
+    McMinsky &middot; <a href="mailto:andre@medicinup.com">andre@medicinup.com</a>
+  </footer>
+
+  <script>
+    // ── Dados dos produtos ──────────────────────────────────────────────
+    const products = [
+      {
+        name: 'Agente ao Vivo',
+        badge: '9 Mai · 16h–18h',
+        badgeType: 'event',
+        desc: 'Sai com um agente IA configurado para o teu negócio. 1 tarde, McMinsky, Lisboa.',
+        price: '€150',
+        stripeBase: 'https://buy.stripe.com/8wMbJ15xD9RJ2YR0981sQ0e',
+        page: 'https://mcminsky.pt/events/agente-ao-vivo.html',
+        img: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80',
+      },
+      {
+        name: 'McMinsky Elders',
+        badge: '9 Mai · 9h30–12h30',
+        badgeType: 'event',
+        desc: 'Sessão de abertura do clube de saúde sénior. Para pais activos. Monitorizados.',
+        price: '€9,90 entrada + €250/mês clube',
+        stripeBase: 'https://buy.stripe.com/8x24gz8JP9RJgTH0Cc1sQ0g',
+        page: 'https://mcminsky.pt/events/elders.html',
+        img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80',
+      },
+      {
+        name: 'ADHD Offsite para Pais',
+        badge: '16 Mai · 10h–12h',
+        badgeType: 'event',
+        desc: 'Neurociência do ADHD para pais. Com médico, sem psicologia de revista.',
+        price: '€120',
+        stripeBase: 'https://buy.stripe.com/4gM4gz4tz0h95aZ1Gg1sQ0f',
+        page: 'https://mcminsky.pt/events/adhd-pais.html',
+        img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
+      },
+      {
+        name: 'Simulação Exames Nacionais',
+        badge: '16 Mai · 15h',
+        badgeType: 'event',
+        desc: 'Faz o exame em condições reais. Correcção e feedback imediato por médico FMUL.',
+        price: '€65',
+        stripeBase: 'https://buy.stripe.com/dRmbJ1gch4xpdHvdoY1sQ0h',
+        page: 'https://mcminsky.pt/events/simulacao-exames.html',
+        img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80',
+      },
+      {
+        name: 'Neuralógica',
+        badge: 'Serviço',
+        badgeType: 'service',
+        desc: 'Gestão de conteúdo e marketing com IA para clínicas e consultórios. Mãos livres.',
+        price: 'Sob consulta',
+        stripeBase: null,
+        page: 'https://mcminsky.pt/#contact',
+        img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80',
+      },
+      {
+        name: 'Parlensky',
+        badge: 'Serviço',
+        badgeType: 'service',
+        desc: 'Aprender línguas sem drama. Método para introvertidos que não aguentam turmas.',
+        price: 'Ver programas',
+        stripeBase: null,
+        page: 'https://mcminsky.pt/#programs',
+        img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80',
+      },
+      {
+        name: 'Aluguer de Agentes IA',
+        badge: 'Serviço',
+        badgeType: 'service',
+        desc: 'Agente IA personalizado para o teu negócio. Automatiza tarefas, responde a clientes, trabalha 24h.',
+        price: 'A partir de €X/mês',
+        stripeBase: null,
+        page: 'https://mcminsky.pt/events/agente-ao-vivo.html',
+        img: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80',
+      },
+      {
+        name: 'Pulseiras MedicinUp',
+        badge: 'Produto',
+        badgeType: 'product',
+        desc: 'Pulseira de cortiça de emergência + dados de saúde controlados pelos pais.',
+        price: 'Ver planos',
+        stripeBase: null,
+        page: 'https://medicinup.com',
+        img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80',
+      },
+    ];
+
+    // ── Helpers ──────────────────────────────────────────────────────────
+    function buildAffiliateLink(product, ref) {
+      if (product.stripeBase) {
+        return product.stripeBase + '?client_reference_id=' + encodeURIComponent(ref) + '&prefilled_promo_code=' + encodeURIComponent(ref);
+      }
+      // Para produtos sem Stripe: adicionar ?ref= à URL da página
+      const sep = product.page.includes('?') ? '&' : '?';
+      return product.page + sep + 'ref=' + encodeURIComponent(ref);
+    }
+
+    function badgeClass(type) {
+      if (type === 'event') return 'badge-event';
+      if (type === 'service') return 'badge-service';
+      return 'badge-product';
+    }
+
+    // ── Render ────────────────────────────────────────────────────────────
+    function renderCards(ref) {
+      const grid = document.getElementById('cards-grid');
+      grid.innerHTML = '';
+
+      products.forEach(function(p, i) {
+        const affLink = buildAffiliateLink(p, ref);
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML =
+          '<img class="card-img" src="' + p.img + '" alt="' + p.name + '" loading="lazy" />' +
+          '<div class="card-body">' +
+            '<span class="badge ' + badgeClass(p.badgeType) + '">' + p.badge + '</span>' +
+            '<div class="card-name">' + p.name + '</div>' +
+            '<div class="card-desc">' + p.desc + '</div>' +
+            '<div class="card-price">' + p.price + '</div>' +
+            '<div class="card-actions">' +
+              '<button class="btn-copy" id="copy-btn-' + i + '" onclick="copyLink(this, \'' + affLink.replace(/'/g, "\\'") + '\', ' + i + ')">Copiar link de afiliado</button>' +
+              '<a class="btn-view" href="' + p.page + '" target="_blank" rel="noopener">Ver página ↗</a>' +
+            '</div>' +
+          '</div>';
+
+        grid.appendChild(card);
+      });
+    }
+
+    // ── Copy to clipboard ────────────────────────────────────────────────
+    function copyLink(btn, url, idx) {
+      navigator.clipboard.writeText(url).then(function() {
+        btn.textContent = '✓ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'Copiar link de afiliado';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(function() {
+        // Fallback para browsers antigos
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = '✓ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'Copiar link de afiliado';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ── Entrada sem ref: gerar URL ───────────────────────────────────────
+    function goWithRef() {
+      var val = document.getElementById('ref-input').value.trim();
+      if (!val) return;
+      // Sanitizar: apenas letras, números, hífens
+      var clean = val.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
+      if (!clean) return;
+      window.location.href = window.location.pathname + '?ref=' + encodeURIComponent(clean);
+    }
+
+    // Permitir Enter no input
+    document.addEventListener('DOMContentLoaded', function() {
+      var inp = document.getElementById('ref-input');
+      if (inp) {
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') goWithRef();
+        });
+      }
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    (function init() {
+      var params = new URLSearchParams(window.location.search);
+      var ref = params.get('ref') || '';
+
+      if (!ref) {
+        document.getElementById('no-ref-section').style.display = 'block';
+      } else {
+        document.getElementById('ref-section').style.display = 'block';
+        document.getElementById('greeting-name').textContent =
+          ref.charAt(0).toUpperCase() + ref.slice(1);
+        renderCards(ref);
+      }
+    })();
+  </script>
+</body>
+</html>
