@@ -11,7 +11,7 @@
   <meta property="og:type" content="article">
   <meta property="og:title" content="Neurociência do ADHD para Pais — 16 Mai · Lisboa · 12 lugares | McMinsky">
   <meta property="og:description" content="Não é mais um workshop de psicólogo. É um médico com PhD em neurociências a explicar o cérebro do seu filho — e o que realmente funciona em casa.">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80">
+  <meta property="og:image" content="https://i.postimg.cc/NsxLjr0J/image.png">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="800">
@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Neurociência do ADHD para Pais — 16 Mai · Lisboa | McMinsky">
   <meta name="twitter:description" content="Não é mais um workshop de psicólogo. É um médico com PhD em neurociências a explicar o cérebro do seu filho — e o que realmente funciona em casa.">
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80">
+  <meta name="twitter:image" content="https://i.postimg.cc/NsxLjr0J/image.png">
   <title>Neurociência do ADHD para Pais — 16 de Maio · Lisboa | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
@@ -136,6 +136,32 @@
     .cta-note{color:var(--gray);font-size:0.78rem;margin-top:10px}
 
     @keyframes qFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* OUTRA option text input */
+    .qopt-outra-input{display:none;width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(212,175,55,0.45);border-radius:8px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:0.9rem;outline:none;margin-top:8px;box-sizing:border-box;transition:border-color 0.2s}
+    .qopt-outra-input.show{display:block}
+    .qopt-outra-input:focus{border-color:var(--gold)}
+    .qopt-outra-input::placeholder{color:var(--gray)}
+
+    /* PRESTIGE / SOCIAL PROOF */
+    .prestige-box{background:var(--black-lighter);border-radius:12px;padding:22px 24px;border-left:3px solid var(--gold);margin:var(--space-lg) auto;max-width:680px}
+    .prestige-box p{color:var(--gray-light);font-size:0.9rem;line-height:1.8;margin:0}
+    .prestige-box p+p{margin-top:12px}
+    .prestige-box strong{color:var(--white)}
+
+    /* GUARANTEE */
+    .guarantee-box{margin-top:18px;padding:18px 20px;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:10px;text-align:left}
+    .guarantee-box p{color:var(--gray-light);font-size:0.85rem;line-height:1.7;margin:0}
+    .guarantee-box strong{color:var(--white)}
+
+    /* DOUBTS FORM */
+    .doubts-box{margin-top:var(--space-lg);max-width:540px;margin-left:auto;margin-right:auto;padding:24px;background:var(--black-lighter);border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
+    .doubts-box h3{color:var(--gold);font-family:var(--font-display);font-size:1.1rem;margin-bottom:6px}
+    .doubts-box p{color:var(--gray-light);font-size:0.85rem;margin-bottom:16px;line-height:1.6}
+    .doubts-row{display:flex;gap:10px;flex-wrap:wrap}
+    .doubts-row .linput{flex:1;min-width:140px;margin-bottom:0}
+    .btn-doubts-wa{width:100%;margin-top:10px;background:var(--gold);color:#0a0a0a;border:none;border-radius:10px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-doubts-wa:hover{opacity:0.88}
   </style>
 </head>
 <body class="loading">
@@ -177,7 +203,7 @@
     <div class="hero-pre">
       <p class="hero-pre-text">N&atilde;o &eacute; falta de vontade. N&atilde;o &eacute; m&aacute; educa&ccedil;&atilde;o. N&atilde;o &eacute; culpa sua.</p>
       <div class="hero-img-wrap">
-        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80" alt="Criança com ADHD a estudar" class="hero-img">
+        <img src="https://i.postimg.cc/NsxLjr0J/image.png" alt="Criança com ADHD a estudar" class="hero-img">
       </div>
       <div class="hero-title">Perceba o c&eacute;rebro do seu filho.</div>
       <p class="hero-sub">
@@ -257,12 +283,14 @@
       <div class="quiz-step" id="qs3">
         <div class="quiz-q">Qual a maior dificuldade que enfrenta actualmente?</div>
         <div class="quiz-hint">Escolha a que mais ressoa neste momento</div>
-        <div class="quiz-opts">
+        <div class="quiz-opts" id="q3-opts">
           <button class="qopt" data-step="3">Comportamento e explosões emocionais em casa</button>
           <button class="qopt" data-step="3">Concentração e desempenho na escola</button>
           <button class="qopt" data-step="3">A questão da medicação — se sim, qual, quando, como</button>
           <button class="qopt" data-step="3">Comunicar com professores, médicos e terapeutas</button>
           <button class="qopt" data-step="3">O meu próprio esgotamento como pai/mãe</button>
+          <button class="qopt qopt-outra-btn" data-step="3" id="q3-outra-btn">Outra.</button>
+          <input class="qopt-outra-input" id="q3-outra-input" maxlength="200" placeholder="Descreva a sua maior dificuldade...">
         </div>
         <div class="quiz-nav"><button class="btn-qnext" id="qn3" data-next="4">Pr&oacute;xima &rarr;</button></div>
       </div>
@@ -270,12 +298,14 @@
       <div class="quiz-step" id="qs4">
         <div class="quiz-q">O que j&aacute; experimentou at&eacute; agora?</div>
         <div class="quiz-hint">Pode escolher v&aacute;rias</div>
-        <div class="quiz-opts">
-          <button class="qopt" data-step="4">Terapia com psic&oacute;logo ou terapeuta</button>
-          <button class="qopt" data-step="4">Medica&ccedil;&atilde;o (metilfenidato ou outros)</button>
-          <button class="qopt" data-step="4">Livros, podcasts e pesquisa pr&oacute;pria</button>
-          <button class="qopt" data-step="4">Workshops ou formações para pais</button>
-          <button class="qopt" data-step="4">Ainda nada — estamos no in&iacute;cio</button>
+        <div class="quiz-opts" id="q4-opts">
+          <button class="qopt multi" data-step="4">Terapia com psic&oacute;logo ou terapeuta</button>
+          <button class="qopt multi" data-step="4">Medica&ccedil;&atilde;o (metilfenidato ou outros)</button>
+          <button class="qopt multi" data-step="4">Livros, podcasts e pesquisa pr&oacute;pria</button>
+          <button class="qopt multi" data-step="4">Workshops ou formações para pais</button>
+          <button class="qopt multi" data-step="4">Ainda nada — estamos no in&iacute;cio</button>
+          <button class="qopt multi qopt-outra-btn" data-step="4" id="q4-outra-btn">Outra.</button>
+          <input class="qopt-outra-input" id="q4-outra-input" maxlength="200" placeholder="O que tentou ou está a tentar...">
         </div>
         <div class="quiz-nav"><button class="btn-qnext" id="qn4" data-next="5">Pr&oacute;xima &rarr;</button></div>
       </div>
@@ -326,7 +356,7 @@
         <div class="myth-grid">
           <div class="myth-card">
             <span class="myth-label">Mito</span>
-            <p class="myth-text">&ldquo;O meu filho &eacute; pris&oacute;neiro quando quer &mdash; o ADHD &eacute; desculpa para n&atilde;o se esfor&ccedil;ar.&rdquo;</p>
+            <p class="myth-text">&ldquo;O meu filho &eacute; prisioneiro quando quer &mdash; o ADHD &eacute; desculpa para n&atilde;o se esfor&ccedil;ar.&rdquo;</p>
             <span class="truth-label">O que a neuroci&ecirc;ncia diz</span>
             <p class="truth-text">O c&eacute;rebro com ADHD tem dificuldade em <strong>regular a aten&ccedil;&atilde;o de forma consistente</strong>, n&atilde;o em prestar aten&ccedil;&atilde;o em geral. A crian&ccedil;a consegue focar-se em videojogos durante horas porque o c&eacute;rebro liberta dopamina de forma diferente quando o est&iacute;mulo &eacute; imediato e imprevis&iacute;vel. N&atilde;o &eacute; escolha &mdash; &eacute; biologia.</p>
           </div>
@@ -385,7 +415,10 @@
         <h2 class="rv-title">Quem orienta</h2>
         <div class="speaker-card">
           <div class="sp-name">Andr&eacute; Rodrigues &mdash; MD, PhD Neuroci&ecirc;ncias</div>
-          <p class="sp-bio">M&eacute;dico formado pela Faculdade de Medicina da Universidade de Lisboa. PhD em Neuroci&ecirc;ncias pela Universidade de Munique. Pr&eacute;mio Inova&ccedil;&atilde;o em Sa&uacute;de 2025.<br><br>N&atilde;o &eacute; psic&oacute;logo. N&atilde;o &eacute; coach. N&atilde;o tem livro de auto-ajuda para vender. Tem dados, tem contexto cl&iacute;nico, e sabe explicar neuroci&ecirc;ncia complexa de forma que chega a quem importa: o pai ou m&atilde;e que chega a casa &agrave;s 19h e precisa de uma ferramenta que funcione.</p>
+          <p class="sp-bio">M&eacute;dico formado pela Faculdade de Medicina da Universidade de Lisboa. PhD em Neuroci&ecirc;ncias pela Universidade de Munique. Pr&eacute;mio Inova&ccedil;&atilde;o em Sa&uacute;de 2025.<br><br>
+          N&atilde;o &eacute; psic&oacute;logo. N&atilde;o &eacute; coach. N&atilde;o tem livro de auto-ajuda para vender.<br><br>
+          Tem <strong>dois perfis que raramente co-existem na mesma pessoa</strong>: o neurocientista que leu os estudos — e o educador que trabalhou presencialmente com mais de 500 crian&ccedil;as e pais no Centro McMinsky do Lumiar. Seis anos de testes emp&iacute;ricos reais, de perceber o que funciona na segunda-feira de manh&atilde; e n&atilde;o apenas nos ensaios cl&iacute;nicos.<br><br>
+          &Eacute; essa ponte &mdash; entre o melhor da investiga&ccedil;&atilde;o e anos de pr&aacute;tica directa, sem teoria, sem rodeios, com crian&ccedil;as e pais individuais &mdash; que o distingue. Sa&iacute; desta tarde com o que funciona, n&atilde;o com o que est&aacute; na moda.</p>
         </div>
       </div>
 
@@ -398,12 +431,36 @@
         </div>
       </div>
 
+      <!-- PRESTIGE / SOCIAL PROOF -->
+      <div class="prestige-box rv-section">
+        <p><strong>A McMinsky n&atilde;o &eacute; para o p&uacute;blico geral.</strong> N&atilde;o funciona &agrave; base de redes sociais, n&atilde;o tem campanhas de publicidade, n&atilde;o tem fila de espera de curiosos. &Eacute; um espa&ccedil;o de prest&iacute;gio, reservado, com privacidade total, para quem percebe o valor do que est&aacute; a receber e est&aacute; preparado para tirar todo o partido.</p>
+        <p>Se ainda n&atilde;o nos conhece: <strong>fale com algu&eacute;m que j&aacute; tenha vindo a algum evento com o selo McMinsky</strong>, para perceber como &eacute; de topo e porqu&ecirc; n&atilde;o encontra este tipo de qualidade em mais nenhum lado. A nossa melhor publicidade &eacute; quem j&aacute; esteve c&aacute;.</p>
+      </div>
+
       <!-- CTA -->
       <div class="cta-box">
         <h2>Garantir o meu lugar &mdash; 16 de Maio, 10h</h2>
         <p class="sub">12 lugares. Uma vez cheio, fecha. N&atilde;o h&aacute; lista de espera para esta edi&ccedil;&atilde;o.</p>
         <a href="https://buy.stripe.com/4gM4gz4tz0h95aZ1Gg1sQ0f" class="btn-stripe" target="_blank">Reservar vaga &mdash; &euro;120</a>
-        <p class="cta-note">Pagamento seguro via Stripe. Lugar confirmado imediatamente ap&oacute;s pagamento.<br>D&uacute;vidas: <a href="mailto:andre@medicinup.com" style="color:var(--gold)">andre@medicinup.com</a></p>
+        <p class="cta-note">Pagamento seguro via Stripe. Lugar confirmado imediatamente ap&oacute;s pagamento.</p>
+        <div class="guarantee-box">
+          <p><strong>Garantia total.</strong> Se no fim do workshop sentir que n&atilde;o valeu o investimento, devolvemos os &euro;120 sem perguntas. A &uacute;nica condi&ccedil;&atilde;o: ter estado presente e ter participado. N&atilde;o acreditamos em ficar com o dinheiro de quem n&atilde;o saiu satisfeito.</p>
+        </div>
+      </div>
+
+      <!-- DOUBTS FORM -->
+      <div class="doubts-box">
+        <h3>Tem d&uacute;vidas?</h3>
+        <p>Deixe o seu nome e contacto e respondemos por WhatsApp em menos de 4 horas.</p>
+        <div class="doubts-row">
+          <input class="linput" type="text" id="d-name" placeholder="Nome" maxlength="80">
+          <input class="linput" type="tel" id="d-phone" placeholder="Telef&oacute;ne / WhatsApp" maxlength="30">
+        </div>
+        <textarea class="linput" id="d-msg" rows="2" maxlength="300" placeholder="A sua d&uacute;vida (opcional)..." style="resize:none;margin-top:10px;min-height:56px"></textarea>
+        <button class="btn-doubts-wa" id="btn-doubts">
+          <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Enviar d&uacute;vida por WhatsApp
+        </button>
       </div>
 
     </div><!-- /reveal -->
@@ -411,18 +468,37 @@
   </article>
 
   <footer class="footer">
-    <div class="footer-inner">
+    <div class="footer-grid">
       <div class="footer-brand">
-        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" class="footer-logo">
-        <span class="footer-name">McMinsky</span>
+        <a href="/" class="logo">
+          <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky">
+          <span class="logo-text">McMinsky</span>
+        </a>
+        <p>Centro de Excel&ecirc;ncia para mentes ambiciosas.</p>
       </div>
-      <nav class="footer-nav">
+      <div class="footer-links">
+        <h4>Navega&ccedil;&atilde;o</h4>
         <ul>
           <li><a href="/#about">Sobre</a></li>
+          <li><a href="/#programs">Programas</a></li>
+          <li><a href="/#insights">Insights</a></li>
           <li><a href="/#offers">Agenda</a></li>
-          <li><a href="/#contact">Contacto</a></li>
         </ul>
-      </nav>
+      </div>
+      <div class="footer-contact">
+        <h4>Localiza&ccedil;&atilde;o</h4>
+        <p>Azinhaga da Cidade 24A r/c</p>
+        <p>1750-063 Lisboa</p>
+        <a href="https://share.google/8wcEaRj5rfmvmwiyv" class="footer-maps-btn" target="_blank">Ver no Google Maps</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="../legal/terms.html">Termos e Condi&ccedil;&otilde;es</a>
+        <a href="../legal/privacy.html">Pol&iacute;tica de Privacidade</a>
+        <a href="https://www.livroreclamacoes.pt/inicio/reclamacao?nipc=517747120" target="_blank">Livro de Reclama&ccedil;&otilde;es</a>
+      </div>
+      <p class="footer-copyright">&copy; <span class="current-year">2026</span> McMinsky. Todos os direitos reservados.</p>
     </div>
   </footer>
 
@@ -432,7 +508,6 @@
     const btnStart = document.getElementById('btn-start');
     const quizWrapper = document.getElementById('quiz-wrapper');
     const leadCapture = document.getElementById('lead-capture');
-    const resultBox = document.getElementById('result-box');
     const resultOk = document.getElementById('result-ok');
     const resultOut = document.getElementById('result-out');
     const reveal = document.getElementById('reveal');
@@ -446,11 +521,67 @@
       quizWrapper.scrollIntoView({behavior:'smooth', block:'start'});
     });
 
-    // Option selection
-    document.querySelectorAll('.qopt').forEach(function(opt) {
+    // ── "Outra." handler: single-choice (Q3) ──
+    (function(){
+      var btn = document.getElementById('q3-outra-btn');
+      var inp = document.getElementById('q3-outra-input');
+      var nextBtn = document.getElementById('qn3');
+      if(!btn||!inp) return;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        // deselect others
+        document.querySelectorAll('[data-step="3"]').forEach(function(o){ o.classList.remove('sel'); });
+        btn.classList.add('sel');
+        inp.classList.add('show');
+        inp.focus();
+        // enable next when input has content
+        inp.addEventListener('input', function(){
+          if(inp.value.trim().length > 0){
+            if(nextBtn) nextBtn.classList.add('on');
+            answers['3'] = inp.value.trim();
+          } else {
+            if(nextBtn) nextBtn.classList.remove('on');
+          }
+        });
+      });
+    })();
+
+    // ── "Outra." handler: multi-choice (Q4) ──
+    (function(){
+      var btn = document.getElementById('q4-outra-btn');
+      var inp = document.getElementById('q4-outra-input');
+      if(!btn||!inp) return;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        btn.classList.toggle('sel');
+        if(btn.classList.contains('sel')){
+          inp.classList.add('show');
+          inp.focus();
+        } else {
+          inp.classList.remove('show');
+          inp.value = '';
+        }
+        updateQ4Next();
+      });
+      inp.addEventListener('input', updateQ4Next);
+    })();
+
+    function updateQ4Next(){
+      var opts = document.querySelectorAll('#q4-opts .qopt');
+      var hasSel = Array.from(opts).some(function(o){ return o.classList.contains('sel'); });
+      var nextBtn = document.getElementById('qn4');
+      if(nextBtn){ nextBtn.className = 'btn-qnext' + (hasSel ? ' on' : ''); }
+    }
+
+    // ── Single-choice options (Q1, Q2, Q3 non-outra, Q5) ──
+    document.querySelectorAll('.qopt:not(.multi):not(.qopt-outra-btn)').forEach(function(opt) {
       opt.addEventListener('click', function() {
         const step = this.dataset.step;
+        // deselect all in step (including outra)
         document.querySelectorAll('[data-step="' + step + '"]').forEach(function(o){ o.classList.remove('sel'); });
+        // hide any outra input in this step
+        var outraInp = document.getElementById('q' + step + '-outra-input');
+        if(outraInp){ outraInp.classList.remove('show'); outraInp.value = ''; }
         this.classList.add('sel');
         const nextBtn = document.getElementById('qn' + step);
         if(nextBtn) nextBtn.classList.add('on');
@@ -459,12 +590,48 @@
       });
     });
 
-    // Step navigation
+    // ── Multi-choice options (Q4 non-outra) ──
+    document.querySelectorAll('#q4-opts .qopt.multi:not(.qopt-outra-btn)').forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        this.classList.toggle('sel');
+        // collect selected
+        var selected = Array.from(document.querySelectorAll('#q4-opts .qopt.sel')).map(function(o){
+          if(o.id === 'q4-outra-btn'){
+            var v = (document.getElementById('q4-outra-input')||{}).value||'';
+            return v.trim() || 'Outra';
+          }
+          return o.textContent.trim();
+        });
+        answers['4'] = selected.join(' | ');
+        updateQ4Next();
+      });
+    });
+
+    // ── Step navigation ──
     document.querySelectorAll('.btn-qnext').forEach(function(btn) {
       btn.addEventListener('click', function() {
+        if(!this.classList.contains('on')) return;
         const next = this.dataset.next;
         const currentStep = this.closest('.quiz-step');
         currentStep.classList.remove('active');
+
+        // collect Q4 outra text
+        if(currentStep.id === 'qs4'){
+          var outraInp = document.getElementById('q4-outra-input');
+          if(outraInp && outraInp.value.trim()){
+            var existing = answers['4'] || '';
+            if(!existing.includes(outraInp.value.trim())){
+              answers['4'] = (existing ? existing + ' | ' : '') + outraInp.value.trim();
+            }
+          }
+        }
+        // collect Q3 outra text
+        if(currentStep.id === 'qs3'){
+          var outraInp3 = document.getElementById('q3-outra-input');
+          if(outraInp3 && outraInp3.value.trim() && document.getElementById('q3-outra-btn').classList.contains('sel')){
+            answers['3'] = outraInp3.value.trim();
+          }
+        }
 
         if(next === 'lead') {
           quizWrapper.classList.remove('active');
@@ -481,7 +648,7 @@
       });
     });
 
-    // Lead submit
+    // ── Lead submit ──
     document.getElementById('btn-lead').addEventListener('click', function() {
       const name = document.getElementById('l-name').value.trim();
       const email = document.getElementById('l-email').value.trim();
@@ -498,14 +665,13 @@
       reveal.style.display = 'block';
       reveal.scrollIntoView({behavior:'smooth', block:'start'});
 
-      // Funnel tracking
       if(typeof gtag !== 'undefined') {
         gtag('event', 'quiz_complete', {event_category:'adhd_pais', event_label:currentResult});
         gtag('event', 'lead_capture', {event_category:'adhd_pais', event_label:email});
       }
     });
 
-    // Waitlist button
+    // ── Waitlist ──
     document.querySelector('.btn-wl') && document.querySelector('.btn-wl').addEventListener('click', function() {
       const email = document.querySelector('.wl-input').value;
       if(email && email.includes('@')) {
@@ -514,6 +680,19 @@
         this.style.color = 'var(--gold)';
         this.disabled = true;
       }
+    });
+
+    // ── Doubts WhatsApp form ──
+    document.getElementById('btn-doubts') && document.getElementById('btn-doubts').addEventListener('click', function(){
+      var name = (document.getElementById('d-name')||{}).value.trim();
+      var phone = (document.getElementById('d-phone')||{}).value.trim();
+      var msg = (document.getElementById('d-msg')||{}).value.trim();
+      if(!name){ document.getElementById('d-name').focus(); return; }
+      var text = '❓ Dúvida — Workshop ADHD para Pais (16 Mai)\n\n'
+               + '👤 ' + name + '\n'
+               + (phone ? '📱 ' + phone + '\n' : '')
+               + (msg ? '\n💬 ' + msg : '');
+      window.open('https://wa.me/351968114353?text=' + encodeURIComponent(text), '_blank');
     });
   </script>
 </body>
