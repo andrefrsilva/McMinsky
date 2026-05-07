@@ -1151,15 +1151,191 @@
   <!-- ========================================
        MODAL AFILIADOS
        ======================================== -->
-  <div id="modal-afiliados" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,10,10,0.88);overflow-y:auto;padding:24px 16px;">
-    <div style="max-width:680px;margin:0 auto;background:#141414;border:1px solid rgba(201,169,98,0.25);border-radius:4px;padding:36px 28px;position:relative;">
-      <button onclick="document.getElementById('modal-afiliados').style.display='none'" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#c9a962;font-size:1.5rem;cursor:pointer;line-height:1;">&times;</button>
-      <div style="text-align:center;margin-bottom:28px;">
-        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" style="height:40px;margin-bottom:12px;">
-        <h2 id="afil-greeting" style="color:#c9a962;font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin:0 0 6px;"></h2>
-        <p style="color:#888;font-size:0.9rem;margin:0;">Os teus links de afiliado — partilha e ganha em cada venda.</p>
+
+  <style>
+  @keyframes afil-shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+  @keyframes afil-goldPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(201,169,98,0.5); }
+    50%      { box-shadow: 0 0 0 10px rgba(201,169,98,0); }
+  }
+  @keyframes afil-fadeIn {
+    from { opacity:0; transform:translateY(12px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .afil-commission-badge {
+    background: linear-gradient(90deg,#c9a96215,#c9a96230,#c9a96280,#c9a96230,#c9a96215);
+    background-size: 200% auto;
+    animation: afil-shimmer 2.8s linear infinite;
+    border: 1px solid #c9a962;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 10px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .afil-qty-btn {
+    width:28px; height:28px; border-radius:4px;
+    background:none; border:1px solid rgba(201,169,98,0.4);
+    color:#c9a962; font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background 0.15s;
+  }
+  .afil-qty-btn:hover { background: rgba(201,169,98,0.12); }
+  .afil-qty-input {
+    width:36px; text-align:center;
+    background:#0a0a0a; border:1px solid rgba(201,169,98,0.3);
+    color:#fff; font-size:0.9rem; border-radius:4px; padding:3px 0;
+  }
+  .afil-action-btn {
+    flex:1; padding:9px 0; border-radius:4px; cursor:pointer;
+    font-size:0.82rem; font-weight:600; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .afil-action-btn.gold {
+    background:none; border:1px solid #c9a962; color:#c9a962;
+  }
+  .afil-action-btn.gold:hover { background: rgba(201,169,98,0.12); }
+  .afil-action-btn.gray {
+    background:none; border:1px solid #444; color:#888;
+  }
+  .afil-action-btn.gray:hover { background: #1e1e1e; color:#aaa; }
+  .afil-card {
+    background:#0a0a0a;
+    border:1px solid rgba(201,169,98,0.15);
+    border-radius:8px;
+    overflow:hidden;
+    animation: afil-fadeIn 0.35s ease both;
+    transition: border-color 0.2s;
+  }
+  .afil-card:hover { border-color: rgba(201,169,98,0.35); }
+  .afil-thumb-wrap { position:relative; cursor:pointer; }
+  .afil-thumb {
+    width:100%; max-height:180px; object-fit:cover;
+    display:block;
+  }
+  .afil-type-badge {
+    position:absolute; top:10px; left:10px;
+    background:rgba(10,10,10,0.75); border:1px solid rgba(201,169,98,0.5);
+    color:#c9a962; font-size:0.68rem; font-weight:700; letter-spacing:0.06em;
+    padding:3px 9px; border-radius:20px; text-transform:uppercase; backdrop-filter:blur(4px);
+  }
+  .afil-card-body { padding:14px 16px 16px; }
+  .afil-detail-link {
+    display:inline-block; margin-top:8px;
+    color:#c9a962; font-size:0.78rem;
+    border-bottom:1px solid rgba(201,169,98,0.3); cursor:pointer;
+    background:none; border-top:none; border-left:none; border-right:none;
+    padding:0; text-decoration:none;
+  }
+  .afil-detail-link:hover { border-bottom-color:#c9a962; }
+  #afil-total-card {
+    background: linear-gradient(135deg,#141414 0%,#1a1500 100%);
+    border: 1.5px solid #c9a962;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    text-align: center;
+    animation: afil-goldPulse 2.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  #afil-total-card::before {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(90deg,transparent,rgba(201,169,98,0.06),transparent);
+    background-size:200% auto;
+    animation: afil-shimmer 3.5s linear infinite;
+    pointer-events:none;
+  }
+  #afil-total-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem,8vw,3.8rem);
+    color: #c9a962;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+    margin: 6px 0 4px;
+  }
+  #modal-afiliados-detail {
+    display:none;
+    position:fixed; inset:0;
+    z-index:10000;
+    background:rgba(0,0,0,0.95);
+    overflow-y:auto;
+    padding:20px 16px;
+  }
+  .afil-detail-inner {
+    max-width:560px; margin:0 auto;
+    background:#141414;
+    border:1px solid rgba(201,169,98,0.3);
+    border-radius:10px;
+    overflow:hidden;
+    position:relative;
+  }
+  .afil-detail-close {
+    position:absolute; top:12px; right:16px;
+    background:rgba(20,20,20,0.9); border:1px solid #333;
+    color:#c9a962; font-size:1.4rem; cursor:pointer;
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    z-index:2; line-height:1;
+  }
+  .afil-detail-body { padding:20px 20px 24px; }
+  .afil-icp-tag {
+    display:inline-block;
+    background:rgba(201,169,98,0.1); border:1px solid rgba(201,169,98,0.35);
+    color:#c9a962; font-size:0.72rem; padding:3px 10px;
+    border-radius:20px; margin:3px 3px 3px 0;
+  }
+  </style>
+
+  <div id="modal-afiliados" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(5,5,5,0.92);overflow-y:auto;padding:20px 16px;">
+    <div style="max-width:520px;margin:0 auto;background:#141414;border:1px solid rgba(201,169,98,0.2);border-radius:10px;padding:28px 20px 32px;position:relative;">
+
+      <button onclick="document.getElementById('modal-afiliados').style.display='none'" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#c9a962;font-size:1.5rem;cursor:pointer;line-height:1;z-index:2;">&times;</button>
+
+      <!-- HEADER -->
+      <div style="text-align:center;margin-bottom:20px;">
+        <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky" style="height:36px;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:8px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span style="color:#555;font-size:0.75rem;">Pagina reservada a afiliados McMinsky. Nao partilhar esta pagina &mdash; apenas os links individuais de cada produto ou evento.</span>
+        </div>
+        <h2 id="afil-greeting" style="color:#c9a962;font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;margin:0;"></h2>
       </div>
-      <div id="afil-cards" style="display:flex;flex-direction:column;gap:14px;"></div>
+
+      <!-- TOTAL POTENTIAL EARNINGS -->
+      <div id="afil-total-card">
+        <div style="color:#888;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">O teu potencial de ganho</div>
+        <span id="afil-total-value">&#8364;0</span>
+        <div id="afil-total-sub" style="color:#666;font-size:0.78rem;margin-top:4px;">com 0 vendas estimadas</div>
+      </div>
+
+      <!-- FEED -->
+      <div id="afil-cards" style="display:flex;flex-direction:column;gap:16px;"></div>
+
+      <!-- FOOTER -->
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid #222;text-align:center;">
+        <div style="color:#555;font-size:0.75rem;line-height:1.7;">
+          <div style="margin-bottom:8px;"><span style="color:#888;font-size:0.8rem;">Duvidas? Fala connosco directamente:</span></div>
+          <div><a href="tel:+351961926527" style="color:#666;text-decoration:none;">+351 961 926 527</a> &nbsp;&middot;&nbsp; <a href="mailto:mcminsky@gmail.com" style="color:#666;text-decoration:none;">mcminsky@gmail.com</a></div>
+          <div style="margin-top:10px;color:#444;font-size:0.7rem;line-height:1.6;">As comissoes sao calculadas e registadas automaticamente em cada pagamento confirmado.<br>O pagamento ao afiliado e feito directamente, no mes seguinte ao da venda.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DETAIL SUB-MODAL -->
+  <div id="modal-afiliados-detail">
+    <div class="afil-detail-inner">
+      <button class="afil-detail-close" id="afil-detail-close">&times;</button>
+      <div id="afil-detail-img-wrap"></div>
+      <div class="afil-detail-body" id="afil-detail-body"></div>
     </div>
   </div>
 
@@ -1169,80 +1345,160 @@
     var ref = params.get('ref');
     if (!ref) return;
 
-    // Sanitize ref
     ref = ref.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
     if (!ref) return;
 
-    // Product catalogue
+    /* ── CATALOGUE ── */
     var PRODUCTS = [
       {
         id: 'agente-ao-vivo',
         name: 'Agente ao Vivo',
-        desc: 'Workshop presencial · Lisboa · Constrói o teu próprio agente IA',
-        price: '€150',
+        type: 'Evento',
+        desc: 'Workshop presencial onde ves um agente IA a fazer matching comprador/imovel em tempo real.',
+        descFull: 'Um offsite boutique de 2h em Lisboa onde demonstramos ao vivo como um agente IA opera no mundo real. Sem palestras, sem teoria — o agente corre, tu ves.',
+        thumb: 'https://mcminsky.pt/media/multiplicate.jpg',
+        icp: ['Consultores imobiliarios', 'Brokers', 'Gestores de equipa imobiliaria'],
+        isWhat: ['Demonstracao ao vivo de IA em contexto imobiliario', 'Formato boutique (20 pessoas maximo)', 'Acesso a Q&A com o fundador', 'Money-back garantido'],
+        isNotWhat: ['Palestra generica sobre IA', 'Curso de IA para negocios', 'Evento corporativo massificado'],
+        whenWhere: 'Sabado, 9 de Maio 2026 &middot; 16h&ndash;18h &middot; Lisboa (Av. Loule)',
+        price: 150,
+        commission: 30,
+        commissionPct: 20,
         page: 'https://mcminsky.pt/events/agente-ao-vivo.html',
-        stripe: null
+        stripe: null,
+        pdfKit: 'https://mcminsky.pt/assets/pdf/agente-ao-vivo-kit-afiliado.pdf'
       },
       {
         id: 'adhd-pais',
         name: 'ADHD para Pais',
-        desc: 'Neurociência do ADHD · 16 Mai · Lisboa',
-        price: '€120',
+        type: 'Evento',
+        desc: 'Neurociencia do ADHD aplicada por pais, para pais. O que funciona, o que nao funciona.',
+        descFull: 'Evento presencial em Lisboa com abordagem baseada em evidencia para pais de criancas com ADHD. Ferramentas praticas, sem julgamento.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=ADHD+para+Pais',
+        icp: ['Pais de criancas com ADHD', 'Educadores e psicologos', 'Familias em processo de diagnostico'],
+        isWhat: ['Workshop pratico baseado em neurociencia', 'Espaco seguro para partilhar experiencias', 'Ferramentas imediatamente aplicaveis', 'Pequeno grupo (max. 20 pessoas)'],
+        isNotWhat: ['Sessao de terapia', 'Diagnostico medico', 'Palestra teorica sem aplicacao pratica'],
+        whenWhere: '16 de Maio 2026 &middot; Lisboa &middot; Local a confirmar',
+        price: 120,
+        commission: 24,
+        commissionPct: 20,
         page: 'https://mcminsky.pt/events/adhd-pais.html',
-        stripe: 'https://buy.stripe.com/4gM4gz4tz0h95aZ1Gg1sQ0f'
+        stripe: 'https://buy.stripe.com/4gM4gz4tz0h95aZ1Gg1sQ0f',
+        pdfKit: 'https://mcminsky.pt/assets/pdf/adhd-pais-kit-afiliado.pdf'
       },
       {
         id: 'elders',
         name: 'McMinsky Elders',
-        desc: 'Clube mensal para maiores de 60 · saúde, movimento, comunidade',
-        price: '€9,90 + €250/mês',
+        type: 'Programa',
+        desc: 'Clube mensal para maiores de 60. Saude, movimento, comunidade e aprendizagem continua.',
+        descFull: 'Programa de adesao mensal que combina monitorizacao de saude com comunidade activa. Sessoes presenciais + suporte digital.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=McMinsky+Elders',
+        icp: ['Adultos 60+', 'Filhos adultos a procurar programas para pais', 'Medicos de familia e geriatras'],
+        isWhat: ['Comunidade activa com encontros mensais', 'Monitorizacao de saude com pulseira MedicinUp', 'Programa de movimento adaptado', 'Suporte da equipa McMinsky'],
+        isNotWhat: ['Lar de idosos ou estrutura residencial', 'Substituto de cuidados medicos', 'Programa isolado sem comunidade'],
+        whenWhere: 'Sessoes mensais em Lisboa &middot; Inicio imediato',
+        price: 250,
+        commission: 50,
+        commissionPct: 20,
         page: 'https://mcminsky.pt/events/elders.html',
-        stripe: 'https://buy.stripe.com/8x24gz8JP9RJgTH0Cc1sQ0g'
+        stripe: 'https://buy.stripe.com/8x24gz8JP9RJgTH0Cc1sQ0g',
+        pdfKit: 'https://mcminsky.pt/assets/pdf/elders-kit-afiliado.pdf'
       },
       {
         id: 'simulacao-exames',
-        name: 'Simulação Exames Nacionais',
-        desc: 'Exames nacionais com IA · 16 Mai · Lisboa',
-        price: '€65',
+        name: 'Simulacao Exames Nacionais',
+        type: 'Evento',
+        desc: 'Preparacao intensiva com IA para exames nacionais. Matematica A &mdash; nota 20.',
+        descFull: 'Sessao de simulacao de exame nacional com analise em tempo real por IA. O aluno faz o exame, a IA aponta exactamente onde esta a perder pontos.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=Simulacao+Exames',
+        icp: ['Estudantes do 12 ano', 'Pais de alunos a fazer exames', 'Explicadores e professores'],
+        isWhat: ['Simulacao real de exame nacional', 'Analise de erros por IA', 'Feedback personalizado', 'Estrategias de exame especificas'],
+        isNotWhat: ['Explicacao regular', 'Curso de preparacao longo', 'Aulas em grupo grandes'],
+        whenWhere: '16 de Maio 2026 &middot; Lisboa &middot; McMinsky',
+        price: 65,
+        commission: 13,
+        commissionPct: 20,
         page: 'https://mcminsky.pt/events/simulacao-exames.html',
-        stripe: 'https://buy.stripe.com/dRmbJ1gch4xpdHvdoY1sQ0h'
+        stripe: 'https://buy.stripe.com/dRmbJ1gch4xpdHvdoY1sQ0h',
+        pdfKit: 'https://mcminsky.pt/assets/pdf/simulacao-exames-kit-afiliado.pdf'
       },
       {
         id: 'assistente-virtual',
         name: 'Assistente Virtual com IA',
-        desc: 'Muda de vida com IA em 8 semanas · programa online',
-        price: 'Desde €176/mês',
+        type: 'Programa',
+        desc: 'Muda de vida com IA em 8 semanas. Programa online com acompanhamento personalizado.',
+        descFull: 'Programa de 8 semanas para configurar e usar um assistente IA pessoal. Para quem quer ganhar 2-3h/dia e fazer mais com menos esforco.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=Assistente+Virtual',
+        icp: ['Profissionais liberais ocupados', 'Empreendedores solopreneurs', 'Gestores e directores'],
+        isWhat: ['Programa estruturado de 8 semanas', 'Configuracao do assistente IA personalizado', 'Acompanhamento semanal', 'Comunidade privada de membros'],
+        isNotWhat: ['Curso de IA generico', 'Substituicao de emprego', 'Ferramenta tecnica complexa'],
+        whenWhere: 'Online &middot; Inicio imediato &middot; 8 semanas',
+        price: 176,
+        commission: 35,
+        commissionPct: 20,
         page: 'https://mcminsky.pt/events/assistente-virtual.html',
-        stripe: null
+        stripe: null,
+        pdfKit: 'https://mcminsky.pt/assets/pdf/assistente-virtual-kit-afiliado.pdf'
       },
       {
         id: 'preparacao-medicina',
-        name: 'Preparação Medicina',
-        desc: 'Matemática A para Medicina · 20 no Exame Nacional',
-        price: '€990',
+        name: 'Preparacao Medicina',
+        type: 'Programa',
+        desc: 'Matematica A para Medicina. Metodo McMinsky para nota 20 no Exame Nacional.',
+        descFull: 'Programa intensivo de preparacao para o exame nacional de Matematica A com foco em candidatos a Medicina. Metodo proprietario com taxa de sucesso superior a media nacional.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=Preparacao+Medicina',
+        icp: ['Estudantes 12 ano a candidatar-se a Medicina', 'Pais de futuros medicos', 'Explicadores de Matematica A'],
+        isWhat: ['Preparacao especifica para Medicina via Matematica A', 'Metodo McMinsky comprovado', 'Acompanhamento intensivo', 'Garantia de melhoria ou devolucao'],
+        isNotWhat: ['Explicacao generica de Matematica', 'Programa para outros cursos', 'Turmas grandes'],
+        whenWhere: 'Presencial em Lisboa + Online &middot; Inscricoes abertas',
+        price: 990,
+        commission: 198,
+        commissionPct: 20,
         page: 'https://mcminsky.pt/events/preparacao-medicina.html',
-        stripe: null
+        stripe: null,
+        pdfKit: 'https://mcminsky.pt/assets/pdf/preparacao-medicina-kit-afiliado.pdf'
       },
       {
         id: 'medicinup',
         name: 'Pulseiras MedicinUp',
-        desc: 'Monitorização de saúde em tempo real · tensão, SpO₂, ECG, sono',
-        price: 'Ver site',
+        type: 'Produto',
+        desc: 'Monitorizacao de saude em tempo real. Tensao, SpO2, ECG, sono.',
+        descFull: 'Pulseira medica de monitorizacao continua com acesso a dados em tempo real por medico, familiar ou cuidador. Aprovada para uso clinico.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=MedicinUp',
+        icp: ['Pessoas 60+ com doencas cronicas', 'Familias com idosos a cargo', 'Medicos e clinicas'],
+        isWhat: ['Monitorizacao continua de saude', 'Acesso remoto para medico/familiar', 'Dados clinicos certificados', 'Hardware + software integrado'],
+        isNotWhat: ['Smartwatch de fitness generico', 'Substituto de consulta medica', 'Aplicacao sem hardware'],
+        whenWhere: 'Disponivel imediatamente &middot; Entrega em Portugal',
+        price: null,
+        commission: 40,
+        commissionPct: null,
         page: 'https://medicinup.com',
         stripe: null,
-        external: true
+        external: true,
+        pdfKit: 'https://mcminsky.pt/assets/pdf/medicinup-kit-afiliado.pdf'
       },
       {
         id: 'parlensky',
         name: 'Programas Parlensky',
-        desc: 'Comunicação e linguagem · programas presenciais e online',
-        price: 'Ver programas',
+        type: 'Externo',
+        desc: 'Comunicacao e linguagem. Programas presenciais e online para todas as idades.',
+        descFull: 'Programas especializados em comunicacao e desenvolvimento da linguagem, com abordagem ludica e baseada em evidencia.',
+        thumb: 'https://placehold.co/400x220/141414/c9a962?text=Parlensky',
+        icp: ['Pais de criancas com dificuldades de comunicacao', 'Educadores e terapeutas', 'Adultos que querem melhorar comunicacao'],
+        isWhat: ['Programas especializados em comunicacao', 'Abordagem baseada em evidencia', 'Formatos presencial e online', 'Para todas as idades'],
+        isNotWhat: ['Terapia da fala clinica', 'Curso de oratoria generico', 'Substituicao de terapeuta'],
+        whenWhere: 'Varias datas &middot; Lisboa e Online &middot; Ver programas',
+        price: null,
+        commission: 30,
+        commissionPct: null,
         page: 'https://mcminsky.pt/#programs',
         stripe: null,
-        external: true
+        external: true,
+        pdfKit: 'https://mcminsky.pt/assets/pdf/parlensky-kit-afiliado.pdf'
       }
     ];
 
+    /* ── HELPERS ── */
     function buildLink(p) {
       if (p.stripe) {
         return p.stripe + '?client_reference_id=' + ref + '&utm_source=' + ref;
@@ -1254,44 +1510,228 @@
     function copyLink(btn, link) {
       navigator.clipboard.writeText(link).then(function(){
         var orig = btn.textContent;
-        btn.textContent = 'Copiado!';
-        btn.style.background = '#2a2a2a';
+        btn.textContent = 'Copiado! ✓';
+        btn.style.background = 'rgba(201,169,98,0.15)';
         setTimeout(function(){ btn.textContent = orig; btn.style.background = ''; }, 1800);
       });
     }
 
-    var cap = ref.charAt(0).toUpperCase() + ref.slice(1);
-    document.getElementById('afil-greeting').textContent = 'Olá, ' + cap + ' \uD83D\uDC4B';
+    var quantities = {};
+    PRODUCTS.forEach(function(p){ quantities[p.id] = 1; });
 
-    var container = document.getElementById('afil-cards');
-    PRODUCTS.forEach(function(p){
+    /* ── COUNT-UP ── */
+    var _cuRaf = null, _cuPrev = 0;
+    function animateTotal(newVal) {
+      if (_cuRaf) cancelAnimationFrame(_cuRaf);
+      var start = _cuPrev, end = newVal, duration = 400, startTime = null;
+      _cuPrev = newVal;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var p = Math.min((ts - startTime) / duration, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        document.getElementById('afil-total-value').textContent = '€' + Math.round(start + (end - start) * e).toLocaleString('pt-PT');
+        if (p < 1) { _cuRaf = requestAnimationFrame(step); } else { _cuRaf = null; }
+      }
+      _cuRaf = requestAnimationFrame(step);
+    }
+
+    function recalcTotal() {
+      var total = 0, units = 0;
+      PRODUCTS.forEach(function(p){
+        var q = quantities[p.id] || 1;
+        total += q * (p.commission || 0);
+        units += q;
+      });
+      animateTotal(total);
+      var s = units !== 1;
+      document.getElementById('afil-total-sub').textContent = 'com ' + units + ' venda' + (s ? 's' : '') + ' estimada' + (s ? 's' : '');
+    }
+
+    function updateQtyPreview(p) {
+      var q = quantities[p.id] || 1;
+      var preview = document.getElementById('qty-preview-' + p.id);
+      if (preview) preview.textContent = '€' + (q * p.commission).toLocaleString('pt-PT') + ' de comissao';
+      var qEl = document.getElementById('qty-input-' + p.id);
+      if (qEl) qEl.value = q;
+      recalcTotal();
+    }
+
+    /* ── DETAIL SUB-MODAL ── */
+    function openDetail(p) {
       var link = buildLink(p);
-      var card = document.createElement('div');
-      card.style.cssText = 'background:#0a0a0a;border:1px solid rgba(201,169,98,0.18);border-radius:3px;padding:16px 18px;display:flex;align-items:center;gap:14px;';
-      card.innerHTML =
-        '<div style="flex:1;min-width:0;">' +
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
-            '<span style="color:#fff;font-weight:600;font-size:0.95rem;">' + p.name + '</span>' +
-            (p.external ? '<span style="font-size:0.7rem;color:#888;border:1px solid #333;padding:1px 6px;border-radius:2px;">externo</span>' : '') +
-          '</div>' +
-          '<div style="color:#888;font-size:0.82rem;margin-bottom:6px;">' + p.desc + '</div>' +
-          '<div style="color:#c9a962;font-size:0.85rem;font-weight:600;margin-bottom:8px;">' + p.price + '</div>' +
-          '<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:3px;padding:6px 10px;font-size:0.75rem;color:#666;font-family:monospace;word-break:break-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + link + '</div>' +
-        '</div>' +
-        '<div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">' +
-          '<button onclick="window.open(\'' + link.replace(/'/g,"\\'") + '\',\'_blank\')" style="background:none;border:1px solid rgba(201,169,98,0.4);color:#c9a962;padding:7px 14px;border-radius:3px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">Ver →</button>' +
-          '<button class="copy-btn" style="background:none;border:1px solid #333;color:#aaa;padding:7px 14px;border-radius:3px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">Copiar</button>' +
-        '</div>';
-      card.querySelector('.copy-btn').addEventListener('click', function(){ copyLink(this, link); });
-      container.appendChild(card);
+
+      var imgWrap = document.getElementById('afil-detail-img-wrap');
+      imgWrap.innerHTML = '<a href="' + p.thumb + '" target="_blank" rel="noopener" style="display:block;">'
+        + '<img src="' + p.thumb + '" alt="' + p.name + '" style="width:100%;max-height:240px;object-fit:cover;display:block;cursor:zoom-in;"'
+        + ' onerror="this.src=\'https://placehold.co/400x240/141414/c9a962?text=' + encodeURIComponent(p.name) + '\'">'
+        + '</a>';
+
+      var icpHtml = (p.icp || []).map(function(t){ return '<span class="afil-icp-tag">' + t + '</span>'; }).join('');
+      var isWHtml = (p.isWhat || []).map(function(t){ return '<li style="margin:3px 0;color:#ccc;">&#9989; ' + t + '</li>'; }).join('');
+      var isNHtml = (p.isNotWhat || []).map(function(t){ return '<li style="margin:3px 0;color:#888;">&#10060; ' + t + '</li>'; }).join('');
+
+      var q = quantities[p.id] || 1;
+      var commLine = p.price
+        ? 'Preco ao publico: &euro;' + p.price.toLocaleString('pt-PT') + ' &middot; Comissao: ' + (p.commissionPct || '?') + '%'
+        : 'Comissao fixa por venda referenciada';
+
+      document.getElementById('afil-detail-body').innerHTML =
+        '<div style="margin-bottom:6px;">'
+          + '<span style="background:rgba(201,169,98,0.15);border:1px solid rgba(201,169,98,0.4);color:#c9a962;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:2px 10px;border-radius:20px;">' + p.type + '</span>'
+        + '</div>'
+        + '<h2 style="font-family:\'Cormorant Garamond\',serif;color:#c9a962;font-size:1.7rem;font-weight:700;margin:6px 0 10px;line-height:1.2;">' + p.name + '</h2>'
+        + '<p style="color:#bbb;font-size:0.88rem;line-height:1.65;margin-bottom:16px;">' + p.descFull + '</p>'
+
+        + '<div style="margin-bottom:14px;">'
+          + '<div style="color:#c9a962;font-weight:700;font-size:0.8rem;margin-bottom:6px;">&#128204; Para quem e</div>'
+          + '<div>' + icpHtml + '</div>'
+        + '</div>'
+
+        + '<div style="margin-bottom:12px;">'
+          + '<div style="color:#c9a962;font-weight:700;font-size:0.8rem;margin-bottom:5px;">O que e</div>'
+          + '<ul style="list-style:none;padding:0;margin:0;font-size:0.82rem;">' + isWHtml + '</ul>'
+        + '</div>'
+
+        + '<div style="margin-bottom:12px;">'
+          + '<div style="color:#888;font-weight:700;font-size:0.8rem;margin-bottom:5px;">O que nao e</div>'
+          + '<ul style="list-style:none;padding:0;margin:0;font-size:0.82rem;">' + isNHtml + '</ul>'
+        + '</div>'
+
+        + '<div style="margin-bottom:14px;">'
+          + '<div style="color:#c9a962;font-weight:700;font-size:0.8rem;margin-bottom:4px;">&#128197; Quando e onde</div>'
+          + '<div style="color:#bbb;font-size:0.85rem;">' + p.whenWhere + '</div>'
+        + '</div>'
+
+        + (p.price ? '<div style="color:#666;font-size:0.78rem;margin-bottom:10px;">Preco ao publico: <strong style="color:#aaa;">&euro;' + p.price.toLocaleString('pt-PT') + '</strong></div>' : '')
+
+        + '<div class="afil-commission-badge">'
+          + '<span style="font-size:1.15rem;">&#128176;</span>'
+          + '<div>'
+            + '<div style="color:#c9a962;font-weight:700;font-size:1.05rem;">A tua comissao: &euro;' + (p.commission || 0) + ' por venda</div>'
+            + '<div style="color:#888;font-size:0.75rem;">' + commLine + '</div>'
+          + '</div>'
+        + '</div>'
+
+        + '<div style="display:flex;align-items:center;gap:8px;margin:12px 0 16px;flex-wrap:wrap;">'
+          + '<span style="color:#888;font-size:0.78rem;">Estimas</span>'
+          + '<button class="afil-qty-btn" id="dqm-' + p.id + '">&#8722;</button>'
+          + '<input class="afil-qty-input" type="number" min="1" max="999" value="' + q + '" id="dqi-' + p.id + '">'
+          + '<button class="afil-qty-btn" id="dqp-' + p.id + '">+</button>'
+          + '<span style="color:#888;font-size:0.78rem;">vendas =</span>'
+          + '<span id="dqv-' + p.id + '" style="color:#c9a962;font-weight:700;font-size:0.9rem;">&euro;' + (q * p.commission).toLocaleString('pt-PT') + ' total</span>'
+        + '</div>'
+
+        + '<div style="display:flex;gap:10px;">'
+          + '<button class="afil-action-btn gold" id="dcopy-' + p.id + '">Copiar link &#128203;</button>'
+          + '<a href="' + p.pdfKit + '" target="_blank" rel="noopener" style="text-decoration:none;flex:1;">'
+            + '<button class="afil-action-btn gray" style="width:100%;">PDF Kit &#128196;</button>'
+          + '</a>'
+        + '</div>';
+
+      /* Detail qty wiring */
+      var dqm = document.getElementById('dqm-' + p.id);
+      var dqp = document.getElementById('dqp-' + p.id);
+      var dqi = document.getElementById('dqi-' + p.id);
+      var dqv = document.getElementById('dqv-' + p.id);
+      function syncDQ() {
+        var v = Math.max(1, parseInt(dqi.value) || 1);
+        quantities[p.id] = v; dqi.value = v;
+        dqv.textContent = '€' + (v * p.commission).toLocaleString('pt-PT') + ' total';
+        updateQtyPreview(p);
+      }
+      dqm.addEventListener('click', function(){ dqi.value = Math.max(1,(parseInt(dqi.value)||1)-1); syncDQ(); });
+      dqp.addEventListener('click', function(){ dqi.value = (parseInt(dqi.value)||1)+1; syncDQ(); });
+      dqi.addEventListener('change', syncDQ);
+      document.getElementById('dcopy-' + p.id).addEventListener('click', function(){ copyLink(this, link); });
+
+      document.getElementById('modal-afiliados-detail').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('afil-detail-close').addEventListener('click', function(){
+      document.getElementById('modal-afiliados-detail').style.display = 'none';
+      document.body.style.overflow = '';
+    });
+    document.getElementById('modal-afiliados-detail').addEventListener('click', function(e){
+      if (e.target === this) { this.style.display = 'none'; document.body.style.overflow = ''; }
     });
 
-    // Click outside to close
+    /* ── RENDER CARDS ── */
+    var cap = ref.charAt(0).toUpperCase() + ref.slice(1);
+    document.getElementById('afil-greeting').textContent = 'Ola, ' + cap + ' 👋';
+
+    var container = document.getElementById('afil-cards');
+
+    PRODUCTS.forEach(function(p, idx){
+      var link = buildLink(p);
+      var q = quantities[p.id];
+
+      var commLine = p.price
+        ? 'Preco: &euro;' + p.price.toLocaleString('pt-PT') + ' &middot; Comissao: ' + (p.commissionPct || '?') + '%'
+        : 'Comissao fixa por venda referenciada';
+
+      var card = document.createElement('div');
+      card.className = 'afil-card';
+      card.style.animationDelay = (idx * 0.07) + 's';
+
+      card.innerHTML =
+        '<div class="afil-thumb-wrap" id="twrap-' + p.id + '">'
+          + '<img class="afil-thumb" src="' + p.thumb + '" alt="' + p.name + '"'
+          + ' onerror="this.src=\'https://placehold.co/400x220/141414/c9a962?text=' + encodeURIComponent(p.name) + '\'">'
+          + '<span class="afil-type-badge">' + p.type + '</span>'
+        + '</div>'
+        + '<div class="afil-card-body">'
+          + '<div style="font-weight:700;font-size:0.98rem;color:#fff;margin-bottom:3px;">' + p.name + '</div>'
+          + '<div style="color:#888;font-size:0.8rem;line-height:1.5;margin-bottom:2px;">' + p.desc + '</div>'
+          + '<div class="afil-commission-badge">'
+            + '<span style="font-size:1.1rem;">&#128176;</span>'
+            + '<div>'
+              + '<div style="color:#c9a962;font-weight:700;font-size:1rem;">Ganhas &euro;' + (p.commission || 0) + ' por venda</div>'
+              + '<div style="color:#888;font-size:0.72rem;">' + commLine + '</div>'
+            + '</div>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:8px;margin:8px 0 12px;flex-wrap:wrap;">'
+            + '<button class="afil-qty-btn" id="qm-' + p.id + '">&#8722;</button>'
+            + '<input class="afil-qty-input" type="number" min="1" max="999" value="1" id="qty-input-' + p.id + '">'
+            + '<button class="afil-qty-btn" id="qp-' + p.id + '">+</button>'
+            + '<span style="color:#666;font-size:0.76rem;">vendas</span>'
+            + '<span id="qty-preview-' + p.id + '" style="color:#c9a962;font-size:0.8rem;font-weight:600;">&euro;' + (p.commission || 0).toLocaleString('pt-PT') + ' de comissao</span>'
+          + '</div>'
+          + '<div style="display:flex;gap:8px;margin-bottom:6px;">'
+            + '<button class="afil-action-btn gold" id="copy-' + p.id + '">Copiar link &#128203;</button>'
+            + '<a href="' + p.pdfKit + '" target="_blank" rel="noopener" style="text-decoration:none;flex:1;">'
+              + '<button class="afil-action-btn gray" style="width:100%;">PDF Kit &#128196;</button>'
+            + '</a>'
+          + '</div>'
+          + '<button class="afil-detail-link" id="det-' + p.id + '">Ver detalhes completos &rarr;</button>'
+        + '</div>';
+
+      container.appendChild(card);
+
+      /* Qty wiring */
+      var qm = document.getElementById('qm-' + p.id);
+      var qp = document.getElementById('qp-' + p.id);
+      var qi = document.getElementById('qty-input-' + p.id);
+      function syncQ() {
+        var v = Math.max(1, parseInt(qi.value) || 1);
+        quantities[p.id] = v; qi.value = v;
+        updateQtyPreview(p);
+      }
+      qm.addEventListener('click', function(){ qi.value = Math.max(1,(parseInt(qi.value)||1)-1); syncQ(); });
+      qp.addEventListener('click', function(){ qi.value = (parseInt(qi.value)||1)+1; syncQ(); });
+      qi.addEventListener('change', syncQ);
+
+      document.getElementById('copy-' + p.id).addEventListener('click', function(){ copyLink(this, link); });
+      document.getElementById('twrap-' + p.id).addEventListener('click', function(){ openDetail(p); });
+      document.getElementById('det-' + p.id).addEventListener('click', function(){ openDetail(p); });
+    });
+
+    recalcTotal();
+
     document.getElementById('modal-afiliados').addEventListener('click', function(e){
       if (e.target === this) this.style.display = 'none';
     });
 
-    // Show modal
     document.getElementById('modal-afiliados').style.display = 'block';
   })();
   </script>
