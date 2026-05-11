@@ -1361,8 +1361,8 @@
         isWhat: ['Sessão ao vivo com PhD em Neurociências', 'Ferramentas práticas para segunda-feira de manhã', '30 lugares máximo', 'PDF com resumo completo + acesso a simuladores interactivos'],
         isNotWhat: ['Palestra genérica de psicólogo', 'Vídeo gravado', 'Para trazer os filhos — um bilhete = um lugar de pai/mãe'],
         whenWhere: 'S&aacute;bado, 16 de Maio 2026 &middot; 17h30&ndash;19h30 &middot; Lumiar, Lisboa',
-        price: 360,
-        commission: 150,
+        price: 30,
+        commission: 10,
         page: 'https://mcminsky.pt/events/adhd-pais.html',
         stripe: null,
         pdfKit: null
@@ -1370,16 +1370,16 @@
       {
         id: 'elders',
         name: 'Super Pais da McMinsky',
-        type: 'Evento',
-        desc: 'Clube de saúde e comunidade para maiores de 60. Movimento, aprendizagem, monitorização.',
-        descFull: 'Programa de adesão mensal que combina monitorização de saúde com comunidade activa. Sessões presenciais + suporte digital.',
+        type: 'Programa',
+        desc: 'Dois manh&atilde;s por semana com pequeno-almo&ccedil;o incr&iacute;vel, exerc&iacute;cio, forma&ccedil;&otilde;es e comunidade. &euro;360/m&ecirc;s.',
+        descFull: 'Programa de mensalidade de &euro;360 que inclui duas manh&atilde;s por semana: pequeno-almo&ccedil;o super apetitoso, exerc&iacute;cio f&iacute;sico (indoors e outdoors), forma&ccedil;&otilde;es, jogos e comunidade. Individual ou casal. A sess&atilde;o de estreia (17 Mai, 10h) &eacute; exclusiva — por convite, apenas para quem chegar atrav&eacute;s de afiliados. O programa arranca a 19 de Maio. A comiss&atilde;o &eacute; atribu&iacute;da a quem de facto se inscrever.',
         thumb: 'https://i.postimg.cc/XJC1FPRG/superpais.png',
-        icp: ['Adultos 60+', 'Filhos adultos a procurar programas para pais', 'Médicos de família e geriatras'],
-        isWhat: ['Comunidade activa com encontros regulares', 'Monitorização de saúde com pulseira MedicinUp', 'Programa de movimento adaptado', 'Suporte da equipa McMinsky'],
-        isNotWhat: ['Lar de idosos ou estrutura residencial', 'Substituto de cuidados médicos', 'Programa isolado sem comunidade'],
-        whenWhere: 'Domingo, 17 de Maio 2026 &middot; 10h &middot; Lumiar, Lisboa &middot; McMinsky',
-        price: 250,
-        commission: 50,
+        icp: ['Reformados e s&eacute;niors activos com qualidade de vida como prioridade', 'Filhos adultos que querem o melhor para os pais', 'Casais que querem investir na sa&uacute;de e comunidade juntos'],
+        isWhat: ['Pequeno-almo&ccedil;o incr&iacute;vel inclu&iacute;do todas as sess&otilde;es', 'Exerc&iacute;cio f&iacute;sico indoors e outdoors', 'Forma&ccedil;&otilde;es e jogos em comunidade', 'Duas manh&atilde;s por semana &middot; Individual ou casal', 'Monitoriza&ccedil;&atilde;o de sa&uacute;de dispon&iacute;vel'],
+        isNotWhat: ['Lar ou estrutura residencial', 'S&oacute; ginásio — &eacute; muito mais do que isso', 'Programa isolado sem comunidade real'],
+        whenWhere: '&#x1F511; Estreia exclusiva por convite: Dom 17 Mai &middot; 10h &middot; McMinsky, Lumiar &middot; Programa arranca 19 Mai',
+        price: 360,
+        commission: 150,
         page: null,
         stripe: null,
         pdfKit: null
@@ -1498,7 +1498,7 @@
       var q = quantities[p.id];
       var commLine = p.price
         ? 'Pre&ccedil;o ao p&uacute;blico: &euro;' + p.price.toLocaleString('pt-PT')
-        : 'Comiss&atilde;o por venda referenciada';
+        : 'de comiss&atilde;o';
 
       document.getElementById('afil-detail-body').innerHTML =
         '<div style="margin-bottom:6px;">'
@@ -1595,7 +1595,7 @@
 
       var commLine = p.price
         ? 'Pre&ccedil;o: &euro;' + p.price.toLocaleString('pt-PT')
-        : 'Comiss&atilde;o por venda referenciada';
+        : 'de comiss&atilde;o';
 
       var card = document.createElement('div');
       card.className = 'afil-card';
@@ -1613,7 +1613,7 @@
           + '<div class="afil-commission-badge">'
             + '<span style="font-size:1.1rem;">&#128176;</span>'
             + '<div>'
-              + '<div style="color:#c9a962;font-weight:700;font-size:1rem;">Ganhas &euro;' + (p.commission || 0) + ' por venda referenciada</div>'
+              + '<div style="color:#c9a962;font-weight:700;font-size:1rem;">Ganhas &euro;' + (p.commission || 0) + ' de comiss&atilde;o</div>'
               + '<div style="color:#888;font-size:0.72rem;">' + commLine + '</div>'
             + '</div>'
           + '</div>'
