@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simulador ADHD Trigger Score — Visualiza em tempo real como os factores neurológicos do ADHD interagem e influenciam o estado de foco. McMinsky.">
+  <title>Simulador ADHD Trigger Score | McMinsky</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET & VARIÁVEIS ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:        #0a0a0a;
+      --black-light:  #141414;
+      --black-lighter:#1a1a1a;
+      --white:        #f5f5f5;
+      --white-dim:    #e0e0e0;
+      --gold:         #c9a962;
+      --gold-light:   #d4bc7a;
+      --gold-dark:    #a88a4a;
+      --gray:         #666666;
+      --gray-dark:    #333333;
+      --gray-light:   #999999;
+
+      --green:        #22c55e;
+      --green-dark:   #16a34a;
+      --yellow:       #eab308;
+      --yellow-dark:  #ca8a04;
+      --red:          #ef4444;
+      --red-dark:     #dc2626;
+
+      --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+      --font-body:    'Inter', -apple-system, sans-serif;
+
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 2rem;
+      --space-lg: 4rem;
+
+      --transition-fast:   0.2s ease;
+      --transition-medium: 0.4s ease;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--gold); text-decoration: none; transition: color var(--transition-fast); }
+    a:hover { color: var(--gold-light); }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,169,98,0.15);
+      padding: 0.875rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .site-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+    }
+
+    .site-header .logo img { width: 28px; height: 28px; object-fit: contain; }
+
+    .back-link {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--gray-light);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .back-link:hover { color: var(--gold); }
+
+    /* ── HERO SECTION ── */
+    .hero {
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--gray-dark);
+      background: linear-gradient(180deg, var(--black-light) 0%, var(--black) 100%);
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(201,169,98,0.3);
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      color: var(--white);
+    }
+
+    .hero h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .hero p {
+      max-width: 640px;
+      margin: 0 auto;
+      color: var(--white-dim);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* ── LAYOUT PRINCIPAL ── */
+    .main-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 900px) {
+      .main-layout {
+        grid-template-columns: 1fr 380px;
+        align-items: start;
+      }
+    }
+
+    /* ── PAINEL DO SCORE ── */
+    .score-panel {
+      background: var(--black-light);
+      border: 1px solid var(--gray-dark);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 70px;
+      order: -1;
+    }
+
+    @media (min-width: 900px) {
+      .score-panel { order: 2; }
+    }
+
+    .score-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .score-number {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 12vw, 6rem);
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      transition: color 0.5s ease;
+    }
+
+    .score-bar-container {
+      margin: 1rem 0;
+      height: 10px;
+      background: var(--gray-dark);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .score-bar {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.4s ease, background-color 0.5s ease;
+    }
+
+    .score-zone {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--gray-light);
+      margin-bottom: 1.25rem;
+    }
+
+    .score-zone span { letter-spacing: 0.04em; }
+
+    .score-description {
+      font-size: 0.875rem;
+      color: var(--white-dim);
+      line-height: 1.65;
+      padding: 1rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      border-left: 3px solid var(--gold-dark);
+      min-height: 80px;
+      transition: border-color 0.5s ease;
+    }
+
+    /* ── CASOS PRÉ-CONFIGURADOS ── */
+    .cases-section {
+      margin-top: 1.5rem;
+    }
+
+    .cases-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .cases-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .case-btn {
+      background: var(--black-lighter);
+      border: 1px solid var(--gray-dark);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+      color: var(--white);
+      font-family: var(--font-body);
+    }
+
+    .case-btn:hover {
+      border-color: var(--gold-dark);
+      background: rgba(201,169,98,0.06);
+    }
+
+    .case-btn.active {
+      border-color: var(--gold);
+      background: rgba(201,169,98,0.1);
+    }
+
+    .case-btn-emoji { font-size: 1.1rem; display: block; margin-bottom: 0.2rem; }
+    .case-btn-name { font-size: 0.72rem; font-weight: 500; line-height: 1.3; display: block; }
+
+    /* ── PAINEL DOS SLIDERS ── */
+    .sliders-panel { order: 1; }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(201,169,98,0.2);
+    }
+
+    .sliders-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .slider-row {
+      padding: 0.9rem 1rem;
+      background: var(--black-light);
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: border-color var(--transition-fast);
+    }
+
+    .slider-row:hover { border-color: var(--gray-dark); }
+
+    .slider-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+    }
+
+    .slider-name {
+      font-size: 0.82rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .slider-name .emoji { font-size: 1rem; }
+
+    .slider-tooltip {
+      font-size: 0.68rem;
+      color: var(--gray-light);
+      margin-top: 0.1rem;
+      display: block;
+      line-height: 1.4;
+    }
+
+    .slider-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      min-width: 1.8rem;
+      text-align: right;
+      transition: color 0.3s ease;
+    }
+
+    /* HTML range slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 100px;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 0.3rem;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      border: 2px solid var(--black);
+      box-shadow: 0 0 0 2px rgba(201,169,98,0.3);
+      transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 5px rgba(201,169,98,0.25);
+      transform: scale(1.1);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      border: 2px solid var(--black);
+    }
+
+    /* ── LEGEND / INFO ── */
+    .info-box {
+      margin-top: 2rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--black-light);
+      border-radius: 12px;
+      border: 1px solid var(--gray-dark);
+      font-size: 0.82rem;
+      color: var(--gray-light);
+      line-height: 1.7;
+    }
+
+    .info-box strong { color: var(--white-dim); }
+
+    .info-box h4 {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .info-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .info-box ul li::before {
+      content: '→ ';
+      color: var(--gold-dark);
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--gray-dark);
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+
+    .site-footer a { color: var(--gold-dark); }
+    .site-footer a:hover { color: var(--gold); }
+
+    /* ── UTILITÁRIOS ── */
+    .color-green  { color: var(--green); }
+    .color-yellow { color: var(--yellow); }
+    .color-red    { color: var(--red); }
+
+    .mt-sm { margin-top: 0.75rem; }
+
+    /* ── ANIMAÇÃO DO SCORE ── */
+    @keyframes pulse-score {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
+    .score-pulse { animation: pulse-score 0.35s ease; }
+
+    /* ── DIVISOR ENTRE GRUPOS ── */
+    .group-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gray-dark), transparent);
+      margin: 0.75rem 0 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header class="site-header">
+    <a href="/" class="logo">
+      <img src="https://i.postimg.cc/T27BCpJj/logo-without-text.png" alt="McMinsky">
+      McMinsky
+    </a>
+    <a href="/" class="back-link">← mcminsky.pt</a>
+  </header>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <span class="hero-eyebrow">Neurociência ADHD</span>
+    <h1>Simulador <em>ADHD Trigger Score</em></h1>
+    <p>
+      Ajusta os parâmetros neurológicos e vê em tempo real como a configuração cerebral
+      influencia a probabilidade de dread, desinteresse e desadequação numa pessoa com ADHD.
+      Baseado na investigação do Dr. Alok Kanojia (HealthyGamerGG).
+    </p>
+  </section>
+
+  <!-- ══ LAYOUT PRINCIPAL ══ -->
+  <div class="main-layout">
+
+    <!-- COLUNA SLIDERS -->
+    <div class="sliders-panel">
+
+      <!-- GRUPO 1: DÉFICES -->
+      <div class="section-label">Factores neurológicos — défices (slider alto = mais comprometido)</div>
+
+      <div class="sliders-group" id="group-deficits">
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">🧪</span> Dopamina basal</div>
+              <span class="slider-tooltip">Combustível do sistema de recompensa e motivação. Baixa dopamina = sem "engine" para iniciar tarefas.</span>
+            </div>
+            <span class="slider-value" id="val-dopamine">5</span>
+          </div>
+          <input type="range" id="sl-dopamine" min="0" max="10" value="5"
+                 data-key="dopamine" data-invert="true" data-weight="0.20">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">⚡</span> Norepinefrina</div>
+              <span class="slider-tooltip">Regula o estado de alerta e a transmissão de sinal no córtex. Baixa = niebla mental, lentidão de processamento.</span>
+            </div>
+            <span class="slider-value" id="val-norepi">5</span>
+          </div>
+          <input type="range" id="sl-norepi" min="0" max="10" value="5"
+                 data-key="norepi" data-invert="true" data-weight="0.10">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">🧠</span> Activação do córtex pré-frontal</div>
+              <span class="slider-tooltip">O "CEO" do cérebro. Com baixa activação, o controlo executivo colapsa: não há planeamento nem inibição de impulsos.</span>
+            </div>
+            <span class="slider-value" id="val-pfc">5</span>
+          </div>
+          <input type="range" id="sl-pfc" min="0" max="10" value="5"
+                 data-key="pfc" data-invert="true" data-weight="0.15">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">🛑</span> Controlo inibitório</div>
+              <span class="slider-tooltip">Capacidade de travar impulsos e pensamentos intrusivos. Baixo = dread irrompe como impulso incontrolável.</span>
+            </div>
+            <span class="slider-value" id="val-inhibit">5</span>
+          </div>
+          <input type="range" id="sl-inhibit" min="0" max="10" value="5"
+                 data-key="inhibit" data-invert="true" data-weight="0.10">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">💾</span> Memória de trabalho</div>
+              <span class="slider-tooltip">RAM do cérebro. Baixa capacidade impede manter contexto activo — não é esquecimento, é falha de codificação.</span>
+            </div>
+            <span class="slider-value" id="val-wm">5</span>
+          </div>
+          <input type="range" id="sl-wm" min="0" max="10" value="5"
+                 data-key="wm" data-invert="true" data-weight="0.08">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">🌊</span> Regulação emocional</div>
+              <span class="slider-tooltip">Em ADHD, emoções chegam mais rápido e mais intensas. Baixa regulação amplifica qualquer frustração em cascata.</span>
+            </div>
+            <span class="slider-value" id="val-emreg">5</span>
+          </div>
+          <input type="range" id="sl-emreg" min="0" max="10" value="5"
+                 data-key="emreg" data-invert="true" data-weight="0.08">
+        </div>
+
+      </div>
+
+      <div class="group-divider"></div>
+
+      <!-- GRUPO 2: PROTECTORES -->
+      <div class="section-label">Factores protectores (slider alto = melhor — reduzem o score)</div>
+
+      <div class="sliders-group" id="group-protectors">
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">🏃</span> Exercício físico recente</div>
+              <span class="slider-tooltip">Eleva dopamina e BDNF. Mesmo 20 min de corrida aumentam significativamente a activação do córtex pré-frontal.</span>
+            </div>
+            <span class="slider-value" id="val-exercise">5</span>
+          </div>
+          <input type="range" id="sl-exercise" min="0" max="10" value="5"
+                 data-key="exercise" data-invert="false" data-weight="0.08">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">😴</span> Sono adequado</div>
+              <span class="slider-tooltip">Consolida dopamina e restaura o córtex. Uma noite mal dormida é neurologicamente equivalente a défice de estimulante.</span>
+            </div>
+            <span class="slider-value" id="val-sleep">5</span>
+          </div>
+          <input type="range" id="sl-sleep" min="0" max="10" value="5"
+                 data-key="sleep" data-invert="false" data-weight="0.07">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">📋</span> Estrutura e rotina no ambiente</div>
+              <span class="slider-tooltip">Hábitos usam o basal ganglia — intacto em ADHD. Rotina contorna o córtex pré-frontal comprometido via automatização.</span>
+            </div>
+            <span class="slider-value" id="val-structure">5</span>
+          </div>
+          <input type="range" id="sl-structure" min="0" max="10" value="5"
+                 data-key="structure" data-invert="false" data-weight="0.05">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <div>
+              <div class="slider-name"><span class="emoji">✨</span> Interesse intrínseco na tarefa</div>
+              <span class="slider-tooltip">O ADHD é regido por interesse, não por importância. Interesse máximo = hiperfocus possível. É o único override do sistema dopaminérgico.</span>
+            </div>
+            <span class="slider-value" id="val-interest">5</span>
+          </div>
+          <input type="range" id="sl-interest" min="0" max="10" value="5"
+                 data-key="interest" data-invert="false" data-weight="0.09">
+        </div>
+
+      </div>
+
+      <!-- INFO BOX -->
+      <div class="info-box">
+        <h4>Como ler o score</h4>
+        <ul>
+          <li><strong>0–30 (verde):</strong> Configuração favorável. Foco possível, baixa fricção.</li>
+          <li><strong>31–60 (amarelo):</strong> Tensão neurológica. Foco exige esforço consciente.</li>
+          <li><strong>61–100 (vermelho):</strong> Alta probabilidade de dread, fuga ou paralisia.</li>
+        </ul>
+        <p class="mt-sm">
+          A fórmula é <strong>multiplicativa</strong> nos factores críticos (dopamina × interesse):
+          ambos baixos ao mesmo tempo produz score muito superior à soma individual.
+          Reflecte a interacção real — dopamina sem interesse não arranca, interesse sem dopamina não sustenta.
+        </p>
+      </div>
+
+    </div><!-- /sliders-panel -->
+
+    <!-- COLUNA SCORE -->
+    <div class="score-panel">
+
+      <div class="score-label">ADHD Trigger Score</div>
+      <div class="score-number" id="score-number">50</div>
+
+      <div class="score-bar-container">
+        <div class="score-bar" id="score-bar" style="width:50%"></div>
+      </div>
+
+      <div class="score-zone">
+        <span class="color-green">Favorável</span>
+        <span class="color-yellow">Tensão</span>
+        <span class="color-red">Trigger</span>
+      </div>
+
+      <div class="score-description" id="score-description">
+        Ajusta os sliders para ver a descrição neurológica actualizada em tempo real.
+      </div>
+
+      <!-- CASOS PRÉ-CONFIGURADOS -->
+      <div class="cases-section">
+        <div class="cases-title">Cenários pré-configurados</div>
+        <div class="cases-grid" id="cases-grid">
+          <!-- Gerado por JS -->
+        </div>
+      </div>
+
+    </div><!-- /score-panel -->
+
+  </div><!-- /main-layout -->
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer">
+    <p>
+      <a href="/">mcminsky.pt</a> &nbsp;·&nbsp;
+      Baseado na investigação do Dr. Alok Kanojia, HealthyGamerGG &nbsp;·&nbsp;
+      Fins educativos — não substitui diagnóstico clínico
+    </p>
+  </footer>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════
+       ADHD TRIGGER SCORE SIMULATOR
+       Neurociência: Dr. Alok Kanojia / HealthyGamerGG
+       ═══════════════════════════════════════════════════════ */
+
+    /* ── CONFIGURAÇÃO DOS SLIDERS ── */
+    const SLIDERS = [
+      /* DÉFICES (data-invert=true → slider alto = pior) */
+      { key: 'dopamine',  weight: 0.20, invert: true  },
+      { key: 'norepi',    weight: 0.10, invert: true  },
+      { key: 'pfc',       weight: 0.15, invert: true  },
+      { key: 'inhibit',   weight: 0.10, invert: true  },
+      { key: 'wm',        weight: 0.08, invert: true  },
+      { key: 'emreg',     weight: 0.08, invert: true  },
+      /* PROTECTORES (data-invert=false → slider alto = melhor) */
+      { key: 'exercise',  weight: 0.08, invert: false },
+      { key: 'sleep',     weight: 0.07, invert: false },
+      { key: 'structure', weight: 0.05, invert: false },
+      { key: 'interest',  weight: 0.09, invert: false },
+    ];
+
+    /* ── CASOS PRÉ-CONFIGURADOS ── */
+    const CASES = [
+      {
+        name: 'Matemática sem dormir',
+        emoji: '📐',
+        desc: 'Dopamina baixa, sono mau, zero interesse. O córtex pré-frontal fica sem fuel. Resultado clássico: paralisia ou fuga para estímulo mais fácil.',
+        values: {
+          dopamine: 9, norepi: 7, pfc: 8, inhibit: 8, wm: 9, emreg: 8,
+          exercise: 1, sleep: 1, structure: 3, interest: 1
+        }
+      },
+      {
+        name: 'Jogo novo preferido',
+        emoji: '🎮',
+        desc: 'Interesse intrínseco máximo dispara dopamina endógena. O paradoxo ADHD: neste estado funciona melhor que um neurotípico em tédio. Hiperfocus disponível.',
+        values: {
+          dopamine: 1, norepi: 3, pfc: 3, inhibit: 3, wm: 2, emreg: 4,
+          exercise: 6, sleep: 8, structure: 2, interest: 10
+        }
+      },
+      {
+        name: 'Reunião após almoço',
+        emoji: '😑',
+        desc: 'Dopamina em queda pós-prandial, interesse zero, ambiente passivo. A configuração mais tóxica: sem urgência, sem novidade, sem estrutura externa.',
+        values: {
+          dopamine: 9, norepi: 8, pfc: 9, inhibit: 7, wm: 8, emreg: 7,
+          exercise: 2, sleep: 5, structure: 2, interest: 1
+        }
+      },
+      {
+        name: 'Projecto criativo com deadline',
+        emoji: '🎨',
+        desc: 'Interesse alto mas controlo inibitório baixo e deadline a criar ansiedade antecipatória. Tensão criativa real — produtivo mas instável e dispersivo.',
+        values: {
+          dopamine: 5, norepi: 5, pfc: 4, inhibit: 3, wm: 5, emreg: 4,
+          exercise: 4, sleep: 5, structure: 3, interest: 8
+        }
+      },
+      {
+        name: 'Rotina matinal com exercício',
+        emoji: '🌅',
+        desc: 'Exercício elevou dopamina e activação do córtex. Rotina usa o basal ganglia — intacto em ADHD — para contornar o défice de atenção executiva.',
+        values: {
+          dopamine: 3, norepi: 3, pfc: 3, inhibit: 4, wm: 3, emreg: 4,
+          exercise: 9, sleep: 8, structure: 8, interest: 5
+        }
+      },
+      {
+        name: 'Hiperfocus numa crise',
+        emoji: '🚨',
+        desc: 'Urgência extrema activa o sistema de emergência dopaminérgico — o único override fiável do ADHD. Funciona melhor que neurotípico médio em modo de crise.',
+        values: {
+          dopamine: 2, norepi: 2, pfc: 2, inhibit: 2, wm: 2, emreg: 2,
+          exercise: 5, sleep: 4, structure: 2, interest: 10
+        }
+      },
+    ];
+
+    /* ── FÓRMULA DO SCORE ── */
+    function computeScore(vals) {
+      /* Base linear ponderada */
+      let base = 0;
+      for (const s of SLIDERS) {
+        const raw = vals[s.key];           /* 0-10 */
+        /* Para défices: alto = mau → contribui positivamente para score */
+        /* Para protectores: alto = bom → contribui negativamente para score */
+        const contribution = s.invert ? raw / 10 : (10 - raw) / 10;
+        base += contribution * s.weight;
+      }
+      /* base está entre 0 e 1 (soma dos pesos = 1.0) */
+
+      /* Multiplicador de interacção: dopamina baixa × interesse baixo = muito pior */
+      const dopNorm   = vals.dopamine / 10;   /* 0=óptimo, 1=péssimo */
+      const intNorm   = (10 - vals.interest) / 10; /* 0=interesse máx, 1=zero interesse */
+      const pfcNorm   = vals.pfc / 10;
+      const sleepNorm = (10 - vals.sleep) / 10;
+
+      /* Factor de interacção crítica: quando dopamina E interesse estão ambos maus */
+      const criticalInteraction = dopNorm * intNorm;
+      /* Factor pré-frontal × sono: sem sono o córtex vai ao chão */
+      const pfcSleepInteraction = pfcNorm * sleepNorm;
+
+      /* Score final: base + bónus por interacções críticas */
+      const rawScore = base + (criticalInteraction * 0.25) + (pfcSleepInteraction * 0.12);
+
+      /* Normalizar para 0–100, clamp */
+      const score = Math.round(Math.min(100, Math.max(0, rawScore * 100)));
+      return score;
+    }
+
+    /* ── COR CONFORME SCORE ── */
+    function scoreColor(score) {
+      if (score <= 30) return '#22c55e';
+      if (score <= 60) return '#eab308';
+      return '#ef4444';
+    }
+
+    function scoreBg(score) {
+      if (score <= 30) return 'linear-gradient(90deg, #22c55e, #16a34a)';
+      if (score <= 60) return 'linear-gradient(90deg, #eab308, #ca8a04)';
+      return 'linear-gradient(90deg, #ef4444, #dc2626)';
+    }
+
+    /* ── DESCRIÇÕES DINÂMICAS ── */
+    function buildDescription(vals, score) {
+      const dopa  = vals.dopamine;
+      const inter = vals.interest;
+      const sleep = vals.sleep;
+      const pfc   = vals.pfc;
+      const exercise = vals.exercise;
+      const structure = vals.structure;
+
+      /* Score verde */
+      if (score <= 15) {
+        if (inter >= 8)
+          return 'Interesse intrínseco máximo activou o sistema de recompensa via dopamina endógena. O hiperfocus está disponível — o cérebro não precisa de se esforçar para entrar em modo de trabalho profundo.';
+        return 'Configuração neurológica favorável. A combinação de factores protectores activos compensa os défices do ADHD. Baixa fricção para iniciar e manter foco.';
+      }
+      if (score <= 30) {
+        return 'Condição estável. Alguns défices presentes mas os factores protectores — ' +
+          (exercise >= 7 ? 'exercício recente, ' : '') +
+          (sleep >= 7 ? 'sono adequado, ' : '') +
+          (structure >= 7 ? 'rotina estruturada, ' : '') +
+          (inter >= 6 ? 'interesse na tarefa' : 'relativa estrutura de ambiente') +
+          ' — criam margem suficiente para funcionar sem grande esforço extra.';
+      }
+
+      /* Score amarelo */
+      if (score <= 45) {
+        if (inter >= 7 && dopa >= 6)
+          return 'Tensão criativa: interesse alto mas controlo inibitório comprometido. O foco existe mas é instável — a mente desvia com facilidade para ramificações do próprio projecto. Produtivo mas com custo cognitivo elevado.';
+        return 'Zona de tensão. O córtex pré-frontal está a trabalhar acima da capacidade para compensar os défices. Funcional mas com esforço consciente. Tendência para procrastinar o início, não a execução.';
+      }
+      if (score <= 60) {
+        return 'Nível de tensão elevado. A combinação de ' +
+          (dopa >= 6 ? 'dopamina comprometida ' : '') +
+          (pfc >= 6 ? 'com activação pré-frontal reduzida ' : '') +
+          'aumenta o risco de ansiedade antecipatória ("dread"). ' +
+          'O sistema de alerta permanece ligado mesmo sem ameaça real — energia a ser consumida em vigilância em vez de tarefa.';
+      }
+
+      /* Score vermelho */
+      if (score <= 75) {
+        if (dopa >= 7 && inter <= 3)
+          return 'Dopamina baixa combinada com interesse mínimo: o córtex pré-frontal fica literalmente sem fuel para manter atenção. Resultado típico: procrastinação activa, fuga para estímulo de menor exigência, ou paralisia.';
+        return 'Alta probabilidade de dread crónico. O sistema adaptativo do ADHD — sempre à espera de falhar — está em modo máximo. Difícil distinguir entre "não quero" e "neurologicamente não consigo sem estímulo externo forte".';
+      }
+
+      /* Score > 75 */
+      if (sleep <= 3 && dopa >= 7)
+        return 'Combinação crítica: sono mau destruiu as reservas de dopamina e o córtex pré-frontal opera abaixo do mínimo funcional. Qualquer tarefa não-urgente é praticamente impossível sem intervenção externa (café, deadline, crise). O estado de "flat tire com o pé no fundo" — motor a trabalhar, rodas não andam.';
+      return 'Configuração de risco máximo. Praticamente todos os factores de défice estão activos e os protectores estão ausentes. O cérebro está em modo de sobrevivência — só a urgência extrema ou uma crise real consegue activar o sistema dopaminérgico o suficiente para agir.';
+    }
+
+    /* ── ESTADO DOS SLIDERS ── */
+    const state = {};
+    for (const s of SLIDERS) state[s.key] = 5; /* default = 5 */
+
+    /* ── ACTUALIZAR UI ── */
+    function updateUI(animate) {
+      const score = computeScore(state);
+      const color = scoreColor(score);
+
+      /* Número */
+      const numEl = document.getElementById('score-number');
+      numEl.textContent = score;
+      numEl.style.color = color;
+      if (animate) {
+        numEl.classList.remove('score-pulse');
+        void numEl.offsetWidth; /* reflow para reiniciar animação */
+        numEl.classList.add('score-pulse');
+      }
+
+      /* Barra */
+      const bar = document.getElementById('score-bar');
+      bar.style.width = score + '%';
+      bar.style.background = scoreBg(score);
+
+      /* Descrição */
+      const desc = document.getElementById('score-description');
+      desc.textContent = buildDescription(state, score);
+      desc.style.borderLeftColor =
+        score <= 30 ? '#22c55e' : score <= 60 ? '#eab308' : '#ef4444';
+
+      /* Cores dos valores dos sliders */
+      for (const s of SLIDERS) {
+        const el = document.getElementById('val-' + s.key);
+        if (!el) continue;
+        const v = state[s.key];
+        /* Para défice: 0-3=verde, 4-6=amarelo, 7-10=vermelho */
+        /* Para protector: inverso */
+        let c;
+        if (s.invert) {
+          c = v <= 3 ? '#22c55e' : v <= 6 ? '#eab308' : '#ef4444';
+        } else {
+          c = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
+        }
+        el.style.color = c;
+      }
+
+      /* Cor da track do slider conforme valor */
+      for (const s of SLIDERS) {
+        const sl = document.getElementById('sl-' + s.key);
+        if (!sl) continue;
+        const v = state[s.key];
+        const pct = (v / 10) * 100;
+        let trackColor;
+        if (s.invert) {
+          trackColor = v <= 3 ? '#22c55e' : v <= 6 ? '#eab308' : '#ef4444';
+        } else {
+          trackColor = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
+        }
+        sl.style.background =
+          `linear-gradient(to right, ${trackColor} 0%, ${trackColor} ${pct}%, #333 ${pct}%, #333 100%)`;
+      }
+
+      /* Destaque do caso activo */
+      const activeCaseEl = document.querySelector('.case-btn.active');
+      if (activeCaseEl) {
+        /* verificar se os valores ainda correspondem */
+        const idx = parseInt(activeCaseEl.dataset.idx);
+        const caseVals = CASES[idx].values;
+        const match = Object.keys(caseVals).every(k => state[k] === caseVals[k]);
+        if (!match) activeCaseEl.classList.remove('active');
+      }
+    }
+
+    /* ── EVENTOS DOS SLIDERS ── */
+    function attachSliderEvents() {
+      for (const s of SLIDERS) {
+        const sl = document.getElementById('sl-' + s.key);
+        const val = document.getElementById('val-' + s.key);
+        if (!sl) continue;
+        sl.addEventListener('input', function () {
+          state[s.key] = parseInt(this.value);
+          if (val) val.textContent = this.value;
+          updateUI(false);
+        });
+      }
+    }
+
+    /* ── CASOS PRÉ-CONFIGURADOS ── */
+    function buildCases() {
+      const grid = document.getElementById('cases-grid');
+      CASES.forEach(function (c, i) {
+        const btn = document.createElement('button');
+        btn.className = 'case-btn';
+        btn.dataset.idx = i;
+        btn.innerHTML =
+          '<span class="case-btn-emoji">' + c.emoji + '</span>' +
+          '<span class="case-btn-name">' + c.name + '</span>';
+
+        btn.addEventListener('click', function () {
+          /* Remover active de todos */
+          document.querySelectorAll('.case-btn').forEach(function (b) {
+            b.classList.remove('active');
+          });
+          btn.classList.add('active');
+
+          /* Aplicar valores */
+          Object.assign(state, c.values);
+
+          /* Actualizar sliders UI */
+          for (const key of Object.keys(c.values)) {
+            const sl = document.getElementById('sl-' + key);
+            const vl = document.getElementById('val-' + key);
+            if (sl) sl.value = c.values[key];
+            if (vl) vl.textContent = c.values[key];
+          }
+
+          /* Actualizar score */
+          updateUI(true);
+        });
+
+        grid.appendChild(btn);
+      });
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      attachSliderEvents();
+      buildCases();
+      updateUI(false);
+
+      /* Definir tracks iniciais */
+      for (const s of SLIDERS) {
+        const sl = document.getElementById('sl-' + s.key);
+        if (sl) {
+          const v = state[s.key];
+          const pct = (v / 10) * 100;
+          sl.style.background =
+            'linear-gradient(to right, #eab308 0%, #eab308 ' + pct + '%, #333 ' + pct + '%, #333 100%)';
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
