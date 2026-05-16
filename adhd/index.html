@@ -479,7 +479,7 @@
     <div class="sliders-panel">
 
       <!-- GRUPO 1: DÉFICES -->
-      <div class="section-label">Factores neurológicos — défices (slider alto = mais comprometido)</div>
+      <div class="section-label">Factores neurológicos — nível actual (0 = comprometido · 10 = óptimo)</div>
 
       <div class="sliders-group" id="group-deficits">
 
@@ -679,15 +679,16 @@
        ═══════════════════════════════════════════════════════ */
 
     /* ── CONFIGURAÇÃO DOS SLIDERS ── */
+    /* Todos os sliders: 0 = mínimo/mau, 10 = óptimo/bom */
     const SLIDERS = [
-      /* DÉFICES (data-invert=true → slider alto = pior) */
+      /* DÉFICES: 0 = muito comprometido, 10 = funcional/alto */
       { key: 'dopamine',  weight: 0.20, invert: true  },
       { key: 'norepi',    weight: 0.10, invert: true  },
       { key: 'pfc',       weight: 0.15, invert: true  },
       { key: 'inhibit',   weight: 0.10, invert: true  },
       { key: 'wm',        weight: 0.08, invert: true  },
       { key: 'emreg',     weight: 0.08, invert: true  },
-      /* PROTECTORES (data-invert=false → slider alto = melhor) */
+      /* PROTECTORES: 0 = ausente, 10 = máximo */
       { key: 'exercise',  weight: 0.08, invert: false },
       { key: 'sleep',     weight: 0.07, invert: false },
       { key: 'structure', weight: 0.05, invert: false },
@@ -695,13 +696,14 @@
     ];
 
     /* ── CASOS PRÉ-CONFIGURADOS ── */
+    /* Valores em escala natural: 0 = mínimo, 10 = óptimo/máximo */
     const CASES = [
       {
         name: 'Matemática sem dormir',
         emoji: '📐',
         desc: 'Dopamina baixa, sono mau, zero interesse. O córtex pré-frontal fica sem fuel. Resultado clássico: paralisia ou fuga para estímulo mais fácil.',
         values: {
-          dopamine: 9, norepi: 7, pfc: 8, inhibit: 8, wm: 9, emreg: 8,
+          dopamine: 1, norepi: 3, pfc: 2, inhibit: 2, wm: 1, emreg: 2,
           exercise: 1, sleep: 1, structure: 3, interest: 1
         }
       },
@@ -710,7 +712,7 @@
         emoji: '🎮',
         desc: 'Interesse intrínseco máximo dispara dopamina endógena. O paradoxo ADHD: neste estado funciona melhor que um neurotípico em tédio. Hiperfocus disponível.',
         values: {
-          dopamine: 1, norepi: 3, pfc: 3, inhibit: 3, wm: 2, emreg: 4,
+          dopamine: 9, norepi: 7, pfc: 7, inhibit: 7, wm: 8, emreg: 6,
           exercise: 6, sleep: 8, structure: 2, interest: 10
         }
       },
@@ -719,16 +721,16 @@
         emoji: '😑',
         desc: 'Dopamina em queda pós-prandial, interesse zero, ambiente passivo. A configuração mais tóxica: sem urgência, sem novidade, sem estrutura externa.',
         values: {
-          dopamine: 9, norepi: 8, pfc: 9, inhibit: 7, wm: 8, emreg: 7,
+          dopamine: 1, norepi: 2, pfc: 1, inhibit: 3, wm: 2, emreg: 3,
           exercise: 2, sleep: 5, structure: 2, interest: 1
         }
       },
       {
         name: 'Projecto criativo com deadline',
         emoji: '🎨',
-        desc: 'Interesse alto mas controlo inibitório baixo e deadline a criar ansiedade antecipatória. Tensão criativa real — produtivo mas instável e dispersivo.',
+        desc: 'Interesse alto mas controlo inibitório comprometido e deadline a criar ansiedade antecipatória. Tensão criativa real — produtivo mas instável e dispersivo.',
         values: {
-          dopamine: 5, norepi: 5, pfc: 4, inhibit: 3, wm: 5, emreg: 4,
+          dopamine: 5, norepi: 5, pfc: 6, inhibit: 4, wm: 5, emreg: 6,
           exercise: 4, sleep: 5, structure: 3, interest: 8
         }
       },
@@ -737,7 +739,7 @@
         emoji: '🌅',
         desc: 'Exercício elevou dopamina e activação do córtex. Rotina usa o basal ganglia — intacto em ADHD — para contornar o défice de atenção executiva.',
         values: {
-          dopamine: 3, norepi: 3, pfc: 3, inhibit: 4, wm: 3, emreg: 4,
+          dopamine: 7, norepi: 7, pfc: 7, inhibit: 6, wm: 7, emreg: 6,
           exercise: 9, sleep: 8, structure: 8, interest: 5
         }
       },
@@ -746,7 +748,7 @@
         emoji: '🚨',
         desc: 'Urgência extrema activa o sistema de emergência dopaminérgico — o único override fiável do ADHD. Funciona melhor que neurotípico médio em modo de crise.',
         values: {
-          dopamine: 2, norepi: 2, pfc: 2, inhibit: 2, wm: 2, emreg: 2,
+          dopamine: 8, norepi: 9, pfc: 5, inhibit: 3, wm: 6, emreg: 2,
           exercise: 5, sleep: 4, structure: 2, interest: 10
         }
       },
@@ -755,20 +757,21 @@
     /* ── FÓRMULA DO SCORE ── */
     function computeScore(vals) {
       /* Base linear ponderada */
+      /* Todos os sliders: 10 = óptimo, 0 = comprometido/ausente */
+      /* Contribution ao trigger score = quanto mais baixo, pior = (10-raw)/10 */
       let base = 0;
       for (const s of SLIDERS) {
         const raw = vals[s.key];           /* 0-10 */
-        /* Para défices: alto = mau → contribui positivamente para score */
-        /* Para protectores: alto = bom → contribui negativamente para score */
-        const contribution = s.invert ? raw / 10 : (10 - raw) / 10;
+        const contribution = (10 - raw) / 10;
         base += contribution * s.weight;
       }
       /* base está entre 0 e 1 (soma dos pesos = 1.0) */
 
       /* Multiplicador de interacção: dopamina baixa × interesse baixo = muito pior */
-      const dopNorm   = vals.dopamine / 10;   /* 0=óptimo, 1=péssimo */
-      const intNorm   = (10 - vals.interest) / 10; /* 0=interesse máx, 1=zero interesse */
-      const pfcNorm   = vals.pfc / 10;
+      /* dopNorm/pfcNorm: 1 = péssimo (comprometido), 0 = óptimo */
+      const dopNorm   = (10 - vals.dopamine) / 10;
+      const intNorm   = (10 - vals.interest) / 10;
+      const pfcNorm   = (10 - vals.pfc) / 10;
       const sleepNorm = (10 - vals.sleep) / 10;
 
       /* Factor de interacção crítica: quando dopamina E interesse estão ambos maus */
@@ -823,27 +826,27 @@
 
       /* Score amarelo */
       if (score <= 45) {
-        if (inter >= 7 && dopa >= 6)
-          return 'Tensão criativa: interesse alto mas controlo inibitório comprometido. O foco existe mas é instável — a mente desvia com facilidade para ramificações do próprio projecto. Produtivo mas com custo cognitivo elevado.';
+        if (inter >= 7 && dopa <= 5)
+          return 'Tensão criativa: interesse alto mas dopamina insuficiente. O foco existe mas é instável — a mente desvia com facilidade para ramificações do próprio projecto. Produtivo mas com custo cognitivo elevado.';
         return 'Zona de tensão. O córtex pré-frontal está a trabalhar acima da capacidade para compensar os défices. Funcional mas com esforço consciente. Tendência para procrastinar o início, não a execução.';
       }
       if (score <= 60) {
         return 'Nível de tensão elevado. A combinação de ' +
-          (dopa >= 6 ? 'dopamina comprometida ' : '') +
-          (pfc >= 6 ? 'com activação pré-frontal reduzida ' : '') +
+          (dopa <= 4 ? 'dopamina comprometida ' : '') +
+          (pfc <= 4 ? 'com activação pré-frontal reduzida ' : '') +
           'aumenta o risco de ansiedade antecipatória ("dread"). ' +
           'O sistema de alerta permanece ligado mesmo sem ameaça real — energia a ser consumida em vigilância em vez de tarefa.';
       }
 
       /* Score vermelho */
       if (score <= 75) {
-        if (dopa >= 7 && inter <= 3)
+        if (dopa <= 3 && inter <= 3)
           return 'Dopamina baixa combinada com interesse mínimo: o córtex pré-frontal fica literalmente sem fuel para manter atenção. Resultado típico: procrastinação activa, fuga para estímulo de menor exigência, ou paralisia.';
         return 'Alta probabilidade de dread crónico. O sistema adaptativo do ADHD — sempre à espera de falhar — está em modo máximo. Difícil distinguir entre "não quero" e "neurologicamente não consigo sem estímulo externo forte".';
       }
 
       /* Score > 75 */
-      if (sleep <= 3 && dopa >= 7)
+      if (sleep <= 3 && dopa <= 3)
         return 'Combinação crítica: sono mau destruiu as reservas de dopamina e o córtex pré-frontal opera abaixo do mínimo funcional. Qualquer tarefa não-urgente é praticamente impossível sem intervenção externa (café, deadline, crise). O estado de "flat tire com o pé no fundo" — motor a trabalhar, rodas não andam.';
       return 'Configuração de risco máximo. Praticamente todos os factores de défice estão activos e os protectores estão ausentes. O cérebro está em modo de sobrevivência — só a urgência extrema ou uma crise real consegue activar o sistema dopaminérgico o suficiente para agir.';
     }
@@ -879,18 +882,12 @@
         score <= 30 ? '#22c55e' : score <= 60 ? '#eab308' : '#ef4444';
 
       /* Cores dos valores dos sliders */
+      /* Direção unificada: 7-10 = verde (bom), 4-6 = amarelo, 0-3 = vermelho */
       for (const s of SLIDERS) {
         const el = document.getElementById('val-' + s.key);
         if (!el) continue;
         const v = state[s.key];
-        /* Para défice: 0-3=verde, 4-6=amarelo, 7-10=vermelho */
-        /* Para protector: inverso */
-        let c;
-        if (s.invert) {
-          c = v <= 3 ? '#22c55e' : v <= 6 ? '#eab308' : '#ef4444';
-        } else {
-          c = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
-        }
+        const c = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
         el.style.color = c;
       }
 
@@ -900,12 +897,7 @@
         if (!sl) continue;
         const v = state[s.key];
         const pct = (v / 10) * 100;
-        let trackColor;
-        if (s.invert) {
-          trackColor = v <= 3 ? '#22c55e' : v <= 6 ? '#eab308' : '#ef4444';
-        } else {
-          trackColor = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
-        }
+        const trackColor = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
         sl.style.background =
           `linear-gradient(to right, ${trackColor} 0%, ${trackColor} ${pct}%, #333 ${pct}%, #333 100%)`;
       }
