@@ -16,9 +16,8 @@
     :root {
       --black:  #0a0a0a;
       --gold:   #c9a962;
-      --gold-d: #a88a4a;
       --white:  #f0ece4;
-      --dim:    #888;
+      --dim:    #666;
       --font-d: 'Cormorant Garamond', serif;
       --font-b: 'Inter', sans-serif;
     }
@@ -37,7 +36,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.25rem;
+      gap: 1rem;
       padding: 1rem;
       min-height: 100dvh;
     }
@@ -63,11 +62,7 @@
       text-decoration: none;
     }
 
-    .logo img {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-    }
+    .logo img { width: 24px; height: 24px; object-fit: contain; }
 
     .live-badge {
       margin-left: auto;
@@ -78,15 +73,14 @@
       font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--white);
+      color: #fff;
       background: #c0392b;
       padding: 0.3rem 0.7rem;
       border-radius: 4px;
     }
 
     .live-dot {
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       border-radius: 50%;
       background: #fff;
       animation: blink 1.6s ease-in-out infinite;
@@ -109,95 +103,72 @@
       box-shadow: 0 0 0 1px rgba(201,169,98,0.12), 0 20px 60px rgba(0,0,0,0.7);
     }
 
-    .player-wrap iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+    /* O embed Twitch JS cria um iframe — forçar a ocupar tudo */
+    .player-wrap iframe,
+    .player-wrap #twitch-embed,
+    #twitch-embed {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
     }
 
-    /* ── SHIELDS: bloqueiam cliques para o site Twitch ── */
-    /* Shield topo: cobre título/canal */
+    /* ── SHIELDS ── */
     .shield-top {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 62px;
       z-index: 10;
       cursor: default;
+      pointer-events: auto;
+      background: transparent;
     }
 
-    /* Shield canto inferior direito: cobre "Watch on Twitch" */
     .shield-br {
       position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 160px;
-      height: 56px;
+      bottom: 0; right: 0;
+      width: 170px; height: 58px;
       z-index: 10;
       cursor: default;
+      pointer-events: auto;
+      background: transparent;
     }
 
-    /* ── BOTÃO FULLSCREEN CUSTOM ── */
-    .sound-btn {
+    /* ── BOTÕES OVERLAY ── */
+    .overlay-btns {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
+      bottom: 12px;
+      left: 12px;
       z-index: 20;
-      background: rgba(201,169,98,0.18);
-      border: 1px solid rgba(201,169,98,0.7);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .ovr-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(201,169,98,0.4);
       border-radius: 4px;
-      padding: 0.35rem 0.75rem;
+      padding: 0.32rem 0.65rem;
       cursor: pointer;
       color: var(--gold);
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       font-family: var(--font-b);
-      transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .sound-btn:hover { background: rgba(201,169,98,0.28); }
-    .sound-btn svg { width: 14px; height: 14px; fill: currentColor; }
-
-    .fs-btn {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      z-index: 20;
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(201,169,98,0.3);
-      border-radius: 4px;
-      padding: 0.35rem 0.6rem;
-      cursor: pointer;
-      color: var(--gold);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-family: var(--font-b);
       transition: background 0.2s, border-color 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
     }
 
-    .fs-btn:hover {
-      background: rgba(201,169,98,0.12);
-      border-color: rgba(201,169,98,0.6);
+    .ovr-btn:hover {
+      background: rgba(201,169,98,0.15);
+      border-color: rgba(201,169,98,0.7);
     }
 
-    .fs-btn svg {
-      width: 13px;
-      height: 13px;
-      fill: currentColor;
-    }
+    .ovr-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
     /* ── FOOTER ── */
     .footer {
@@ -206,12 +177,10 @@
       letter-spacing: 0.05em;
     }
 
-    /* ── RESPONSIVE ── */
+    /* ── MOBILE ── */
     @media (max-width: 480px) {
-      body { gap: 0.75rem; padding: 0.6rem; }
+      body { gap: 0.6rem; padding: 0.6rem; }
       .logo { font-size: 1rem; }
-      .shield-top { height: 52px; }
-      .shield-br  { width: 130px; height: 48px; }
     }
   </style>
 </head>
@@ -230,69 +199,77 @@
 
   <div class="player-wrap" id="playerWrap">
 
-    <iframe
-      id="twitchPlayer"
-      src="https://player.twitch.tv/?channel=mcminsky2026&parent=mcminsky.pt&parent=www.mcminsky.pt&autoplay=true&muted=true"
-      allowfullscreen
-      allow="autoplay; fullscreen">
-    </iframe>
+    <!-- Twitch JS Embed monta o iframe aqui -->
+    <div id="twitch-embed"></div>
 
-    <!-- Shields de privacidade -->
-    <div class="shield-top"  aria-hidden="true"></div>
-    <div class="shield-br"   aria-hidden="true"></div>
+    <!-- Shields de privacidade: bloqueiam cliques no título e "Watch on Twitch" -->
+    <div class="shield-top" aria-hidden="true"></div>
+    <div class="shield-br"  aria-hidden="true"></div>
 
-    <!-- Botão som -->
-    <button class="sound-btn" id="soundBtn" title="Activar som">
-      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-      Activar som
-    </button>
-
-    <!-- Botão fullscreen -->
-    <button class="fs-btn" id="fsBtn" title="Ecrã inteiro" aria-label="Ecrã inteiro">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/>
-      </svg>
-      Ecrã inteiro
-    </button>
+    <!-- Botões custom -->
+    <div class="overlay-btns">
+      <button class="ovr-btn" id="soundBtn">
+        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        Activar som
+      </button>
+      <button class="ovr-btn" id="fsBtn">
+        <svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg>
+        Ecrã inteiro
+      </button>
+    </div>
 
   </div>
 
   <footer class="footer">mcminsky.pt &nbsp;·&nbsp; Sessão privada</footer>
 
-  <script>
-    const wrap     = document.getElementById('playerWrap');
-    const fsBtn    = document.getElementById('fsBtn');
-    const soundBtn = document.getElementById('soundBtn');
-    const iframe   = document.getElementById('twitchPlayer');
-    let muted = true;
+  <!-- API oficial Twitch Embed JS -->
+  <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-    /* Som: recarrega iframe com muted=false ao clicar */
-    soundBtn.addEventListener('click', function () {
-      if (muted) {
-        iframe.src = iframe.src.replace('muted=true', 'muted=false');
-        muted = false;
-        soundBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM18.5 12c0-2.77-1.6-5.15-3.9-6.32v2.22c1.46 1 2.4 2.67 2.4 4.1s-.94 3.1-2.4 4.1v2.22C16.9 17.15 18.5 14.77 18.5 12z"/></svg> Som ligado';
-      }
+  <script>
+    var player;
+    var muted = true;
+
+    var embed = new Twitch.Embed("twitch-embed", {
+      width:   "100%",
+      height:  "100%",
+      channel: "mcminsky2026",
+      layout:  "video",        /* apenas vídeo, sem chat */
+      autoplay: true,
+      muted:    true,
+      parent:  ["mcminsky.pt", "www.mcminsky.pt"]
+    });
+
+    embed.addEventListener(Twitch.Embed.VIDEO_READY, function () {
+      player = embed.getPlayer();
+      player.setMuted(true);
+      player.play();
+    });
+
+    /* Som */
+    document.getElementById('soundBtn').addEventListener('click', function () {
+      if (!player) return;
+      muted = !muted;
+      player.setMuted(muted);
+      this.innerHTML = muted
+        ? '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg> Activar som'
+        : '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM18.5 12c0-2.77-1.6-5.15-3.9-6.32v2.22c1.46 1 2.4 2.67 2.4 4.1s-.94 3.1-2.4 4.1v2.22C16.9 17.15 18.5 14.77 18.5 12z"/></svg> Som ligado';
     });
 
     /* Fullscreen */
-    fsBtn.addEventListener('click', function () {
-      const el = wrap;
-      if (el.requestFullscreen)            el.requestFullscreen();
-      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-      else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
-      else if (el.msRequestFullscreen)     el.msRequestFullscreen();
+    var wrap = document.getElementById('playerWrap');
+    document.getElementById('fsBtn').addEventListener('click', function () {
+      if (wrap.requestFullscreen)            wrap.requestFullscreen();
+      else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+      else if (wrap.mozRequestFullScreen)    wrap.mozRequestFullScreen();
     });
 
-    document.addEventListener('fullscreenchange', updateFsIcon);
-    document.addEventListener('webkitfullscreenchange', updateFsIcon);
-
-    function updateFsIcon() {
-      const isFs = !!document.fullscreenElement;
-      fsBtn.innerHTML = isFs
+    document.addEventListener('fullscreenchange', function () {
+      var isFs = !!document.fullscreenElement;
+      var btn = document.getElementById('fsBtn');
+      btn.innerHTML = isFs
         ? '<svg viewBox="0 0 24 24"><path d="M5 9H3V3h6v2H5v4zm11-4h-4V3h6v6h-2V5zM5 15v4h4v2H3v-6h2zm14 4h-4v2h6v-6h-2v4z"/></svg> Sair'
         : '<svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg> Ecrã inteiro';
-    }
+    });
   </script>
 
 </body>
