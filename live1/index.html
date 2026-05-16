@@ -142,10 +142,35 @@
     }
 
     /* ── BOTÃO FULLSCREEN CUSTOM ── */
-    .fs-btn {
+    .sound-btn {
       position: absolute;
       bottom: 10px;
       left: 10px;
+      z-index: 20;
+      background: rgba(201,169,98,0.18);
+      border: 1px solid rgba(201,169,98,0.7);
+      border-radius: 4px;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: var(--font-b);
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .sound-btn:hover { background: rgba(201,169,98,0.28); }
+    .sound-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .fs-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
       z-index: 20;
       background: rgba(0,0,0,0.55);
       border: 1px solid rgba(201,169,98,0.3);
@@ -207,7 +232,7 @@
 
     <iframe
       id="twitchPlayer"
-      src="https://player.twitch.tv/?channel=mcminsky2026&parent=mcminsky.pt&parent=www.mcminsky.pt&autoplay=true&muted=false"
+      src="https://player.twitch.tv/?channel=mcminsky2026&parent=mcminsky.pt&parent=www.mcminsky.pt&autoplay=true&muted=true"
       allowfullscreen
       allow="autoplay; fullscreen">
     </iframe>
@@ -215,6 +240,12 @@
     <!-- Shields de privacidade -->
     <div class="shield-top"  aria-hidden="true"></div>
     <div class="shield-br"   aria-hidden="true"></div>
+
+    <!-- Botão som -->
+    <button class="sound-btn" id="soundBtn" title="Activar som">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+      Activar som
+    </button>
 
     <!-- Botão fullscreen -->
     <button class="fs-btn" id="fsBtn" title="Ecrã inteiro" aria-label="Ecrã inteiro">
@@ -229,9 +260,22 @@
   <footer class="footer">mcminsky.pt &nbsp;·&nbsp; Sessão privada</footer>
 
   <script>
-    const wrap  = document.getElementById('playerWrap');
-    const fsBtn = document.getElementById('fsBtn');
+    const wrap     = document.getElementById('playerWrap');
+    const fsBtn    = document.getElementById('fsBtn');
+    const soundBtn = document.getElementById('soundBtn');
+    const iframe   = document.getElementById('twitchPlayer');
+    let muted = true;
 
+    /* Som: recarrega iframe com muted=false ao clicar */
+    soundBtn.addEventListener('click', function () {
+      if (muted) {
+        iframe.src = iframe.src.replace('muted=true', 'muted=false');
+        muted = false;
+        soundBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM18.5 12c0-2.77-1.6-5.15-3.9-6.32v2.22c1.46 1 2.4 2.67 2.4 4.1s-.94 3.1-2.4 4.1v2.22C16.9 17.15 18.5 14.77 18.5 12z"/></svg> Som ligado';
+      }
+    });
+
+    /* Fullscreen */
     fsBtn.addEventListener('click', function () {
       const el = wrap;
       if (el.requestFullscreen)            el.requestFullscreen();
@@ -240,7 +284,6 @@
       else if (el.msRequestFullscreen)     el.msRequestFullscreen();
     });
 
-    /* Actualizar ícone quando sair do fullscreen */
     document.addEventListener('fullscreenchange', updateFsIcon);
     document.addEventListener('webkitfullscreenchange', updateFsIcon);
 
