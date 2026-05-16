@@ -468,7 +468,7 @@
     <p>
       Ajusta os parâmetros neurológicos e vê em tempo real como a configuração cerebral
       influencia a probabilidade de dread, desinteresse e desadequação numa pessoa com ADHD.
-      Baseado na investigação do Dr. Alok Kanojia (HealthyGamerGG).
+      Dr. André Silva, MD · McMinsky Lisboa.
     </p>
   </section>
 
@@ -667,7 +667,7 @@
   <footer class="site-footer">
     <p>
       <a href="/">mcminsky.pt</a> &nbsp;·&nbsp;
-      Baseado na investigação do Dr. Alok Kanojia, HealthyGamerGG &nbsp;·&nbsp;
+      Dr. André Silva, MD &nbsp;·&nbsp; McMinsky &nbsp;·&nbsp;
       Fins educativos — não substitui diagnóstico clínico
     </p>
   </footer>
@@ -675,7 +675,7 @@
   <script>
     /* ═══════════════════════════════════════════════════════
        ADHD TRIGGER SCORE SIMULATOR
-       Neurociência: Dr. Alok Kanojia / HealthyGamerGG
+       Dr. André Silva, MD — McMinsky Lisboa
        ═══════════════════════════════════════════════════════ */
 
     /* ── CONFIGURAÇÃO DOS SLIDERS ── */
@@ -696,60 +696,96 @@
     ];
 
     /* ── CASOS PRÉ-CONFIGURADOS ── */
-    /* Valores em escala natural: 0 = mínimo, 10 = óptimo/máximo */
+    /* Valores em escala natural: 0 = mínimo/comprometido, 10 = óptimo/máximo */
     const CASES = [
-      {
-        name: 'Matemática sem dormir',
-        emoji: '📐',
-        desc: 'Dopamina baixa, sono mau, zero interesse. O córtex pré-frontal fica sem fuel. Resultado clássico: paralisia ou fuga para estímulo mais fácil.',
-        values: {
-          dopamine: 1, norepi: 3, pfc: 2, inhibit: 2, wm: 1, emreg: 2,
-          exercise: 1, sleep: 1, structure: 3, interest: 1
-        }
-      },
-      {
-        name: 'Jogo novo preferido',
-        emoji: '🎮',
-        desc: 'Interesse intrínseco máximo dispara dopamina endógena. O paradoxo ADHD: neste estado funciona melhor que um neurotípico em tédio. Hiperfocus disponível.',
-        values: {
-          dopamine: 9, norepi: 7, pfc: 7, inhibit: 7, wm: 8, emreg: 6,
-          exercise: 6, sleep: 8, structure: 2, interest: 10
-        }
-      },
-      {
-        name: 'Reunião após almoço',
-        emoji: '😑',
-        desc: 'Dopamina em queda pós-prandial, interesse zero, ambiente passivo. A configuração mais tóxica: sem urgência, sem novidade, sem estrutura externa.',
-        values: {
-          dopamine: 1, norepi: 2, pfc: 1, inhibit: 3, wm: 2, emreg: 3,
-          exercise: 2, sleep: 5, structure: 2, interest: 1
-        }
-      },
-      {
-        name: 'Projecto criativo com deadline',
-        emoji: '🎨',
-        desc: 'Interesse alto mas controlo inibitório comprometido e deadline a criar ansiedade antecipatória. Tensão criativa real — produtivo mas instável e dispersivo.',
-        values: {
-          dopamine: 5, norepi: 5, pfc: 6, inhibit: 4, wm: 5, emreg: 6,
-          exercise: 4, sleep: 5, structure: 3, interest: 8
-        }
-      },
       {
         name: 'Rotina matinal com exercício',
         emoji: '🌅',
-        desc: 'Exercício elevou dopamina e activação do córtex. Rotina usa o basal ganglia — intacto em ADHD — para contornar o défice de atenção executiva.',
+        desc: 'O melhor estado possível para o ADHD. Exercício elevou dopamina e norepinefrina; sono repôs reservas de PFC; rotina usa o basal ganglia (intacto em ADHD) para contornar o défice executivo. Isto é o que o tratamento tenta replicar.',
         values: {
           dopamine: 7, norepi: 7, pfc: 7, inhibit: 6, wm: 7, emreg: 6,
           exercise: 9, sleep: 8, structure: 8, interest: 5
         }
       },
       {
-        name: 'Hiperfocus numa crise',
-        emoji: '🚨',
-        desc: 'Urgência extrema activa o sistema de emergência dopaminérgico — o único override fiável do ADHD. Funciona melhor que neurotípico médio em modo de crise.',
+        name: 'Jogo novo: dia 1',
+        emoji: '🎮',
+        desc: 'Interesse intrínseco máximo dispara dopamina endógena — tão eficazmente como medicação. O paradoxo ADHD: neste estado supera um neurotípico entediado. O hiperfocus está disponível. Problema: dura 3-10 dias, depois a novidade passa.',
         values: {
-          dopamine: 8, norepi: 9, pfc: 5, inhibit: 3, wm: 6, emreg: 2,
-          exercise: 5, sleep: 4, structure: 2, interest: 10
+          dopamine: 9, norepi: 7, pfc: 7, inhibit: 4, wm: 8, emreg: 7,
+          exercise: 6, sleep: 8, structure: 2, interest: 10
+        }
+      },
+      {
+        name: 'Deadline em 2h: nada feito',
+        emoji: '⏰',
+        desc: 'O único override fiável do ADHD: urgência extrema. Dopamina e norepinefrina de emergência compensam os défices crónicos. Funciona — mas a um custo emocional alto e cria um loop: o cérebro aprende que só funciona em crise.',
+        values: {
+          dopamine: 8, norepi: 9, pfc: 5, inhibit: 3, wm: 7, emreg: 2,
+          exercise: 3, sleep: 4, structure: 2, interest: 8
+        }
+      },
+      {
+        name: 'Véspera do aniversário / viagem',
+        emoji: '🎉',
+        desc: 'Dopamina de antecipação monopoliza o sistema de recompensa. O cérebro ADHD não consegue processar o presente quando o futuro promete dopamina. Time blindness activa: amanhã é agora, tudo o resto é invisível.',
+        values: {
+          dopamine: 7, norepi: 8, pfc: 3, inhibit: 2, wm: 4, emreg: 5,
+          exercise: 5, sleep: 3, structure: 4, interest: 1
+        }
+      },
+      {
+        name: 'Email urgente há 3 semanas',
+        emoji: '📧',
+        desc: 'Task paralysis clássica do adulto ADHD. Quanto mais tempo passa sem estar feito, mais vergonha se acumula — e mais difícil fica começar. O ADHD requer novidade, urgência ou interesse: este email tem o oposto de tudo isso.',
+        values: {
+          dopamine: 3, norepi: 5, pfc: 4, inhibit: 5, wm: 5, emreg: 3,
+          exercise: 4, sleep: 6, structure: 4, interest: 2
+        }
+      },
+      {
+        name: 'TPC às 19h — após escola',
+        emoji: '🎒',
+        desc: '"After-school restraint collapse": a criança passou 6-8h a suprimir impulsos, manter atenção, cumprir regras. Chegou a casa com o PFC a zero. Pedir TPC agora é como pedir a alguém em hipoglicemia que resolva álgebra. O conflito pai-filho mais comum.',
+        values: {
+          dopamine: 2, norepi: 3, pfc: 2, inhibit: 2, wm: 2, emreg: 2,
+          exercise: 3, sleep: 6, structure: 3, interest: 1
+        }
+      },
+      {
+        name: 'Minecraft: "Vai jantar!"',
+        emoji: '🛑',
+        desc: 'Interrupção de hiperfocus. O cérebro estava em fluxo com dopamina estável. A interrupção provoca crash imediato de dopamina + activação do sistema de ameaça. A reacção "desproporcional" não é manipulação — é neurológica. O aviso de "5 minutos" não funciona se não há percepção do tempo.',
+        values: {
+          dopamine: 4, norepi: 3, pfc: 1, inhibit: 1, wm: 2, emreg: 1,
+          exercise: 3, sleep: 6, structure: 2, interest: 3
+        }
+      },
+      {
+        name: '"Precisamos de falar sobre a nota"',
+        emoji: '😤',
+        desc: 'Confronto parental = ameaça emocional = amígdala em modo de sobrevivência. O PFC desliga imediatamente. Não é defensividade — é neurofisiologicamente impossível aceder à memória de trabalho e raciocinar sob esta activação. A conversa só funciona 20 minutos depois, num ambiente neutro.',
+        values: {
+          dopamine: 3, norepi: 3, pfc: 1, inhibit: 1, wm: 1, emreg: 1,
+          exercise: 4, sleep: 5, structure: 4, interest: 1
+        }
+      },
+      {
+        name: 'Telemóvel confiscado',
+        emoji: '📵',
+        desc: 'O telemóvel é o regulador dopaminérgico externo do ADHD. A confiscação sem alternativa provoca crash de dopamina imediato + activação do sistema de ameaça. O que parece birra é a única resposta disponível quando o sistema de autorregulação perde a sua ferramenta principal.',
+        values: {
+          dopamine: 1, norepi: 3, pfc: 1, inhibit: 1, wm: 2, emreg: 1,
+          exercise: 4, sleep: 6, structure: 3, interest: 1
+        }
+      },
+      {
+        name: 'Matemática sem dormir',
+        emoji: '📐',
+        desc: 'Sem sono, o córtex pré-frontal fica sem as reservas mínimas de dopamina e norepinefrina para funcionar. A tarefa é a mais contrária ao ADHD: passiva, abstracta, sem interesse intrínseco, sem urgência real. Estado de colapso total.',
+        values: {
+          dopamine: 1, norepi: 3, pfc: 2, inhibit: 2, wm: 1, emreg: 2,
+          exercise: 1, sleep: 1, structure: 3, interest: 1
         }
       },
     ];
