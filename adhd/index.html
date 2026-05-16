@@ -167,13 +167,16 @@
       border: 1px solid var(--gray-dark);
       border-radius: 16px;
       padding: 2rem 1.5rem;
-      position: sticky;
-      top: 70px;
+      position: static;
       order: -1;
     }
 
     @media (min-width: 900px) {
-      .score-panel { order: 2; }
+      .score-panel {
+        order: 2;
+        position: sticky;
+        top: 70px;
+      }
     }
 
     .score-label {
