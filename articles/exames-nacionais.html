@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Exames Nacionais 2026 — Os Truques que as Escolas Não Ensinam | McMinsky</title>
-  <meta name="description" content="Medicina tem 1.594 lugares. Esta página tem um grupo pequeno. Se ignorares e correr mal, vais lembrar-te deste momento. Descobre o que os outros não têm.">
+  <meta name="description" content="Em Junho há quem entra no curso que quer — e quem fica de fora a ver. A diferença raramente é talento. Esta página fecha quando completarmos o grupo.">
   <meta name="author" content="McMinsky">
   <meta name="category" content="Exames Nacionais">
   <meta name="reading-time" content="4">
@@ -14,11 +14,11 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://mcminsky.pt/articles/exames-nacionais">
   <meta property="og:title" content="Os Truques que as Escolas Não Ensinam — Exames Nacionais 2026">
-  <meta property="og:description" content="Medicina tem 1.594 lugares. Há quem entre. Há quem fique de fora. A diferença raramente é talento — é preparação. Esta página fecha quando completarmos o grupo.">
+  <meta property="og:description" content="Em Junho há dois lados. Quem entra no curso que quer — e quem fica de fora a ver o post da outra. A diferença raramente é talento. Esta página fecha quando completarmos o grupo.">
   <meta property="og:image" content="https://i.postimg.cc/HL0F4gCm/exames-og.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Os Truques que as Escolas Não Ensinam — Exames Nacionais 2026">
-  <meta name="twitter:description" content="Medicina tem 1.594 lugares. Esta página fecha quando completarmos o grupo.">
+  <meta name="twitter:description" content="Em Junho há dois lados. Quem entra no curso que quer — e quem fica de fora a ver. Esta página fecha quando completarmos o grupo.">
   <meta name="twitter:image" content="https://i.postimg.cc/HL0F4gCm/exames-og.jpg">
 
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
@@ -144,8 +144,19 @@
       margin-right: auto;
     }
     @media (max-width: 600px) {
-      .en-videos { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-      .en-videos.two-col { grid-template-columns: repeat(2, 1fr); }
+      .en-videos {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .en-videos.two-col {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        margin: 0;
+      }
+    }
+    .en-video-card {
+      display: flex;
+      flex-direction: column;
     }
     .en-video-wrap {
       position: relative;
@@ -165,6 +176,16 @@
       inset: 0;
       background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
       pointer-events: none;
+    }
+    .en-video-caption {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--gray-light);
+      line-height: 1.5;
+      margin-top: 0.6rem;
+      text-align: center;
+      padding: 0 0.2rem;
+      font-style: italic;
     }
 
     /* ── VIDEO SECTION LABELS ── */
@@ -221,6 +242,11 @@
       color: var(--white);
       margin-bottom: 0.2rem;
       font-size: 0.95rem;
+    }
+    .en-product-text em {
+      color: var(--gold);
+      font-style: italic;
+      font-size: 0.85rem;
     }
 
     /* ── SCARCITY BLOCK ── */
@@ -351,24 +377,20 @@
   <!-- HERO -->
   <section class="en-hero">
     <span class="en-eyebrow">Exames Nacionais 2026</span>
-    <h1>Os exames estão a semanas.<br><em>Há quem entre. Há quem não entre.</em><br>A diferença raramente é talento.</h1>
-    <p class="en-hero-sub">Medicina tem 1.594 lugares em Portugal. Fisioterapia, Enfermagem, Psicologia, Dentária — ainda menos. É competição. E há quem esteja a preparar-se com coisas que tu provavelmente não tens.</p>
+    <h1>Vais arriscar<br><em>correr mal?</em></h1>
+    <p class="en-hero-sub">Em Junho há quem entra no curso que quer — e quem fica de fora a ver o post da outra no Instagram. A diferença raramente é talento. É o que cada um levou para os exames que o outro não tinha.</p>
     <div class="en-stat-bar">
       <div class="en-stat">
         <span class="en-stat-num">346 541</span>
         <span class="en-stat-label">inscrições em 2025</span>
       </div>
       <div class="en-stat">
-        <span class="en-stat-num">1 594</span>
-        <span class="en-stat-label">vagas em Medicina</span>
-      </div>
-      <div class="en-stat">
-        <span class="en-stat-num">185+</span>
-        <span class="en-stat-label">nota mínima FMUP 2025</span>
-      </div>
-      <div class="en-stat">
-        <span class="en-stat-num">+1 000</span>
+        <span class="en-stat-num">1 000+</span>
         <span class="en-stat-label">alunos McMinsky</span>
+      </div>
+      <div class="en-stat">
+        <span class="en-stat-num">Junho</span>
+        <span class="en-stat-label">os exames estão a semanas</span>
       </div>
     </div>
   </section>
@@ -384,29 +406,44 @@
   <!-- VIDEOS: BAD OUTCOMES -->
   <div class="en-section">
     <span class="en-video-label bad">O que pode acontecer</span>
-    <h2 class="en-section-title">Quem não entra em Portugal vai para outro lado.</h2>
-    <p class="en-section-sub">Não é dramatismo. É o que acontece. Aeroporto, quarto solitário, Instagram dos outros. Estas situações são reais — e evitáveis.</p>
+    <h2 class="en-section-title">Ver o outro entrar onde tu querias.</h2>
+    <p class="en-section-sub">Não é dramatismo. É o que acontece a quem não estava preparado da forma certa. Cada um destes momentos é real — e evitável.</p>
 
     <div class="en-videos" id="videos-bad">
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/rr4ngx.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/rr4ngx.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">Estudou enquanto as outras foram de férias. E depois dos resultados, percebeu que foi em vão.</p>
       </div>
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/bvh28y.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/bvh28y.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">O ecrã ficou parado. A nota estava lá. E com ela, o plano de uma vida inteira.</p>
       </div>
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/517mb5.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/517mb5.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">Entrou — mas no estrangeiro. A 2.000km dos pais. Os custos que ninguém conta antes.</p>
       </div>
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/gw50q6.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/gw50q6.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">O post dela no Instagram. As felicitações todas. E ela ali, sozinha, a perceber o que podia ter sido diferente.</p>
       </div>
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/sdpz50.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/sdpz50.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">A outra passou com o hoodie no corredor. Ela percebeu o que aquilo significava — e o que ela não tinha feito.</p>
       </div>
     </div>
   </div>
@@ -415,16 +452,22 @@
   <div class="en-section" style="padding-top:0;">
     <span class="en-video-label good">O que também pode acontecer</span>
     <h2 class="en-section-title">Quando a preparação foi a certa.</h2>
-    <p class="en-section-sub">A bata. A sala de aulas com médicos. A mãe a olhar para a filha com aquele orgulho que não precisa de palavras.</p>
+    <p class="en-section-sub">A faculdade que querias. A sala de aulas. A mãe a olhar para a filha com aquele orgulho que não precisa de palavras.</p>
 
     <div class="en-videos two-col" id="videos-good">
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/pgrg59.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/pgrg59.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">Quando a preparação foi a certa — e a faculdade aconteceu.</p>
       </div>
-      <div class="en-video-wrap">
-        <video autoplay muted loop playsinline preload="none" data-src="https://files.catbox.moe/u8ox25.mp4"></video>
-        <div class="en-video-overlay"></div>
+      <div class="en-video-card">
+        <div class="en-video-wrap">
+          <video autoplay muted loop playsinline preload="auto" src="https://files.catbox.moe/u8ox25.mp4"></video>
+          <div class="en-video-overlay"></div>
+        </div>
+        <p class="en-video-caption">A mãe a meter a bata. Aquele orgulho que não precisa de palavras.</p>
       </div>
     </div>
   </div>
@@ -485,7 +528,7 @@
         <span class="en-product-num">7</span>
         <div class="en-product-text">
           <strong>Manuais-cábula por disciplina</strong>
-          O essencial numa folha. Para quando não tens tempo de rever tudo — ou quando queres confirmar num minuto o que já estudaste.
+          Esquece os manuais gigantes das editoras do costume. Quem é esperto vai directo ao que importa — com os truques de memorização que te fazem saber mais em menos tempo. O essencial numa folha. Só o que sai mesmo.
         </div>
       </li>
       <li>
@@ -498,15 +541,15 @@
       <li>
         <span class="en-product-num">9</span>
         <div class="en-product-text">
-          <strong>Técnicas de exame que a escola não ensina</strong>
-          Gerir o tempo. O que atacar primeiro. Como recuperar quando bloqueia. Como garantir pontos mesmo quando não tens a certeza. Isto decide pontos — e pontos decidem entradas.
+          <strong>Sistema de registo de erros</strong>
+          Template para registares cada exercício: o que erraste, porquê, e onde ainda tens pontos a ganhar. Para não cometeres os mesmos erros duas vezes.
         </div>
       </li>
       <li>
         <span class="en-product-num">10</span>
         <div class="en-product-text">
-          <strong>Sistema de registo de erros</strong>
-          Template para registares cada exercício: o que erraste, porquê, e onde ainda tens pontos a ganhar. Para não cometeres os mesmos erros duas vezes.
+          <strong>Técnicas de exame que a escola não ensina</strong>
+          Gerir o tempo. O que atacar primeiro. Como recuperar quando bloqueia. Como garantir pontos mesmo quando não tens a certeza. Isto decide pontos — e pontos decidem entradas. <em>E outros truques de quem é esperto que não podemos meter aqui.</em>
         </div>
       </li>
     </ul>
@@ -520,13 +563,13 @@
       <p class="en-warning">Não fazemos marketing em massa. Este grupo é pequeno por design.</p>
 
       <div class="en-cta-group">
-        <a href="https://api.whatsapp.com/send?phone=351961926527&text=Ol%C3%A1%2C%20vi%20a%20p%C3%A1gina%20dos%20Exames%20Nacionais%20e%20quero%20saber%20mais." class="en-btn-wa" target="_blank" rel="noopener">
+        <a href="https://wa.me/351961926527?text=Ol%C3%A1%2C%20vi%20a%20p%C3%A1gina%20dos%20Exames%20Nacionais%20e%20quero%20saber%20mais." class="en-btn-wa" target="_blank" rel="noopener">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Quero saber mais
         </a>
         <a href="mailto:mcminsky@gmail.com?subject=Exames%20Nacionais%202026&body=Ol%C3%A1%2C%20vi%20a%20p%C3%A1gina%20e%20quero%20saber%20mais%20sobre%20os%20materiais%20para%20Exames%20Nacionais." class="en-btn-email">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          mcminsky@gmail.com
+          Enviar email
         </a>
       </div>
     </div>
@@ -575,30 +618,21 @@
 
   <script src="../js/main.js"></script>
   <script>
-    // Lazy-load videos with IntersectionObserver — load src when entering viewport
     (function() {
-      var videos = document.querySelectorAll('video[data-src]');
-      if (!('IntersectionObserver' in window)) {
-        // Fallback: load all immediately
-        videos.forEach(function(v) {
-          v.src = v.dataset.src;
-          v.load();
+      var videos = document.querySelectorAll('video');
+      // iOS autoplay unlock on first touch
+      document.addEventListener('touchstart', function() {
+        videos.forEach(function(v) { v.play().catch(function() {}); });
+      }, { once: true });
+      videos.forEach(function(v) {
+        v.play().catch(function() {});
+        v.addEventListener('stalled', function() {
+          setTimeout(function() { v.play().catch(function() {}); }, 500);
         });
-        return;
-      }
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            var vid = e.target;
-            if (!vid.src) {
-              vid.src = vid.dataset.src;
-              vid.load();
-            }
-            obs.unobserve(vid);
-          }
+        v.addEventListener('error', function() {
+          setTimeout(function() { v.load(); v.play().catch(function() {}); }, 3000);
         });
-      }, { rootMargin: '200px' });
-      videos.forEach(function(v) { obs.observe(v); });
+      });
     })();
   </script>
 </body>
