@@ -1596,7 +1596,7 @@
         type: 'Plataforma',
         desc: 'Montra e encomendas para quem vende produto feito por si. Os produtos aparecem em vídeo, a rodar sobre si mesmos, e as encomendas entram organizadas em vez de entrarem por mensagem.',
         descFull: 'Cada negócio tem a sua montra própria, com fotografia profissional e vídeo de cada produto, incluindo animação em que o produto roda sobre si mesmo e se vê de todos os lados. Isso muda por completo a vontade de encomendar, comparada com uma fotografia parada tirada ao balcão. Por trás está a gestão: antecedência mínima definida produto a produto, limites de produção diária para a cozinha não rebentar, preços diferentes para particulares e para revenda, grupos de clientes com preços próprios, descontos automáticos para escoar o que sobra ao fim do dia, painel de fabrico para quem produz e painel de balcão para quem entrega, guias de transporte em ordem, facturação ligada ao sistema de facturação, exportação de dados e indicadores de gestão. Funciona no telemóvel, existe em várias línguas, e o cliente vê o estado da sua encomenda sem ter de telefonar. Há negócios reais a trabalhar assim neste momento, e a montagem é serviço completo: fotografia dos produtos, configuração e formação da equipa.',
-        thumb: 'https://media.pastelarias.online/vitrine/vitrine_1767195263914_e8gkmkhq.webp',
+        thumb: 'https://media.pastelarias.online/vitrine/vitrine_1767195288321_rf9pqek8.gif',
         icp: ['Pastelarias, padarias e chocolatarias', 'Churrasqueiras, pizarias e refeições por encomenda', 'Produtores regionais que só vendem a quem passa à porta', 'Qualquer negócio com catálogo e encomenda com antecedência'],
         scenarios: [
           'A pastelaria de bairro que recebe encomendas por mensagem e por papel, e perde encomendas quando o telemóvel enche ou quando quem atende não está.',
@@ -1838,7 +1838,7 @@
 
       card.innerHTML =
         '<div class="afil-thumb-wrap" id="twrap-' + p.id + '">'
-          + '<img class="afil-thumb" src="' + p.thumb + '" alt="' + p.name + '"'
+          + '<img class="afil-thumb" src="' + p.thumb + '" alt="' + p.name + '" loading="lazy" decoding="async"'
           + ' onerror="this.src=\'https://placehold.co/400x220/141414/c9a962?text=' + encodeURIComponent(p.name) + '\'">'
           + '<span class="afil-type-badge">' + p.type + '</span>'
         + '</div>'
