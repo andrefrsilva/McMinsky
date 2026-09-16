@@ -382,6 +382,21 @@ Enviado através do formulário do website McMinsky`;
   // deeper pages are added later.
   const ROOT = getBasePath() + '/';
 
+  // Redireccionar âncoras antigas do tempo em que Programas e Agenda viviam
+  // dentro da página principal (#programs, #offers, #program-kids, etc.)
+  // para a página /programas/, que passou a ter essas secções. Só actua
+  // quando a âncora já não existe na página actual, para nunca interferir
+  // com a própria página /programas/.
+  (function redirectLegacyProgramAnchors() {
+    var hash = window.location.hash;
+    if (!hash) return;
+    var legacy = ['#programs', '#offers', '#program-kids', '#program-teens', '#program-grads', '#program-workers', '#program-elders', '#program-parents'];
+    if (legacy.indexOf(hash) === -1) return;
+    if (document.querySelector(hash)) return;
+    if (currentPath.indexOf('/programas/') !== -1) return;
+    window.location.replace(ROOT + 'programas/' + hash);
+  })();
+
   // Build URL for target language
   function buildLangUrl(targetLang) {
     const basePath = getBasePath();
@@ -402,6 +417,10 @@ Enviado através do formulário do website McMinsky`;
         newPath = currentPath.replace('/articles/', '/articles/en/');
       } else if (currentPath.includes('/pages/') && !currentPath.includes('/pages/en/')) {
         newPath = currentPath.replace('/pages/', '/pages/en/');
+      } else if (currentPath.includes('/programas/') || currentPath.includes('/institucional/') || currentPath.includes('/metodo/')) {
+        // As versões EN destas páginas ainda não existem (fase 3). Por agora,
+        // o comutador leva à homepage EN em vez de a um link morto.
+        newPath = getBasePath() + '/en/';
       } else if (!currentPath.includes('/en/')) {
         // Main page or other pages
         if (currentPath.endsWith('/') || currentPath.endsWith('/index.html')) {

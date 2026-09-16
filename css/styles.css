@@ -764,6 +764,11 @@ ul, ol {
 .program-item {
   background: var(--black-lighter);
   border: 1px solid var(--gray-dark);
+  /* Item de grid: sem isto, o grid de coluna única mede a largura mínima
+     do conteúdo (ex: as tabelas de preços) e empurra a página para o lado
+     em ecrãs estreitos. Corrigido na Fase 2, quando os acordeões passam
+     para /programas/. */
+  min-width: 0;
 }
 
 .program-item.active {
@@ -915,6 +920,7 @@ ul, ol {
   background: var(--black);
   padding: var(--space-md);
   margin-top: var(--space-md);
+  overflow-x: auto;
 }
 
 .program-pricing table {
