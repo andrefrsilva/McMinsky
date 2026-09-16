@@ -2168,3 +2168,136 @@ ul, ol {
     padding-right: var(--space-sm) !important;
   }
 }
+
+/* ========================================
+   REDESIGN FASE 1 — cartões partilhados
+   (soluções reais, Minsky e Papert, traços do fundador)
+   ======================================== */
+.info-grid {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+@media (min-width: 640px) {
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .info-grid.info-grid-4col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.info-card {
+  background: var(--black-lighter);
+  border: 1px solid var(--gray-dark);
+  padding: var(--space-md);
+  transition: var(--transition-fast);
+}
+
+.info-card:hover {
+  border-color: var(--gold);
+}
+
+.info-card-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: var(--space-xs);
+}
+
+.info-card-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-bottom: var(--space-sm);
+  color: var(--white);
+}
+
+.info-card p {
+  font-size: 0.9rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+  margin-bottom: var(--space-xs);
+}
+
+.info-card p:last-child {
+  margin-bottom: 0;
+}
+
+.info-card p strong {
+  color: var(--gold);
+}
+
+/* Team by function: simple pill list, no invented names */
+.team-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+}
+
+.team-tag {
+  border: 1px solid var(--gray-dark);
+  color: var(--white-dim);
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: 2px;
+  background: var(--black-lighter);
+}
+
+/* Bifurcação: two large tap-friendly cards */
+.fork-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .fork-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.fork-card {
+  background: var(--black-lighter);
+  border: 1px solid var(--gray-dark);
+  padding: var(--space-lg) var(--space-md);
+  display: block;
+  transition: var(--transition-fast);
+}
+
+.fork-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+}
+
+.fork-card-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--white);
+  margin-bottom: var(--space-sm);
+}
+
+.fork-card p {
+  color: var(--white-dim);
+  line-height: 1.8;
+  margin-bottom: var(--space-sm);
+  font-size: 0.95rem;
+}
+
+.fork-card-note {
+  font-size: 0.8rem;
+  color: var(--gray);
+  font-style: italic;
+}
+
+.fork-card-cta {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  color: var(--gold);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

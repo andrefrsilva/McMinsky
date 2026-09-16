@@ -173,6 +173,25 @@
   // ========================================
   const contactForm = document.querySelector('#contact-form');
 
+  // Pre-fill the subject field from a ?assunto= query param or from the
+  // data-subject attribute of the link/button that brought the visitor here.
+  (function prefillContactSubject() {
+    var subjectField = document.querySelector('#contact-subject');
+    if (!subjectField) return;
+    var params = new URLSearchParams(window.location.search);
+    var fromQuery = params.get('assunto');
+    if (fromQuery) {
+      subjectField.value = fromQuery;
+    }
+  })();
+
+  document.querySelectorAll('a[data-subject]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      var subjectField = document.querySelector('#contact-subject');
+      if (subjectField) subjectField.value = link.getAttribute('data-subject');
+    });
+  });
+
   if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -356,6 +375,13 @@ Enviado através do formulário do website McMinsky`;
     return '';
   }
 
+  // Absolute root for collection fetches (articles/pages/events), so that
+  // pages nested at any depth (ex: /programas/, /institucional/) find the
+  // same manifests and html files as the homepage. Works today because
+  // every page still lives at depth 0 or 1 (/en/), and keeps working when
+  // deeper pages are added later.
+  const ROOT = getBasePath() + '/';
+
   // Build URL for target language
   function buildLangUrl(targetLang) {
     const basePath = getBasePath();
@@ -390,7 +416,9 @@ Enviado através do formulário do website McMinsky`;
       if (currentPath.includes('/events/en/')) {
         newPath = currentPath.replace('/events/en/', '/events/');
       } else if (currentPath.includes('/articles/en/')) {
-        newPath = currentPath.replace('/articles/en/', '/articles/pt/');
+        newPath = currentPath.replace('/articles/en/', '/articles/');
+      } else if (currentPath.includes('/pages/en/')) {
+        newPath = currentPath.replace('/pages/en/', '/pages/');
       } else if (currentPath.includes('/en/')) {
         newPath = currentPath.replace('/en/', '/');
       }
@@ -533,14 +561,36 @@ Enviado através do formulário do website McMinsky`;
   });
 
   // ========================================
+  // AUDIENCE FILTERING (shared by events, articles, pages loaders)
+  // ========================================
+  // wanted: value of data-audience on the container ("pais", "instituicoes",
+  // "ambos", or absent). itemAudience: value of <meta name="audience"> on
+  // the fetched item (defaults to "ambos" when absent).
+  function matchesAudience(itemAudience, wanted) {
+    var item = itemAudience || 'ambos';
+    if (!wanted || wanted === 'ambos') return true;
+    return item === 'ambos' || item === wanted;
+  }
+
+  // Hides the parent .section when a collection ends up with zero items
+  // after audience filtering (so the page never shows an empty title).
+  function hideSectionIfEmpty(container, count) {
+    if (count > 0 || !container) return;
+    var section = container.closest ? container.closest('.section') : null;
+    if (section) section.style.display = 'none';
+  }
+
+  // ========================================
   // EVENTS LOADER (from manifest.json)
   // ========================================
   const eventsContainer = document.querySelector('#events-container');
 
   if (eventsContainer) {
-    const eventsBasePath = isEnglish ? '../events/' : 'events/';
+    const eventsBasePath = ROOT + 'events/';
     const eventsManifestPath = eventsBasePath + 'manifest.json';
     const eventsHtmlPath = isEnglish ? eventsBasePath + 'en/' : eventsBasePath;
+    const eventsWantedAudience = eventsContainer.getAttribute('data-audience');
+    const eventsLimit = parseInt(eventsContainer.getAttribute('data-limit') || '0', 10);
 
     function formatDatePt(dateStr) {
       if (!dateStr) return 'Contínuo';
@@ -640,6 +690,7 @@ Enviado através do formulário do website McMinsky`;
               var continuous = doc.querySelector('meta[name="event-continuous"]') ? doc.querySelector('meta[name="event-continuous"]').getAttribute('content') === 'true' : false;
               var video = doc.querySelector('meta[name="event-video"]') ? doc.querySelector('meta[name="event-video"]').getAttribute('content') : null;
               var image = doc.querySelector('meta[property="og:image"]') ? doc.querySelector('meta[property="og:image"]').getAttribute('content') : '';
+              var audience = doc.querySelector('meta[name="audience"]') ? doc.querySelector('meta[name="audience"]').getAttribute('content') : 'ambos';
 
               return {
                 slug: slug,
@@ -652,7 +703,8 @@ Enviado através do formulário do website McMinsky`;
                 spotsText: spotsText,
                 continuous: continuous,
                 video: video,
-                image: image
+                image: image,
+                audience: audience
               };
             });
         });
@@ -660,10 +712,16 @@ Enviado através do formulário do website McMinsky`;
         return Promise.all(fetchPromises.map(function(p) { return p.catch(function() { return null; }); }));
       })
       .then(function(events) {
-        renderEvents(events.filter(function(e) { return e !== null; }));
+        var filtered = events
+          .filter(function(e) { return e !== null; })
+          .filter(function(e) { return matchesAudience(e.audience, eventsWantedAudience); });
+        if (eventsLimit > 0) filtered = sortEvents(filtered).slice(0, eventsLimit);
+        renderEvents(filtered);
+        hideSectionIfEmpty(eventsContainer, filtered.length);
       })
       .catch(function(error) {
         console.error('Error loading events:', error);
+        hideSectionIfEmpty(eventsContainer, 0);
       });
   }
 
@@ -1000,9 +1058,11 @@ Enviado através do formulário do evento no website McMinsky`;
   const articlesContainer = document.querySelector('#articles-container');
 
   if (articlesContainer) {
-    const articlesBasePath = isEnglish ? '../articles/' : 'articles/';
+    const articlesBasePath = ROOT + 'articles/';
     const articlesManifestPath = articlesBasePath + 'manifest.json';
     const articlesHtmlPath = isEnglish ? articlesBasePath + 'en/' : articlesBasePath;
+    const articlesWantedAudience = articlesContainer.getAttribute('data-audience');
+    const articlesLimit = parseInt(articlesContainer.getAttribute('data-limit') || '0', 10);
 
     fetch(articlesManifestPath)
       .then(function(response) {
@@ -1027,6 +1087,7 @@ Enviado através do formulário do evento no website McMinsky`;
               const category = doc.querySelector('meta[name="category"]') ? doc.querySelector('meta[name="category"]').getAttribute('content') : '';
               const readingTime = doc.querySelector('meta[name="reading-time"]') ? doc.querySelector('meta[name="reading-time"]').getAttribute('content') : '5';
               const image = doc.querySelector('meta[property="og:image"]') ? doc.querySelector('meta[property="og:image"]').getAttribute('content') : '';
+              const audience = doc.querySelector('meta[name="audience"]') ? doc.querySelector('meta[name="audience"]').getAttribute('content') : 'ambos';
 
               return {
                 slug: slug,
@@ -1034,18 +1095,25 @@ Enviado através do formulário do evento no website McMinsky`;
                 description: description,
                 category: category,
                 readingTime: readingTime,
-                image: image
+                image: image,
+                audience: audience
               };
             });
         });
 
-        return Promise.all(fetchPromises);
+        return Promise.all(fetchPromises.map(function(p) { return p.catch(function() { return null; }); }));
       })
       .then(function(articles) {
-        renderArticles(articles);
+        var filtered = articles
+          .filter(function(a) { return a !== null; })
+          .filter(function(a) { return matchesAudience(a.audience, articlesWantedAudience); });
+        if (articlesLimit > 0) filtered = filtered.slice(0, articlesLimit);
+        renderArticles(filtered);
+        hideSectionIfEmpty(articlesContainer, filtered.length);
       })
       .catch(function(error) {
         console.error('Error loading articles:', error);
+        hideSectionIfEmpty(articlesContainer, 0);
       });
   }
 
@@ -1053,7 +1121,7 @@ Enviado através do formulário do evento no website McMinsky`;
     if (!articlesContainer) return;
 
     articles.forEach(function(article) {
-      const articlesHtmlPath = isEnglish ? '../articles/en/' : 'articles/';
+      const articlesHtmlPath = isEnglish ? ROOT + 'articles/en/' : ROOT + 'articles/';
       const readTimeText = isEnglish ? article.readingTime + ' min read' : article.readingTime + ' min leitura';
 
       const card = document.createElement('a');
@@ -1114,10 +1182,10 @@ Enviado através do formulário do evento no website McMinsky`;
             });
         });
 
-        return Promise.all(fetchPromises);
+        return Promise.all(fetchPromises.map(function(p) { return p.catch(function() { return null; }); }));
       })
       .then(function(articles) {
-        articles.forEach(function(article) {
+        articles.filter(function(a) { return a !== null; }).forEach(function(article) {
           var readTimeText = isEnglish ? article.readingTime + ' min read' : article.readingTime + ' min leitura';
           var href = (isEnglish ? 'en/' : '') + article.slug + '.html';
 
@@ -1153,9 +1221,11 @@ Enviado através do formulário do evento no website McMinsky`;
   const pagesContainer = document.querySelector('#pages-container');
 
   if (pagesContainer) {
-    const pagesBasePath = isEnglish ? '../pages/' : 'pages/';
+    const pagesBasePath = ROOT + 'pages/';
     const pagesManifestPath = pagesBasePath + 'manifest.json';
     const pagesHtmlPath = isEnglish ? pagesBasePath + 'en/' : pagesBasePath;
+    const pagesWantedAudience = pagesContainer.getAttribute('data-audience');
+    const pagesLimit = parseInt(pagesContainer.getAttribute('data-limit') || '0', 10);
 
     fetch(pagesManifestPath)
       .then(function(response) {
@@ -1178,23 +1248,31 @@ Enviado através do formulário do evento no website McMinsky`;
               const title = doc.querySelector('title') ? doc.querySelector('title').textContent.replace(' | McMinsky', '') : slug;
               const description = doc.querySelector('meta[name="short-description"]') ? doc.querySelector('meta[name="short-description"]').getAttribute('content') : '';
               const icon = doc.querySelector('meta[name="icon"]') ? doc.querySelector('meta[name="icon"]').getAttribute('content') : slug.charAt(0).toUpperCase();
+              const audience = doc.querySelector('meta[name="audience"]') ? doc.querySelector('meta[name="audience"]').getAttribute('content') : 'ambos';
 
               return {
                 slug: slug,
                 title: title,
                 description: description,
-                icon: icon
+                icon: icon,
+                audience: audience
               };
             });
         });
 
-        return Promise.all(fetchPromises);
+        return Promise.all(fetchPromises.map(function(p) { return p.catch(function() { return null; }); }));
       })
       .then(function(pages) {
-        renderPages(pages);
+        var filtered = pages
+          .filter(function(pg) { return pg !== null; })
+          .filter(function(pg) { return matchesAudience(pg.audience, pagesWantedAudience); });
+        if (pagesLimit > 0) filtered = filtered.slice(0, pagesLimit);
+        renderPages(filtered);
+        hideSectionIfEmpty(pagesContainer, filtered.length);
       })
       .catch(function(error) {
         console.error('Error loading pages:', error);
+        hideSectionIfEmpty(pagesContainer, 0);
       });
   }
 
@@ -1202,7 +1280,7 @@ Enviado através do formulário do evento no website McMinsky`;
     if (!pagesContainer) return;
 
     pages.forEach(function(page) {
-      const pagesHtmlPath = isEnglish ? '../pages/en/' : 'pages/';
+      const pagesHtmlPath = isEnglish ? ROOT + 'pages/en/' : ROOT + 'pages/';
 
       const item = document.createElement('a');
       item.href = pagesHtmlPath + page.slug + '.html';
