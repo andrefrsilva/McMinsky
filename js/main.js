@@ -315,6 +315,53 @@ Enviado através do formulário do website McMinsky`;
   });
 
   // ========================================
+  // IMAGE LIGHTBOX (fotos do local)
+  // ========================================
+  const lightboxImages = document.querySelectorAll('.location-images img');
+
+  if (lightboxImages.length) {
+    const lightbox = document.createElement('div');
+    lightbox.className = 'img-lightbox';
+    lightbox.innerHTML = '<button class="img-lightbox-close" aria-label="Fechar">&times;</button><img class="img-lightbox-img" src="" alt="">';
+    document.body.appendChild(lightbox);
+
+    const lightboxImg = lightbox.querySelector('.img-lightbox-img');
+    const lightboxClose = lightbox.querySelector('.img-lightbox-close');
+
+    function openLightbox(src, alt) {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || '';
+      lightbox.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('visible');
+      document.body.style.overflow = '';
+      lightboxImg.src = '';
+    }
+
+    lightboxImages.forEach(function(img) {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', function() {
+        openLightbox(this.src, this.alt);
+      });
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('visible')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // ========================================
   // SCROLL ANIMATIONS
   // ========================================
   const animatedElements = document.querySelectorAll('.fade-in, .stagger');
