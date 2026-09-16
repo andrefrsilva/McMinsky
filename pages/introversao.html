@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Teste Científico de Introversão e Extroversão baseado em traços de personalidade. Descobre o teu perfil.">
-  <meta name="short-description" content="Teste científico de personalidade — Introversão vs Extroversão.">
+  <meta name="short-description" content="Teste científico de personalidade, Introversão vs Extroversão.">
   <meta name="icon" content="I">
+  <meta name="audience" content="ambos">
   <title>Teste de Introversão e Extroversão | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
@@ -339,7 +340,7 @@
         document.getElementById("extrovert-count").textContent = extro;
 
         var total = intro + extro;
-        var pct = total === 0 ? 50 : (extro / total) * 100;
+        var pct = total === 0 ? 50: (extro / total) * 100;
         document.getElementById("spectrum-indicator").style.left = pct + "%";
 
         var title, desc;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Simulador ADHD Trigger Score — Visualiza em tempo real como os factores neurológicos do ADHD interagem e influenciam o estado de foco. McMinsky.">
+  <meta name="description" content="Simulador ADHD Trigger Score, Visualiza em tempo real como os factores neurológicos do ADHD interagem e influenciam o estado de foco. McMinsky.">
   <title>Simulador ADHD Trigger Score | McMinsky</title>
 
   <!-- Favicon -->
@@ -18,7 +18,7 @@
     /* ── RESET & VARIÁVEIS ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
+   :root {
       --black:        #0a0a0a;
       --black-light:  #141414;
       --black-lighter:#1a1a1a;
@@ -479,7 +479,7 @@
     <div class="sliders-panel">
 
       <!-- GRUPO 1: DÉFICES -->
-      <div class="section-label">Factores neurológicos — nível actual (0 = comprometido · 10 = óptimo)</div>
+      <div class="section-label">Factores neurológicos: nível actual (0 = comprometido · 10 = óptimo)</div>
 
       <div class="sliders-group" id="group-deficits">
 
@@ -535,7 +535,7 @@
           <div class="slider-header">
             <div>
               <div class="slider-name"><span class="emoji">💾</span> Memória de trabalho</div>
-              <span class="slider-tooltip">RAM do cérebro. Baixa capacidade impede manter contexto activo — não é esquecimento, é falha de codificação.</span>
+              <span class="slider-tooltip">RAM do cérebro. Baixa capacidade impede manter contexto activo: não é esquecimento, é falha de codificação.</span>
             </div>
             <span class="slider-value" id="val-wm">5</span>
           </div>
@@ -560,7 +560,7 @@
       <div class="group-divider"></div>
 
       <!-- GRUPO 2: PROTECTORES -->
-      <div class="section-label">Factores protectores (slider alto = melhor — reduzem o score)</div>
+      <div class="section-label">Factores protectores (slider alto = melhor, reduzem o score)</div>
 
       <div class="sliders-group" id="group-protectors">
 
@@ -592,7 +592,7 @@
           <div class="slider-header">
             <div>
               <div class="slider-name"><span class="emoji">📋</span> Estrutura e rotina no ambiente</div>
-              <span class="slider-tooltip">Hábitos usam o basal ganglia — intacto em ADHD. Rotina contorna o córtex pré-frontal comprometido via automatização.</span>
+              <span class="slider-tooltip">Hábitos usam o basal ganglia, intacto em ADHD. Rotina contorna o córtex pré-frontal comprometido via automatização.</span>
             </div>
             <span class="slider-value" id="val-structure">5</span>
           </div>
@@ -618,14 +618,14 @@
       <div class="info-box">
         <h4>Como ler o score</h4>
         <ul>
-          <li><strong>0–30 (verde):</strong> Configuração favorável. Foco possível, baixa fricção.</li>
-          <li><strong>31–60 (amarelo):</strong> Tensão neurológica. Foco exige esforço consciente.</li>
-          <li><strong>61–100 (vermelho):</strong> Alta probabilidade de dread, fuga ou paralisia.</li>
+          <li><strong>0-30 (verde):</strong> Configuração favorável. Foco possível, baixa fricção.</li>
+          <li><strong>31-60 (amarelo):</strong> Tensão neurológica. Foco exige esforço consciente.</li>
+          <li><strong>61-100 (vermelho):</strong> Alta probabilidade de dread, fuga ou paralisia.</li>
         </ul>
         <p class="mt-sm">
           A fórmula é <strong>multiplicativa</strong> nos factores críticos (dopamina × interesse):
           ambos baixos ao mesmo tempo produz score muito superior à soma individual.
-          Reflecte a interacção real — dopamina sem interesse não arranca, interesse sem dopamina não sustenta.
+          Reflecte a interacção real, dopamina sem interesse não arranca, interesse sem dopamina não sustenta.
         </p>
       </div>
 
@@ -668,14 +668,14 @@
     <p>
       <a href="/">mcminsky.pt</a> &nbsp;·&nbsp;
       Dr. André Silva, MD &nbsp;·&nbsp; McMinsky &nbsp;·&nbsp;
-      Fins educativos — não substitui diagnóstico clínico
+      Fins educativos, não substitui diagnóstico clínico
     </p>
   </footer>
 
   <script>
     /* ═══════════════════════════════════════════════════════
        ADHD TRIGGER SCORE SIMULATOR
-       Dr. André Silva, MD — McMinsky Lisboa
+       Dr. André Silva, MD: McMinsky Lisboa
        ═══════════════════════════════════════════════════════ */
 
     /* ── CONFIGURAÇÃO DOS SLIDERS ── */
@@ -710,7 +710,7 @@
       {
         name: 'Jogo novo: dia 1',
         emoji: '🎮',
-        desc: 'Interesse intrínseco máximo dispara dopamina endógena — tão eficazmente como medicação. O paradoxo ADHD: neste estado supera um neurotípico entediado. O hiperfocus está disponível. Problema: dura 3-10 dias, depois a novidade passa.',
+        desc: 'Interesse intrínseco máximo dispara dopamina endógena, tão eficazmente como medicação. O paradoxo ADHD: neste estado supera um neurotípico entediado. O hiperfocus está disponível. Problema: dura 3-10 dias, depois a novidade passa.',
         values: {
           dopamine: 9, norepi: 7, pfc: 7, inhibit: 4, wm: 8, emreg: 7,
           exercise: 6, sleep: 8, structure: 2, interest: 10
@@ -719,7 +719,7 @@
       {
         name: 'Deadline em 2h: nada feito',
         emoji: '⏰',
-        desc: 'O único override fiável do ADHD: urgência extrema. Dopamina e norepinefrina de emergência compensam os défices crónicos. Funciona — mas a um custo emocional alto e cria um loop: o cérebro aprende que só funciona em crise.',
+        desc: 'O único override fiável do ADHD: urgência extrema. Dopamina e norepinefrina de emergência compensam os défices crónicos. Funciona: mas a um custo emocional alto e cria um loop: o cérebro aprende que só funciona em crise.',
         values: {
           dopamine: 8, norepi: 9, pfc: 5, inhibit: 3, wm: 7, emreg: 2,
           exercise: 3, sleep: 4, structure: 2, interest: 8
@@ -737,14 +737,14 @@
       {
         name: 'Email urgente há 3 semanas',
         emoji: '📧',
-        desc: 'Task paralysis clássica do adulto ADHD. Quanto mais tempo passa sem estar feito, mais vergonha se acumula — e mais difícil fica começar. O ADHD requer novidade, urgência ou interesse: este email tem o oposto de tudo isso.',
+        desc: 'Task paralysis clássica do adulto ADHD. Quanto mais tempo passa sem estar feito, mais vergonha se acumula, e mais difícil fica começar. O ADHD requer novidade, urgência ou interesse: este email tem o oposto de tudo isso.',
         values: {
           dopamine: 3, norepi: 5, pfc: 4, inhibit: 5, wm: 5, emreg: 3,
           exercise: 4, sleep: 6, structure: 4, interest: 2
         }
       },
       {
-        name: 'TPC às 19h — após escola',
+        name: 'TPC às 19h: após escola',
         emoji: '🎒',
         desc: '"After-school restraint collapse": a criança passou 6-8h a suprimir impulsos, manter atenção, cumprir regras. Chegou a casa com o PFC a zero. Pedir TPC agora é como pedir a alguém em hipoglicemia que resolva álgebra. O conflito pai-filho mais comum.',
         values: {
@@ -755,7 +755,7 @@
       {
         name: 'Minecraft: "Vai jantar!"',
         emoji: '🛑',
-        desc: 'Interrupção de hiperfocus. O cérebro estava em fluxo com dopamina estável. A interrupção provoca crash imediato de dopamina + activação do sistema de ameaça. A reacção "desproporcional" não é manipulação — é neurológica. O aviso de "5 minutos" não funciona se não há percepção do tempo.',
+        desc: 'Interrupção de hiperfocus. O cérebro estava em fluxo com dopamina estável. A interrupção provoca crash imediato de dopamina + activação do sistema de ameaça. A reacção "desproporcional" não é manipulação: é neurológica. O aviso de "5 minutos" não funciona se não há percepção do tempo.',
         values: {
           dopamine: 4, norepi: 3, pfc: 1, inhibit: 1, wm: 2, emreg: 1,
           exercise: 3, sleep: 6, structure: 2, interest: 3
@@ -764,7 +764,7 @@
       {
         name: '"Precisamos de falar sobre a nota"',
         emoji: '😤',
-        desc: 'Confronto parental = ameaça emocional = amígdala em modo de sobrevivência. O PFC desliga imediatamente. Não é defensividade — é neurofisiologicamente impossível aceder à memória de trabalho e raciocinar sob esta activação. A conversa só funciona 20 minutos depois, num ambiente neutro.',
+        desc: 'Confronto parental = ameaça emocional = amígdala em modo de sobrevivência. O PFC desliga imediatamente. Não é defensividade: é neurofisiologicamente impossível aceder à memória de trabalho e raciocinar sob esta activação. A conversa só funciona 20 minutos depois, num ambiente neutro.',
         values: {
           dopamine: 3, norepi: 3, pfc: 1, inhibit: 1, wm: 1, emreg: 1,
           exercise: 4, sleep: 5, structure: 4, interest: 1
@@ -818,7 +818,7 @@
       /* Score final: base + bónus por interacções críticas */
       const rawScore = base + (criticalInteraction * 0.25) + (pfcSleepInteraction * 0.12);
 
-      /* Normalizar para 0–100, clamp */
+      /* Normalizar para 0-100, clamp */
       const score = Math.round(Math.min(100, Math.max(0, rawScore * 100)));
       return score;
     }
@@ -848,43 +848,43 @@
       /* Score verde */
       if (score <= 15) {
         if (inter >= 8)
-          return 'Interesse intrínseco máximo activou o sistema de recompensa via dopamina endógena. O hiperfocus está disponível — o cérebro não precisa de se esforçar para entrar em modo de trabalho profundo.';
+          return 'Interesse intrínseco máximo activou o sistema de recompensa via dopamina endógena. O hiperfocus está disponível: o cérebro não precisa de se esforçar para entrar em modo de trabalho profundo.';
         return 'Configuração neurológica favorável. A combinação de factores protectores activos compensa os défices do ADHD. Baixa fricção para iniciar e manter foco.';
       }
       if (score <= 30) {
-        return 'Condição estável. Alguns défices presentes mas os factores protectores — ' +
-          (exercise >= 7 ? 'exercício recente, ' : '') +
-          (sleep >= 7 ? 'sono adequado, ' : '') +
-          (structure >= 7 ? 'rotina estruturada, ' : '') +
-          (inter >= 6 ? 'interesse na tarefa' : 'relativa estrutura de ambiente') +
-          ' — criam margem suficiente para funcionar sem grande esforço extra.';
+        return 'Condição estável. Alguns défices presentes mas os factores protectores, ' +
+          (exercise >= 7 ? 'exercício recente, ': '') +
+          (sleep >= 7 ? 'sono adequado, ': '') +
+          (structure >= 7 ? 'rotina estruturada, ': '') +
+          (inter >= 6 ? 'interesse na tarefa': 'relativa estrutura de ambiente') +
+          ', criam margem suficiente para funcionar sem grande esforço extra.';
       }
 
       /* Score amarelo */
       if (score <= 45) {
         if (inter >= 7 && dopa <= 5)
-          return 'Tensão criativa: interesse alto mas dopamina insuficiente. O foco existe mas é instável — a mente desvia com facilidade para ramificações do próprio projecto. Produtivo mas com custo cognitivo elevado.';
+          return 'Tensão criativa: interesse alto mas dopamina insuficiente. O foco existe mas é instável, a mente desvia com facilidade para ramificações do próprio projecto. Produtivo mas com custo cognitivo elevado.';
         return 'Zona de tensão. O córtex pré-frontal está a trabalhar acima da capacidade para compensar os défices. Funcional mas com esforço consciente. Tendência para procrastinar o início, não a execução.';
       }
       if (score <= 60) {
         return 'Nível de tensão elevado. A combinação de ' +
-          (dopa <= 4 ? 'dopamina comprometida ' : '') +
-          (pfc <= 4 ? 'com activação pré-frontal reduzida ' : '') +
+          (dopa <= 4 ? 'dopamina comprometida ': '') +
+          (pfc <= 4 ? 'com activação pré-frontal reduzida ': '') +
           'aumenta o risco de ansiedade antecipatória ("dread"). ' +
-          'O sistema de alerta permanece ligado mesmo sem ameaça real — energia a ser consumida em vigilância em vez de tarefa.';
+          'O sistema de alerta permanece ligado mesmo sem ameaça real, energia a ser consumida em vigilância em vez de tarefa.';
       }
 
       /* Score vermelho */
       if (score <= 75) {
         if (dopa <= 3 && inter <= 3)
           return 'Dopamina baixa combinada com interesse mínimo: o córtex pré-frontal fica literalmente sem fuel para manter atenção. Resultado típico: procrastinação activa, fuga para estímulo de menor exigência, ou paralisia.';
-        return 'Alta probabilidade de dread crónico. O sistema adaptativo do ADHD — sempre à espera de falhar — está em modo máximo. Difícil distinguir entre "não quero" e "neurologicamente não consigo sem estímulo externo forte".';
+        return 'Alta probabilidade de dread crónico. O sistema adaptativo do ADHD, sempre à espera de falhar, está em modo máximo. Difícil distinguir entre "não quero" e "neurologicamente não consigo sem estímulo externo forte".';
       }
 
       /* Score > 75 */
       if (sleep <= 3 && dopa <= 3)
-        return 'Combinação crítica: sono mau destruiu as reservas de dopamina e o córtex pré-frontal opera abaixo do mínimo funcional. Qualquer tarefa não-urgente é praticamente impossível sem intervenção externa (café, deadline, crise). O estado de "flat tire com o pé no fundo" — motor a trabalhar, rodas não andam.';
-      return 'Configuração de risco máximo. Praticamente todos os factores de défice estão activos e os protectores estão ausentes. O cérebro está em modo de sobrevivência — só a urgência extrema ou uma crise real consegue activar o sistema dopaminérgico o suficiente para agir.';
+        return 'Combinação crítica: sono mau destruiu as reservas de dopamina e o córtex pré-frontal opera abaixo do mínimo funcional. Qualquer tarefa não-urgente é praticamente impossível sem intervenção externa (café, deadline, crise). O estado de "flat tire com o pé no fundo", motor a trabalhar, rodas não andam.';
+      return 'Configuração de risco máximo. Praticamente todos os factores de défice estão activos e os protectores estão ausentes. O cérebro está em modo de sobrevivência, só a urgência extrema ou uma crise real consegue activar o sistema dopaminérgico o suficiente para agir.';
     }
 
     /* ── ESTADO DOS SLIDERS ── */
@@ -915,7 +915,7 @@
       const desc = document.getElementById('score-description');
       desc.textContent = buildDescription(state, score);
       desc.style.borderLeftColor =
-        score <= 30 ? '#22c55e' : score <= 60 ? '#eab308' : '#ef4444';
+        score <= 30 ? '#22c55e': score <= 60 ? '#eab308': '#ef4444';
 
       /* Cores dos valores dos sliders */
       /* Direção unificada: 7-10 = verde (bom), 4-6 = amarelo, 0-3 = vermelho */
@@ -923,7 +923,7 @@
         const el = document.getElementById('val-' + s.key);
         if (!el) continue;
         const v = state[s.key];
-        const c = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
+        const c = v >= 7 ? '#22c55e': v >= 4 ? '#eab308': '#ef4444';
         el.style.color = c;
       }
 
@@ -933,7 +933,7 @@
         if (!sl) continue;
         const v = state[s.key];
         const pct = (v / 10) * 100;
-        const trackColor = v >= 7 ? '#22c55e' : v >= 4 ? '#eab308' : '#ef4444';
+        const trackColor = v >= 7 ? '#22c55e': v >= 4 ? '#eab308': '#ef4444';
         sl.style.background =
           `linear-gradient(to right, ${trackColor} 0%, ${trackColor} ${pct}%, #333 ${pct}%, #333 100%)`;
       }

@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Jogo de adivinhação de preços de carros usados reais. Treina a tua intuição financeira com anúncios verdadeiros.">
-  <meta name="short-description" content="Adivinha o preço de carros usados reais — treina intuição financeira.">
+  <meta name="short-description" content="Adivinha o preço de carros usados reais, treina intuição financeira.">
   <meta name="icon" content="€">
+  <meta name="audience" content="pais">
   <title>Quanto Custa? | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
@@ -423,7 +424,7 @@
     <div class="screen active" id="setup-screen">
       <div class="setup-header">
         <h1>Quanto <strong>Custa</strong>?</h1>
-        <p class="setup-intro">Vês a foto de um carro usado real, anunciado no auto.sapo.pt. Sem marca, modelo ou ano — apenas a imagem. Tenta adivinhar o preço, revela a resposta e diz-nos se acertaste. Treina a tua intuição financeira!</p>
+        <p class="setup-intro">Vês a foto de um carro usado real, anunciado no auto.sapo.pt. Sem marca, modelo ou ano: apenas a imagem. Tenta adivinhar o preço, revela a resposta e diz-nos se acertaste. Treina a tua intuição financeira!</p>
         <span class="data-badge">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
           Dados guardados apenas no teu dispositivo
@@ -651,7 +652,7 @@
       /* --- Setup stats --- */
       function updateSetupStats() {
         $('prev-rounds').textContent = data.totalRounds;
-        var acc = data.totalRounds > 0 ? Math.round(data.correct / data.totalRounds * 100) : 0;
+        var acc = data.totalRounds > 0 ? Math.round(data.correct / data.totalRounds * 100): 0;
         $('prev-accuracy').textContent = acc + '%';
         $('prev-streak').textContent = data.bestStreak;
       }
@@ -675,7 +676,7 @@
       function updateStatsBar() {
         streakVal.textContent = streak;
         streakFire.classList.toggle('visible', streak >= 3);
-        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100) : 0;
+        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100): 0;
         accuracyVal.textContent = acc + '%';
         roundNum.textContent = sessionTotal;
       }
@@ -755,7 +756,7 @@
         if (imgSrc && imgSrc.indexOf('http') !== 0) imgSrc = BASE + imgSrc;
 
         var linkEl = card.querySelector('.thumb a');
-        var linkHref = linkEl ? (linkEl.getAttribute('href') || '') : '';
+        var linkHref = linkEl ? (linkEl.getAttribute('href') || ''): '';
         if (linkHref && linkHref.indexOf('http') !== 0) linkHref = BASE + linkHref;
 
         var priceEl = card.querySelector('.price span');
@@ -871,11 +872,11 @@
         showScreen('results');
         $('res-rounds').textContent = sessionTotal;
         $('res-correct').textContent = sessionCorrect;
-        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100) : 0;
+        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100): 0;
         $('res-accuracy').textContent = acc + '%';
         var avgT = sessionTimes.length > 0
           ? (sessionTimes.reduce(function(a,b){return a+b;},0) / sessionTimes.length).toFixed(1)
-          : '0';
+        : '0';
         $('res-time').textContent = avgT + 's';
         $('res-streak').textContent = data.bestStreak;
       }

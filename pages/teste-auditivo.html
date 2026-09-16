@@ -6,6 +6,7 @@
   <meta name="description" content="Teste auditivo educativo com audiograma interativo, relatório PDF e conteúdo sobre saúde auditiva. Para toda a família.">
   <meta name="short-description" content="Teste auditivo educativo com audiograma interativo e relatório PDF.">
   <meta name="icon" content="&#x1f442;">
+  <meta name="audience" content="ambos">
   <title>Teste Auditivo | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
@@ -272,7 +273,7 @@
         <p class="test-intro">Descobre como está a tua audição com este teste educativo interativo. Testa diferentes frequências, obtém o teu audiograma pessoal e aprende sobre saúde auditiva.</p>
         <span class="badge-disclaimer">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
-          Apenas para fins educativos &mdash; sem validade clínica
+          Apenas para fins educativos, sem validade clínica
         </span>
       </div>
 
@@ -392,7 +393,7 @@
     <div class="screen" id="screen-results">
       <div class="test-header">
         <h1>Resultados</h1>
-        <p class="test-intro" id="results-subtitle">Audiograma de —</p>
+        <p class="test-intro" id="results-subtitle">Audiograma de …</p>
       </div>
 
       <div class="card audiogram-full-wrap">
@@ -401,19 +402,19 @@
 
       <div class="summary-grid">
         <div class="summary-card right">
-          <div class="summary-value" id="pta-right">—</div>
+          <div class="summary-value" id="pta-right">…</div>
           <div class="summary-label">PTA Direito (dB)</div>
         </div>
         <div class="summary-card left">
-          <div class="summary-value" id="pta-left">—</div>
+          <div class="summary-value" id="pta-left">…</div>
           <div class="summary-label">PTA Esquerdo (dB)</div>
         </div>
         <div class="summary-card right">
-          <div class="summary-value" id="class-right" style="font-size:1.1rem;">—</div>
+          <div class="summary-value" id="class-right" style="font-size:1.1rem;">…</div>
           <div class="summary-label">Classificação Dir.</div>
         </div>
         <div class="summary-card left">
-          <div class="summary-value" id="class-left" style="font-size:1.1rem;">—</div>
+          <div class="summary-value" id="class-left" style="font-size:1.1rem;">…</div>
           <div class="summary-label">Classificação Esq.</div>
         </div>
       </div>
@@ -422,11 +423,11 @@
         <h3 class="section-title">Alcance de Frequências Audíveis</h3>
         <div class="summary-grid" style="margin-bottom:0;">
           <div class="summary-card right">
-            <div class="summary-value" id="range-right" style="font-size:1rem;">—</div>
+            <div class="summary-value" id="range-right" style="font-size:1rem;">…</div>
             <div class="summary-label">Ouvido Direito</div>
           </div>
           <div class="summary-card left">
-            <div class="summary-value" id="range-left" style="font-size:1rem;">—</div>
+            <div class="summary-value" id="range-left" style="font-size:1rem;">…</div>
             <div class="summary-label">Ouvido Esquerdo</div>
           </div>
         </div>
@@ -497,7 +498,7 @@
       { emoji: '&#127820;', title: 'A Banana da Fala', text: 'No audiograma clínico, os sons da fala humana ocupam uma zona em forma de banana entre 250-6000 Hz e 20-50 dB. Se a tua audição cai fora desta zona, podes ter dificuldade em compreender conversas.' },
       { emoji: '&#129528;', title: 'Neurossensorial vs. Condutiva', text: 'A perda condutiva (ouvido externo/médio) pode ser tratada cirurgicamente. A perda neurossensorial (cóclea/nervo) é geralmente permanente e requer aparelhos ou implantes.' },
       { emoji: '&#128164;', title: 'A Fadiga Auditiva', text: 'Após exposição prolongada a ruído (concerto, fábrica), o limiar auditivo sobe temporariamente. Se acontecer com frequência, os danos tornam-se permanentes.' },
-      { emoji: '&#128065;', title: 'Perda Auditiva Oculta', text: 'Podes ter um audiograma normal e ainda assim ter dificuldade em perceber fala em ambientes ruidosos. Chama-se sinaptopatia coclear — as sinapses entre as células ciliadas e o nervo estão danificadas.' },
+      { emoji: '&#128065;', title: 'Perda Auditiva Oculta', text: 'Podes ter um audiograma normal e ainda assim ter dificuldade em perceber fala em ambientes ruidosos. Chama-se sinaptopatia coclear: as sinapses entre as células ciliadas e o nervo estão danificadas.' },
       { emoji: '&#129504;', title: 'Ouvido-Cérebro e Demência', text: 'Estudos da Lancet estimam que a perda auditiva não tratada é o maior fator de risco modificável para demência, representando até 8% dos casos. Tratar a audição pode proteger o cérebro.' },
       { emoji: '&#129516;', title: 'Células que não Renascem', text: 'Os humanos nascem com ~15.000 células ciliadas por ouvido. Ao contrário das aves e répteis, as nossas não se regeneram. Cada célula perdida é permanente.' },
       { emoji: '&#128680;', title: 'Surdez Súbita', text: 'Uma perda auditiva súbita (em horas/dias) é uma emergência médica. O tratamento com corticosteroides nas primeiras 72h pode recuperar a audição. Não esperes!' },
@@ -577,7 +578,7 @@
       if (f >= 1000) return Math.round(f / 50) * 50;
       return Math.round(f / 10) * 10;
     }
-    function formatFreq(f) { return f >= 1000 ? (f / 1000) + ' kHz' : f + ' Hz'; }
+    function formatFreq(f) { return f >= 1000 ? (f / 1000) + ' kHz': f + ' Hz'; }
 
     /* ============ CLASSIFICATION ============ */
     function classify(pta) {
@@ -594,7 +595,7 @@
       for (var i = 0; i < PTA_FREQS.length; i++) {
         if (typeof earData[PTA_FREQS[i]] === 'number') { s += earData[PTA_FREQS[i]]; c++; }
       }
-      return c > 0 ? Math.round(s / c) : 0;
+      return c > 0 ? Math.round(s / c): 0;
     }
     function computeHearingRange(earData) {
       var lo = null, hi = null;
@@ -636,7 +637,7 @@
           scales: {
             x: {
               stacked: true,
-              title: { display: true, text: 'Frequência (Hz) — escala log', color: 'rgba(255,255,255,0.5)', font: { size: 11 } },
+              title: { display: true, text: 'Frequência (Hz): escala log', color: 'rgba(255,255,255,0.5)', font: { size: 11 } },
               ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { var hz = Math.round(Math.pow(10, v)); if (hz >= 1000) return Math.round(hz / 1000) + 'k'; return hz + ''; } },
               grid: { color: 'rgba(255,255,255,0.06)' }, min: 0, max: 5.3
             },
@@ -654,8 +655,8 @@
       var html = '', dh = '';
       for (var k = 0; k < shuffled.length; k++) {
         var f = shuffled[k];
-        html += '<div class="carousel-slide"><div class="fact-card"><div class="fact-emoji">' + f.emoji + '</div><div class="fact-title">Sabia que? — ' + f.title + '</div><div class="fact-text">' + f.text + '</div></div></div>';
-        dh += '<button class="carousel-dot' + (k === 0 ? ' active' : '') + '" data-idx="' + k + '"></button>';
+        html += '<div class="carousel-slide"><div class="fact-card"><div class="fact-emoji">' + f.emoji + '</div><div class="fact-title">Sabia que?, ' + f.title + '</div><div class="fact-text">' + f.text + '</div></div></div>';
+        dh += '<button class="carousel-dot' + (k === 0 ? ' active': '') + '" data-idx="' + k + '"></button>';
       }
       track.innerHTML = html; dotsWrap.innerHTML = dh;
       var cur = 0, total = shuffled.length, dots = dotsWrap.querySelectorAll('.carousel-dot');
@@ -665,7 +666,7 @@
       for (var d = 0; d < dots.length; d++) dots[d].addEventListener('click', function() { goTo(parseInt(this.getAttribute('data-idx'))); });
       var startX = 0;
       $('fact-carousel').addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
-      $('fact-carousel').addEventListener('touchend', function(e) { var diff = startX - e.changedTouches[0].clientX; if (Math.abs(diff) > 40) goTo(cur + (diff > 0 ? 1 : -1)); }, { passive: true });
+      $('fact-carousel').addEventListener('touchend', function(e) { var diff = startX - e.changedTouches[0].clientX; if (Math.abs(diff) > 40) goTo(cur + (diff > 0 ? 1: -1)); }, { passive: true });
     }
 
     /* ============ AUDIOGRAM CHARTS ============ */
@@ -679,9 +680,9 @@
       var freqs = [];
       for (var k in freqSet) freqs.push(parseInt(k));
       freqs.sort(function(a, b) { return a - b; });
-      return freqs.length > 0 ? freqs : [1000];
+      return freqs.length > 0 ? freqs: [1000];
     }
-    function freqToLabel(f) { return f >= 1000 ? (f / 1000) + 'k' : f + ''; }
+    function freqToLabel(f) { return f >= 1000 ? (f / 1000) + 'k': f + ''; }
     function findFreqIdx(freqs, target) {
       for (var i = 0; i < freqs.length; i++) { if (freqs[i] >= target) return i; }
       return freqs.length - 1;
@@ -694,8 +695,8 @@
       var rD = [], lD = [];
       for (var i = 0; i < dynFreqs.length; i++) {
         var f = dynFreqs[i];
-        rD.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f] : null);
-        lD.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f] : null);
+        rD.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f]: null);
+        lD.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f]: null);
       }
       var idx500 = findFreqIdx(dynFreqs, 500);
       var idx6000 = findFreqIdx(dynFreqs, 6000);
@@ -704,8 +705,8 @@
         data: {
           labels: dynFreqs.map(freqToLabel),
           datasets: [
-            { label: 'Direito', data: rD, borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'circle', pointRadius: compact ? 4 : 6, pointBorderWidth: 2, borderWidth: 2, tension: 0, spanGaps: true },
-            { label: 'Esquerdo', data: lD, borderColor: '#3b82f6', backgroundColor: '#3b82f6', pointStyle: 'crossRot', pointRadius: compact ? 6 : 9, pointBorderWidth: 3, borderWidth: 3, tension: 0, spanGaps: true }
+            { label: 'Direito', data: rD, borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'circle', pointRadius: compact ? 4: 6, pointBorderWidth: 2, borderWidth: 2, tension: 0, spanGaps: true },
+            { label: 'Esquerdo', data: lD, borderColor: '#3b82f6', backgroundColor: '#3b82f6', pointStyle: 'crossRot', pointRadius: compact ? 6: 9, pointBorderWidth: 3, borderWidth: 3, tension: 0, spanGaps: true }
           ]
         },
         options: {
@@ -713,14 +714,14 @@
           plugins: {
             legend: { display: !compact, labels: { color: 'rgba(255,255,255,0.7)', usePointStyle: true } },
             tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y + ' dB'; } } },
-            annotation: compact ? {} : { annotations: {
+            annotation: compact ? {}: { annotations: {
               speechBanana: { type: 'box', xMin: idx500, xMax: idx6000, yMin: 20, yMax: 50, backgroundColor: 'rgba(212,175,55,0.08)', borderColor: 'rgba(212,175,55,0.2)', borderWidth: 1, label: { display: true, content: 'Banana da Fala', color: 'rgba(212,175,55,0.5)', font: { size: 10 }, position: 'start' } },
               normalLine: { type: 'line', yMin: 20, yMax: 20, borderColor: 'rgba(34,197,94,0.4)', borderWidth: 1, borderDash: [4, 4], label: { display: true, content: 'Limite normal (20 dB)', color: 'rgba(34,197,94,0.5)', font: { size: 9 }, position: 'end' } }
             }}
           },
           scales: {
-            x: { title: { display: !compact, text: 'Frequência (Hz)', color: 'rgba(255,255,255,0.5)', font: { size: 11 } }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: compact ? 9 : 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
-            y: { title: { display: !compact, text: 'Nível Auditivo (dB)', color: 'rgba(255,255,255,0.5)', font: { size: 11 } }, reverse: true, min: -10, max: 100, ticks: { color: 'rgba(255,255,255,0.5)', stepSize: compact ? 20 : 10, font: { size: compact ? 9 : 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } }
+            x: { title: { display: !compact, text: 'Frequência (Hz)', color: 'rgba(255,255,255,0.5)', font: { size: 11 } }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: compact ? 9: 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
+            y: { title: { display: !compact, text: 'Nível Auditivo (dB)', color: 'rgba(255,255,255,0.5)', font: { size: 11 } }, reverse: true, min: -10, max: 100, ticks: { color: 'rgba(255,255,255,0.5)', stepSize: compact ? 20: 10, font: { size: compact ? 9: 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } }
           }
         }
       };
@@ -792,20 +793,20 @@
       stepIdx = 0;
       bisecting = false;
       bisectRound = 0;
-      lastHeardFreq = (typeof thresholds[testEar][1000] === 'number' && thresholds[testEar][1000] < 100) ? 1000 : null;
+      lastHeardFreq = (typeof thresholds[testEar][1000] === 'number' && thresholds[testEar][1000] < 100) ? 1000: null;
       showCurrentStep();
     }
 
     function getCurrentFreq() {
       if (bisecting) return roundFreq((bisectHeard + bisectNotHeard) / 2);
-      return direction === 'up' ? FREQS_UP[stepIdx] : FREQS_DOWN[stepIdx];
+      return direction === 'up' ? FREQS_UP[stepIdx]: FREQS_DOWN[stepIdx];
     }
 
     function getProgressPercent() {
       var perEar = FREQS_UP.length + FREQS_DOWN.length;
       var total = perEar * 2;
-      var earBase = testEar === 'left' ? perEar : 0;
-      var dirBase = direction === 'down' ? FREQS_UP.length : 0;
+      var earBase = testEar === 'left' ? perEar: 0;
+      var dirBase = direction === 'down' ? FREQS_UP.length: 0;
       return Math.min(98, Math.round((earBase + dirBase + stepIdx) / total * 100));
     }
 
@@ -838,7 +839,7 @@
     $('btn-play-tone').addEventListener('click', function() {
       initAudio();
       if (isPlaying) { stopTone(); this.classList.remove('playing'); return; }
-      playTone(currentFreq, sliderToGain(parseInt($('vol-slider').value)), testEar === 'right' ? 1 : -1);
+      playTone(currentFreq, sliderToGain(parseInt($('vol-slider').value)), testEar === 'right' ? 1: -1);
       this.classList.add('playing');
     });
 
@@ -851,7 +852,7 @@
     /* Record user response */
     function recordResponse(heard) {
       stopTone(); $('btn-play-tone').classList.remove('playing');
-      var db = heard ? gainToRelativeDb(sliderToGain(parseInt($('vol-slider').value))) : 100;
+      var db = heard ? gainToRelativeDb(sliderToGain(parseInt($('vol-slider').value))): 100;
 
       /* ---- BISECTION ---- */
       if (bisecting) {
@@ -923,8 +924,8 @@
       var rangeR = computeHearingRange(thresholds.right), rangeL = computeHearingRange(thresholds.left);
       $('pta-right').textContent = ptaR; $('pta-left').textContent = ptaL;
       $('class-right').textContent = classR; $('class-left').textContent = classL;
-      $('range-right').textContent = formatFreq(rangeR.min) + ' — ' + formatFreq(rangeR.max);
-      $('range-left').textContent = formatFreq(rangeL.min) + ' — ' + formatFreq(rangeL.max);
+      $('range-right').textContent = formatFreq(rangeR.min) + ', ' + formatFreq(rangeR.max);
+      $('range-left').textContent = formatFreq(rangeL.min) + ', ' + formatFreq(rangeL.max);
       buildFullAudiogram();
       buildInterpretation(ptaR, ptaL, classR, classL, rangeR, rangeL);
       updateAshaMarker(ptaR, ptaL);
@@ -940,7 +941,7 @@
       else text += 'Os teus resultados sugerem uma perda auditiva significativa. A comunicação verbal sem amplificação é provavelmente muito difícil. ';
 
       var avgMax = Math.round((rangeR.max + rangeL.max) / 2);
-      if (avgMax >= 16000) text += 'O teu alcance de frequências altas é excelente — consegues ouvir sons que a maioria dos adultos já não percebe. ';
+      if (avgMax >= 16000) text += 'O teu alcance de frequências altas é excelente, consegues ouvir sons que a maioria dos adultos já não percebe. ';
       else if (avgMax < 8000) text += 'O teu alcance nas frequências altas parece reduzido, o que pode dificultar a distinção de certos sons como "s", "f" ou "z". ';
 
       if (Math.abs(ptaR - ptaL) >= 15) text += 'Nota: Há uma diferença assimétrica entre os dois ouvidos, o que pode justificar investigação. ';
@@ -967,8 +968,8 @@
       var rD = [], lD = [];
       for (var i = 0; i < dynFreqs.length; i++) {
         var f = dynFreqs[i];
-        rD.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f] : null);
-        lD.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f] : null);
+        rD.push(typeof thresholds.right[f] === 'number' ? thresholds.right[f]: null);
+        lD.push(typeof thresholds.left[f] === 'number' ? thresholds.left[f]: null);
       }
       var idx500 = findFreqIdx(dynFreqs, 500);
       var idx6000 = findFreqIdx(dynFreqs, 6000);
@@ -1010,7 +1011,7 @@
       doc.setFontSize(18); doc.setFont(undefined, 'bold'); doc.setTextColor(0);
       doc.text('McMinsky - Teste Auditivo Educativo', pw / 2, y, { align: 'center' }); y += 8;
       doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(120);
-      doc.text('Apenas para fins educativos - sem validade clinica', pw / 2, y, { align: 'center' }); y += 10;
+      doc.text('Apenas para fins educativos, sem validade clínica', pw / 2, y, { align: 'center' }); y += 10;
 
       doc.setTextColor(0); doc.setFontSize(10);
       doc.text('Nome: ' + userName, m, y);
@@ -1020,10 +1021,10 @@
       try {
         var imgData = createPdfAudiogram();
         doc.addImage(imgData, 'PNG', m, y, cw, cw * 0.55); y += cw * 0.55 + 6;
-      } catch(e) { doc.text('(Audiograma nao disponivel)', m, y); y += 6; }
+      } catch(e) { doc.text('(Audiograma não disponível)', m, y); y += 6; }
 
       doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(0);
-      doc.text('Limiares por Frequencia (dB relativo)', m, y); y += 5;
+      doc.text('Limiares por Frequência (dB relativo)', m, y); y += 5;
       doc.setFont(undefined, 'normal'); doc.setFontSize(8);
       var colW = cw / (dynFreqs.length + 1);
       doc.setFillColor(240, 240, 240); doc.rect(m, y - 3, cw, 5, 'F');
@@ -1031,9 +1032,9 @@
       for (var i = 0; i < dynFreqs.length; i++) doc.text(freqToLabel(dynFreqs[i]), m + colW * (i + 1), y);
       y += 5;
       doc.setTextColor(200, 40, 40); doc.text('Dir.', m + 2, y);
-      for (var j = 0; j < dynFreqs.length; j++) { var v = thresholds.right[dynFreqs[j]]; doc.text(typeof v === 'number' ? v + '' : '-', m + colW * (j + 1), y); } y += 4;
+      for (var j = 0; j < dynFreqs.length; j++) { var v = thresholds.right[dynFreqs[j]]; doc.text(typeof v === 'number' ? v + '': '-', m + colW * (j + 1), y); } y += 4;
       doc.setTextColor(40, 80, 200); doc.text('Esq.', m + 2, y);
-      for (var l = 0; l < dynFreqs.length; l++) { var vl = thresholds.left[dynFreqs[l]]; doc.text(typeof vl === 'number' ? vl + '' : '-', m + colW * (l + 1), y); } y += 8;
+      for (var l = 0; l < dynFreqs.length; l++) { var vl = thresholds.left[dynFreqs[l]]; doc.text(typeof vl === 'number' ? vl + '': '-', m + colW * (l + 1), y); } y += 8;
 
       doc.setTextColor(0); doc.setFontSize(10); doc.setFont(undefined, 'bold');
       var ptaR = computePTA(thresholds.right), ptaL = computePTA(thresholds.left);
@@ -1045,11 +1046,11 @@
       doc.text('Alcance Esq.: ' + formatFreq(rangeL.min) + ' - ' + formatFreq(rangeL.max), m, y); y += 10;
 
       doc.setFontSize(7); doc.setTextColor(100);
-      var disc = 'AVISO: Este teste e apenas educativo e nao substitui uma avaliacao audiologica profissional. Os valores apresentados sao relativos ao nivel de calibracao do dispositivo e nao correspondem a dB HL calibrados clinicamente. Se suspeita de perda auditiva, consulte um otorrinolaringologista (ORL) ou audiologista.';
+      var disc = 'AVISO: Este teste é apenas educativo e não substitui uma avaliação audiológica profissional. Os valores apresentados são relativos ao nível de calibração do dispositivo e não correspondem a dB HL calibrados clinicamente. Se suspeita de perda auditiva, consulte um otorrinolaringologista (ORL) ou audiologista.';
       var sd = doc.splitTextToSize(disc, cw); doc.text(sd, m, y);
 
       doc.setFontSize(8); doc.setTextColor(140);
-      doc.text('mcminsky.pt - Testes Educativos Para Toda a Familia', pw / 2, 285, { align: 'center' });
+      doc.text('mcminsky.pt, Testes Educativos Para Toda a Família', pw / 2, 285, { align: 'center' });
 
       doc.save('teste-auditivo-' + userName.toLowerCase().replace(/\s+/g, '-') + '.pdf');
       trackAction('Teste Auditivo: PDF');

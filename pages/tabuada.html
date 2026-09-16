@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Jogo adaptativo de treino da tabuada baseado em neurociência. Foca nos teus pontos fracos e domina a multiplicação.">
-  <meta name="short-description" content="Treino adaptativo da tabuada — foca nos teus pontos fracos.">
+  <meta name="short-description" content="Treino adaptativo da tabuada, foca nos teus pontos fracos.">
   <meta name="icon" content="×">
+  <meta name="audience" content="pais">
   <title>Treino da Tabuada | McMinsky</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
   <link rel="stylesheet" href="../css/styles.css">
@@ -511,7 +512,7 @@
     <div class="screen active" id="setup-screen">
       <div class="setup-header">
         <h1>Treino da <strong>Tabuada</strong></h1>
-        <p class="setup-intro">Este treino adapta-se automaticamente aos teus pontos fracos. O algoritmo usa princípios de neurociência — repetição espaçada, reforço imediato e foco adaptativo — para acelerar a tua aprendizagem.</p>
+        <p class="setup-intro">Este treino adapta-se automaticamente aos teus pontos fracos. O algoritmo usa princípios de neurociência, repetição espaçada, reforço imediato e foco adaptativo, para acelerar a tua aprendizagem.</p>
         <span class="data-badge">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
           Dados guardados apenas no teu dispositivo
@@ -745,7 +746,7 @@
         var weights = [];
         var totalW = 0;
         for (var i = 0; i < pairs.length; i++) {
-          var w = (pairs[i] === lastKey && pairs.length > 1) ? 0 : getWeight(pairs[i]);
+          var w = (pairs[i] === lastKey && pairs.length > 1) ? 0: getWeight(pairs[i]);
           weights.push(w);
           totalW += w;
         }
@@ -777,7 +778,7 @@
             if (classify(getRec(nk(i,j))) === 'mastered') mastered++;
           }
         }
-        var acc = data.totalAttempts > 0 ? Math.round(data.totalCorrect / data.totalAttempts * 100) : 0;
+        var acc = data.totalAttempts > 0 ? Math.round(data.totalCorrect / data.totalAttempts * 100): 0;
         $('prev-mastered').textContent = mastered + '/' + TOTAL_PAIRS;
         $('prev-accuracy').textContent = acc + '%';
         $('prev-streak').textContent = data.bestStreak;
@@ -887,7 +888,7 @@
       function updateStatsBar() {
         streakVal.textContent = streak;
         streakFire.classList.toggle('visible', streak >= 5);
-        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100) : 0;
+        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100): 0;
         accuracyVal.textContent = acc + '%';
         questionNum.textContent = sessionTotal;
       }
@@ -911,11 +912,11 @@
         showScreen('results');
         $('res-total').textContent = sessionTotal;
         $('res-correct').textContent = sessionCorrect;
-        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100) : 0;
+        var acc = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100): 0;
         $('res-accuracy').textContent = acc + '%';
         var avgT = sessionTimes.length > 0
           ? (sessionTimes.reduce(function(a,b){return a+b},0) / sessionTimes.length).toFixed(1)
-          : '0';
+        : '0';
         $('res-time').textContent = avgT + 's';
         $('res-streak').textContent = data.bestStreak;
         buildHeatmap();
@@ -1060,7 +1061,7 @@
         var refGameWrap = $('ref-table-game');
         refGameBtn.addEventListener('click', function() {
           var open = refGameWrap.classList.toggle('open');
-          refGameBtn.textContent = open ? 'Esconder tabela' : 'Ver tabela';
+          refGameBtn.textContent = open ? 'Esconder tabela': 'Ver tabela';
         });
 
         /* Start */

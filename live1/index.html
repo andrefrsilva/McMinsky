@@ -13,7 +13,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
+   :root {
       --black:  #0a0a0a;
       --gold:   #c9a962;
       --white:  #f0ece4;
@@ -103,7 +103,7 @@
       box-shadow: 0 0 0 1px rgba(201,169,98,0.12), 0 20px 60px rgba(0,0,0,0.7);
     }
 
-    /* O embed Twitch JS cria um iframe — forçar a ocupar tudo */
+    /* O embed Twitch JS cria um iframe, forçar a ocupar tudo */
     .player-wrap iframe,
     .player-wrap #twitch-embed,
     #twitch-embed {
@@ -252,7 +252,7 @@
       player.setMuted(muted);
       this.innerHTML = muted
         ? '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg> Activar som'
-        : '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM18.5 12c0-2.77-1.6-5.15-3.9-6.32v2.22c1.46 1 2.4 2.67 2.4 4.1s-.94 3.1-2.4 4.1v2.22C16.9 17.15 18.5 14.77 18.5 12z"/></svg> Som ligado';
+      : '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM18.5 12c0-2.77-1.6-5.15-3.9-6.32v2.22c1.46 1 2.4 2.67 2.4 4.1s-.94 3.1-2.4 4.1v2.22C16.9 17.15 18.5 14.77 18.5 12z"/></svg> Som ligado';
     });
 
     /* Fullscreen */
@@ -268,7 +268,7 @@
       var btn = document.getElementById('fsBtn');
       btn.innerHTML = isFs
         ? '<svg viewBox="0 0 24 24"><path d="M5 9H3V3h6v2H5v4zm11-4h-4V3h6v6h-2V5zM5 15v4h4v2H3v-6h2zm14 4h-4v2h6v-6h-2v4z"/></svg> Sair'
-        : '<svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg> Ecrã inteiro';
+      : '<svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg> Ecrã inteiro';
     });
   </script>
 
