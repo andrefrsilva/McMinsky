@@ -417,10 +417,6 @@ Enviado através do formulário do website McMinsky`;
         newPath = currentPath.replace('/articles/', '/articles/en/');
       } else if (currentPath.includes('/pages/') && !currentPath.includes('/pages/en/')) {
         newPath = currentPath.replace('/pages/', '/pages/en/');
-      } else if (currentPath.includes('/programas/') || currentPath.includes('/institucional/') || currentPath.includes('/metodo/')) {
-        // As versões EN destas páginas ainda não existem (fase 3). Por agora,
-        // o comutador leva à homepage EN em vez de a um link morto.
-        newPath = getBasePath() + '/en/';
       } else if (!currentPath.includes('/en/')) {
         // Main page or other pages
         if (currentPath.endsWith('/') || currentPath.endsWith('/index.html')) {
@@ -495,13 +491,28 @@ Enviado através do formulário do website McMinsky`;
     }
   }
 
+  // Explicit override: some pages cannot be mapped by the generic path
+  // rules above (a slug that changes between languages, e.g.
+  // events/adhd-pais.html <-> events/en/adhd-parents.html) or simply have
+  // no translation yet. In those cases the .lang-switch element carries
+  // data-en-target / data-pt-target with a path relative to ROOT, so the
+  // switch never points at a page that does not exist.
+  function getLangOverridePath(targetLang) {
+    var container = document.querySelector('.lang-switch');
+    if (!container) return null;
+    var attr = targetLang === 'en' ? 'data-en-target' : 'data-pt-target';
+    var val = container.getAttribute(attr);
+    if (!val) return null;
+    return ROOT + val;
+  }
+
   // Handle language button clicks
   langBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       const targetLang = this.getAttribute('data-lang');
       saveLangPreference(targetLang);
 
-      const newUrl = buildLangUrl(targetLang);
+      const newUrl = getLangOverridePath(targetLang) || buildLangUrl(targetLang);
       if (newUrl) {
         window.location.href = newUrl;
       }
