@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartoes McMinsky: folhas A4</title>
+<!--
+  Base: o "legacy a4 grid generator.html" do Andre, que ele enviou a 16 Out 2026 e que ja fazia o
+  essencial. O que ficou dele, sem mexer: a folha em 210 por 297 mm, as faixas de margem em mm, a
+  grelha em linhas por colunas, as definicoes guardadas no localStorage, o botao de repor, e as
+  regras de impressao que fazem o PDF sair SEM GRELHA (faixas transparentes e sem bordas nas
+  celulas). Nao e biblioteca de PDF: e o print do proprio browser, e e por isso que a Cormorant
+  Garamond do site funciona sem embutir nada.
+
+  O que mudou: onde ele carregava UMA imagem que se repetia em todas as celulas, agora cada etiqueta
+  leva o seu proprio conteudo gerado, porque cada etiqueta tem um numero de afiliado diferente. Os
+  numeros nao sao escolhidos aqui: sao RESERVADOS pelo servidor, senao duas folhas impressas em dias
+  diferentes repetiam numeros e o papel nao se corrige.
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #555;
+    font-family: system-ui, -apple-system, sans-serif;
+    display: flex; flex-direction: column; align-items: center; padding: 30px;
+  }
+  .controls {
+    background: white; padding: 20px 30px; border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 30px;
+    width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 12px;
+    text-align: center;
+  }
+  .controls h3 { font-weight: 600; }
+  .input-group {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px; background: #f8f9fa; border-radius: 6px; gap: 10px;
+  }
+  .input-group label { text-align: left; }
+  input[type="number"], select { width: 110px; padding: 5px; font-size: 16px; text-align: center; }
+  button {
+    background-color: #007bff; color: white; border: none; padding: 12px;
+    font-size: 16px; border-radius: 6px; cursor: pointer; transition: background 0.2s;
+  }
+  button:hover { background-color: #0056b3; }
+  button.secondary { background-color: #6c757d; }
+  button.secondary:hover { background-color: #545b62; }
+  button:disabled { background-color: #b0b0b0; cursor: not-allowed; }
+  .aviso { font-size: 13px; line-height: 1.5; text-align: left; padding: 10px; border-radius: 6px; }
+  .aviso.erro { background: #fdecea; color: #b3261e; }
+  .aviso.ok { background: #e7f5ec; color: #1b5e34; }
+
+  /* --- A FOLHA A4 --- */
+  .sheet {
+    background: white; width: 210mm; height: 297mm;
+    display: flex; flex-direction: column;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+  }
+  .margin-stripe {
+    width: 100%; background-color: #ffebee; display: flex; justify-content: center;
+    align-items: center; font-size: 10px; color: #d32f2f; font-weight: bold;
+    text-transform: uppercase; letter-spacing: 2px; flex-shrink: 0;
+    border-bottom: 1px dashed #ccc;
+  }
+  .margin-stripe.bottom { border-bottom: none; border-top: 1px dashed #ccc; }
+  .grid-area { width: 100%; flex-grow: 1; min-height: 0; display: grid; }
+  .cell {
+    border: 0.5px solid #f0f0f0; display: flex; justify-content: space-evenly;
+    align-items: center; overflow: hidden; padding: 1mm;
+  }
+  .cell.vazia { background: #fafafa; }
+  .cell svg { height: 100%; width: auto; }
+
+  /* --- IMPRESSAO (PDF) --- */
+  @media print {
+    @page { size: A4; margin: 0; }
+    body { background: none; padding: 0; }
+    .controls { display: none; }
+    .sheet { box-shadow: none; height: 297mm; }
+    .margin-stripe { background-color: transparent; color: transparent; border: none; }
+    .cell { border: none; }
+    .cell.vazia { background: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="controls">
+    <h3>Folhas de cartões</h3>
+
+    <div class="input-group">
+      <label for="donoInput"><strong>Dono do cartão</strong></label>
+      <select id="donoInput"></select>
+    </div>
+    <div class="input-group">
+      <label for="topMarginInput"><strong>Margem Superior (mm)</strong></label>
+      <input type="number" id="topMarginInput" value="10" min="0" max="150" step="0.5">
+    </div>
+    <div class="input-group">
+      <label for="bottomMarginInput"><strong>Margem Inferior (mm)</strong></label>
+      <input type="number" id="bottomMarginInput" value="10" min="0" max="150" step="0.5">
+    </div>
+    <div class="input-group">
+      <label for="rowsInput"><strong>Número de linhas</strong></label>
+      <input type="number" id="rowsInput" value="11" min="1" max="50">
+    </div>
+    <div class="input-group">
+      <label for="colsInput"><strong>Número de colunas</strong></label>
+      <input type="number" id="colsInput" value="3" min="1" max="20">
+    </div>
+    <div class="input-group">
+      <label for="quantosInput"><strong>Quantos cartões</strong></label>
+      <input type="number" id="quantosInput" value="33" min="1" max="200">
+    </div>
+
+    <button id="reservarBtn" type="button">Reservar números e gerar</button>
+    <button onclick="window.print()">Guardar como PDF</button>
+    <button class="secondary" type="button" id="resetBtn">Repor predefinições</button>
+    <div class="aviso" id="aviso" style="display:none"></div>
+  </div>
+
+  <div class="sheet">
+    <div class="margin-stripe top" id="topStripe">MARGEM SUPERIOR</div>
+    <div class="grid-area" id="gridContainer"></div>
+    <div class="margin-stripe bottom" id="bottomStripe">MARGEM INFERIOR</div>
+  </div>
+
+<script src="/painel/qrcode-generator.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const gridContainer = document.getElementById('gridContainer');
+  const topStripe = document.getElementById('topStripe');
+  const bottomStripe = document.getElementById('bottomStripe');
+  const topMarginInput = document.getElementById('topMarginInput');
+  const bottomMarginInput = document.getElementById('bottomMarginInput');
+  const rowsInput = document.getElementById('rowsInput');
+  const colsInput = document.getElementById('colsInput');
+  const quantosInput = document.getElementById('quantosInput');
+  const donoInput = document.getElementById('donoInput');
+  const reservarBtn = document.getElementById('reservarBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const aviso = document.getElementById('aviso');
+
+  const DEFAULTS = { topMargin: 10, bottomMargin: 10, rows: 11, cols: 3, quantos: 33, dono: 1 };
+  const STORAGE_KEY = 'a4GridSettings';
+
+  // Os cartoes reservados na ultima vez. Ficam guardados para a folha sobreviver a um refresh
+  // acidental: numeros reservados nao se podem perder, porque ja estao gastos do lado do servidor.
+  const CARTOES_KEY = 'cartoesUltimoLote';
+  let cartoes = [];
+
+  function mostrar(texto, tipo) {
+    aviso.textContent = texto;
+    aviso.className = 'aviso ' + (tipo || '');
+    aviso.style.display = texto ? 'block' : 'none';
+  }
+
+  function loadSettings() {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { saved = {}; }
+    const s = Object.assign({}, DEFAULTS, saved);
+    topMarginInput.value = s.topMargin;
+    bottomMarginInput.value = s.bottomMargin;
+    rowsInput.value = s.rows;
+    colsInput.value = s.cols;
+    quantosInput.value = s.quantos;
+    return s;
+  }
+
+  function saveSettings() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      topMargin: parseFloat(topMarginInput.value) || 0,
+      bottomMargin: parseFloat(bottomMarginInput.value) || 0,
+      rows: parseInt(rowsInput.value, 10) || 1,
+      cols: parseInt(colsInput.value, 10) || 1,
+      quantos: parseInt(quantosInput.value, 10) || 1,
+      dono: parseInt(donoInput.value, 10) || 1,
+    }));
+  }
+
+  // Um conjunto: o QR em modulos vectoriais, "McMinsky.pt" e "P=1 | A=22", as duas linhas de texto
+  // com a largura EXACTA do QR. A largura imposta faz-se com textLength mais
+  // lengthAdjust="spacingAndGlyphs", que e deterministico; andar a adivinhar tamanhos de letra nao e.
+  //
+  // O endereco vai todo em MAIUSCULAS de proposito: o QR tem um modo de codificacao proprio, mais
+  // denso, so para maiusculas, digitos e . / : - + * % $, e isso da um codigo mais pequeno e com
+  // mais correccao de erro ao mesmo tempo (medido a 16 Out 2026: 25 modulos em maiusculas contra 29
+  // em minusculas, e 33 na forma com parametros de consulta, que cai sempre no modo de bytes).
+  function conjunto(cartao) {
+    const qr = qrcode(0, 'Q');
+    qr.addData(cartao.url_qr, 'Alphanumeric');
+    qr.make();
+    const n = qr.getModuleCount();
+
+    const LADO = 100;                 // unidades do desenho, nao mm: o SVG escala com a celula
+    const modulo = LADO / n;
+    const ALTURA_LINHA = 13;
+    const ESPACO = 2;
+    const alturaTotal = LADO + ESPACO + ALTURA_LINHA * 2;
+
+    let modulos = '';
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        if (qr.isDark(r, c)) {
+          modulos += '<rect x="' + (c * modulo).toFixed(3) + '" y="' + (r * modulo).toFixed(3)
+            + '" width="' + modulo.toFixed(3) + '" height="' + modulo.toFixed(3) + '"/>';
+        }
+      }
+    }
+
+    const linha1 = 'McMinsky.pt';
+    const linha2 = 'P=' + cartao.dono + ' | A=' + cartao.afiliado;
+    const texto = function (y, conteudo, tamanho) {
+      return '<text x="0" y="' + y + '" textLength="' + LADO + '" lengthAdjust="spacingAndGlyphs"'
+        + ' font-family="Cormorant Garamond, Garamond, Times New Roman, serif"'
+        + ' font-size="' + tamanho + '" fill="#000">' + conteudo + '</text>';
+    };
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + LADO + ' ' + alturaTotal + '"'
+      + ' shape-rendering="crispEdges">'
+      + '<g fill="#000">' + modulos + '</g>'
+      + '<g shape-rendering="auto">'
+      + texto(LADO + ESPACO + ALTURA_LINHA * 0.8, linha1, ALTURA_LINHA * 0.95)
+      + texto(LADO + ESPACO + ALTURA_LINHA * 1.85, linha2, ALTURA_LINHA * 0.95)
+      + '</g></svg>';
+  }
+
+  function initGrid() {
+    const rows = Math.max(1, parseInt(rowsInput.value, 10) || 1);
+    const cols = Math.max(1, parseInt(colsInput.value, 10) || 1);
+    const total = rows * cols;
+
+    gridContainer.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+    gridContainer.style.gridTemplateRows = 'repeat(' + rows + ', 1fr)';
+    gridContainer.innerHTML = '';
+
+    for (let i = 0; i < total; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      const cartao = cartoes[i];
+      if (cartao) {
+        // Dois conjuntos por etiqueta, com o MESMO numero de afiliado, porque o numero e por
+        // etiqueta (palavras dele a 16 Out: "cada etiqueta com tag de afiliado diferente").
+        // O justify-content: space-evenly do CSS garante que o espaco a esquerda, o do meio e o da
+        // direita sao iguais, que foi o que ele pediu.
+        cell.innerHTML = conjunto(cartao) + conjunto(cartao);
+      } else {
+        cell.classList.add('vazia');
+      }
+      gridContainer.appendChild(cell);
+    }
+  }
+
+  function updateMargins() {
+    let topMm = parseFloat(topMarginInput.value);
+    let bottomMm = parseFloat(bottomMarginInput.value);
+    if (isNaN(topMm) || topMm < 0) topMm = 0;
+    if (isNaN(bottomMm) || bottomMm < 0) bottomMm = 0;
+    const A4 = 297, MIN_GRID = 20;
+    if (topMm + bottomMm > A4 - MIN_GRID) {
+      const escala = (A4 - MIN_GRID) / (topMm + bottomMm);
+      topMm *= escala; bottomMm *= escala;
+    }
+    topStripe.style.height = topMm + 'mm';
+    bottomStripe.style.height = bottomMm + 'mm';
+  }
+
+  function applyAll() {
+    updateMargins();
+    initGrid();
+    saveSettings();
+  }
+
+  async function carregarDonos() {
+    try {
+      const r = await fetch('/api/donos', { credentials: 'same-origin' });
+      if (!r.ok) throw new Error('estado ' + r.status);
+      const dados = await r.json();
+      donoInput.innerHTML = '';
+      for (const d of dados.donos) {
+        const o = document.createElement('option');
+        o.value = d.num;
+        o.textContent = d.num + ' - ' + d.nome;
+        donoInput.appendChild(o);
+      }
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) {}
+      if (saved.dono) donoInput.value = saved.dono;
+    } catch (e) {
+      mostrar('Não consegui ler os donos de cartão: ' + e.message, 'erro');
+    }
+  }
+
+  async function reservar() {
+    const quantos = parseInt(quantosInput.value, 10) || 0;
+    const dono = parseInt(donoInput.value, 10) || 0;
+    if (!dono || quantos < 1) { mostrar('Falta o dono ou a quantidade.', 'erro'); return; }
+
+    const cabem = (parseInt(rowsInput.value, 10) || 1) * (parseInt(colsInput.value, 10) || 1);
+    if (quantos > cabem) {
+      mostrar('Pediu ' + quantos + ' cartões mas a folha só tem ' + cabem + ' etiquetas.', 'erro');
+      return;
+    }
+
+    reservarBtn.disabled = true;
+    mostrar('A reservar números...', '');
+    try {
+      const r = await fetch('/api/lotes', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ dono: dono, quantos: quantos }),
+      });
+      const dados = await r.json();
+      if (!r.ok || !dados.ok) throw new Error(dados.erro || ('estado ' + r.status));
+      cartoes = dados.cartoes;
+      localStorage.setItem(CARTOES_KEY, JSON.stringify(cartoes));
+      initGrid();
+      mostrar('Reservados ' + cartoes.length + ' cartões, de A=' + dados.de + ' a A=' + dados.ate
+        + ' (lote ' + dados.lote + '). Agora guarde como PDF.', 'ok');
+    } catch (e) {
+      mostrar('Não reservou: ' + e.message, 'erro');
+    } finally {
+      reservarBtn.disabled = false;
+    }
+  }
+
+  topMarginInput.addEventListener('input', applyAll);
+  bottomMarginInput.addEventListener('input', applyAll);
+  rowsInput.addEventListener('input', applyAll);
+  colsInput.addEventListener('input', applyAll);
+  quantosInput.addEventListener('input', saveSettings);
+  donoInput.addEventListener('change', saveSettings);
+  reservarBtn.addEventListener('click', reservar);
+
+  resetBtn.addEventListener('click', function () {
+    topMarginInput.value = DEFAULTS.topMargin;
+    bottomMarginInput.value = DEFAULTS.bottomMargin;
+    rowsInput.value = DEFAULTS.rows;
+    colsInput.value = DEFAULTS.cols;
+    quantosInput.value = DEFAULTS.quantos;
+    applyAll();
+  });
+
+  loadSettings();
+  try { cartoes = JSON.parse(localStorage.getItem(CARTOES_KEY)) || []; } catch (e) { cartoes = []; }
+  if (cartoes.length) {
+    mostrar('Está a mostrar o último lote reservado, de A=' + cartoes[0].afiliado + ' a A='
+      + cartoes[cartoes.length - 1].afiliado + '. Reserve outro para números novos.', '');
+  }
+  applyAll();
+  carregarDonos();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cartões · McMinsky</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+  :root {
+    --preto: #0a0a0a; --preto-2: #131313; --preto-3: #1b1b1b;
+    --branco: #f0f0f0; --cinza: #8d8d8d; --cinza-2: #5c5c5c;
+    --ouro: #c9a962; --frio: #7fb2ff; --quente: #d9885a; --verde: #6fbf8f;
+    --display: 'Cormorant Garamond', serif; --corpo: 'Inter', system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--preto); color: var(--branco); font-family: var(--corpo); font-weight: 300; line-height: 1.55; }
+  a { color: var(--ouro); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+
+  .topo {
+    display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+    padding: 1.4rem 1.5rem 1rem; border-bottom: 1px solid #242424;
+  }
+  .topo h1 { font-family: var(--display); font-weight: 500; font-size: 1.9rem; letter-spacing: 0.01em; }
+  .topo .marca { color: var(--ouro); letter-spacing: 0.3em; font-size: 0.7rem; text-transform: uppercase; }
+  .topo .direita { margin-left: auto; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+  .accao {
+    padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid #333;
+    background: var(--preto-3); font-size: 0.85rem;
+  }
+  .accao:hover { border-color: var(--ouro); }
+  .accao.destaque { background: var(--ouro); color: #14110a; border-color: var(--ouro); font-weight: 500; }
+
+  main { padding: 1.25rem 1.5rem 4rem; max-width: 1240px; margin: 0 auto; }
+
+  .filtros { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.4rem; }
+  select, input[type=text], input[type=number], input[type=search] {
+    background: var(--preto-3); color: var(--branco); border: 1px solid #333;
+    border-radius: 8px; padding: 0.5rem 0.7rem; font: inherit; font-size: 0.88rem;
+  }
+  select:focus, input:focus { outline: 1px solid var(--ouro); }
+  .filtros label { font-size: 0.76rem; color: var(--cinza); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1.6rem; }
+  .ficha { background: var(--preto-2); border: 1px solid #222; border-radius: 12px; padding: 1rem 1.1rem; }
+  /* Inter e nao Cormorant: o Cormorant tem algarismos antigos, e o 1 sai igual a um I maiusculo.
+     Num painel de numeros isso le-se mal, e viu-se logo na primeira imagem do ecra. */
+    .ficha .valor { font-family: var(--corpo); font-weight: 300; font-size: 2.2rem; line-height: 1.05; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .ficha .rotulo { font-size: 0.72rem; color: var(--cinza); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.25rem; }
+  .ficha.robo .valor { color: var(--cinza-2); }
+  .ficha.voz .valor { color: var(--frio); }
+
+  .painel { background: var(--preto-2); border: 1px solid #222; border-radius: 12px; padding: 1.1rem 1.2rem 1.3rem; margin-bottom: 1.4rem; }
+  .painel h2 { font-family: var(--display); font-weight: 500; font-size: 1.35rem; margin-bottom: 0.2rem; }
+  .painel .ajuda { font-size: 0.78rem; color: var(--cinza); margin-bottom: 0.9rem; }
+
+  .grafico { position: relative; height: 260px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; font-weight: 500; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cinza); padding: 0.5rem 0.6rem; border-bottom: 1px solid #262626; position: sticky; top: 0; background: var(--preto-2); }
+  td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #1c1c1c; vertical-align: middle; }
+  tr:hover td { background: #171717; }
+  .rolar { max-height: 420px; overflow-y: auto; scrollbar-width: thin; }
+  .etiqueta { display: inline-block; padding: 0.1rem 0.45rem; border-radius: 5px; font-size: 0.7rem; }
+  .et-qr { background: rgba(127,178,255,0.14); color: #9fc6ff; }
+  .et-manual { background: rgba(217,136,90,0.14); color: #e0a37d; }
+  .et-link { background: rgba(201,169,98,0.14); color: var(--ouro); }
+  .et-desconhecida { background: #222; color: var(--cinza); }
+  .et-robo { background: #222; color: var(--cinza-2); }
+  .et-novo { background: rgba(111,191,143,0.14); color: var(--verde); }
+
+  .linha-edicao { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+  .mini { padding: 0.3rem 0.55rem; font-size: 0.78rem; border-radius: 6px; border: 1px solid #333; background: var(--preto-3); }
+  .mini:hover { border-color: var(--ouro); }
+
+  dialog {
+    background: var(--preto-2); color: var(--branco); border: 1px solid #2c2c2c;
+    border-radius: 14px; padding: 0; max-width: 980px; width: 94vw; max-height: 92vh;
+  }
+  dialog::backdrop { background: rgba(0,0,0,0.75); }
+  .modal-topo { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; border-bottom: 1px solid #242424; }
+  .modal-topo h3 { font-family: var(--display); font-weight: 500; font-size: 1.25rem; }
+  .modal-corpo { padding: 1.1rem; max-height: 78vh; overflow: auto; }
+  .modal-corpo iframe { width: 100%; height: 72vh; border: 0; border-radius: 10px; background: #fff; }
+
+  .resultados { margin-top: 0.5rem; }
+  .resultado { display: flex; gap: 0.6rem; align-items: center; padding: 0.45rem 0.5rem; border-radius: 8px; }
+  .resultado:hover { background: #1d1d1d; }
+  .resultado .nome { font-size: 0.9rem; }
+  .resultado .titulo { font-size: 0.74rem; color: var(--cinza); }
+
+  .aviso { font-size: 0.8rem; color: var(--cinza); padding: 0.8rem 0; }
+  .vazio { color: var(--cinza-2); font-size: 0.85rem; padding: 1rem 0.6rem; }
+  @media (max-width: 640px) {
+    main { padding: 1rem 0.9rem 3rem; }
+    .topo { padding: 1rem 0.9rem 0.8rem; }
+    .grafico { height: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <span class="marca">McMinsky</span>
+  <h1>Cartões</h1>
+  <div class="direita">
+    <button class="accao" id="b-afiliados">Afiliados</button>
+    <button class="accao" id="b-dono">Novo dono</button>
+    <button class="accao destaque" id="b-gerador">Gerar folha A4</button>
+  </div>
+</header>
+
+<main>
+  <div class="filtros">
+    <label for="f-dono">Dono</label>
+    <select id="f-dono"><option value="">todos</option></select>
+    <label for="f-afiliado">Afiliado</label>
+    <input type="number" id="f-afiliado" min="1" placeholder="número" style="width:7rem">
+    <label for="f-dias">Período</label>
+    <select id="f-dias">
+      <option value="7">7 dias</option>
+      <option value="30" selected>30 dias</option>
+      <option value="90">90 dias</option>
+      <option value="365">1 ano</option>
+    </select>
+    <button class="accao" id="b-limpar">Limpar</button>
+  </div>
+
+  <div class="cartoes" id="fichas"></div>
+
+  <section class="painel">
+    <h2>Aberturas ao longo do tempo</h2>
+    <p class="ajuda">Pessoas e robôs em linhas separadas. Os robôs são leitores de pré-visualização de links, não contam como visitas.</p>
+    <div class="grafico"><canvas id="g-tempo"></canvas></div>
+  </section>
+
+  <section class="painel">
+    <h2>Por afiliado</h2>
+    <p class="ajuda">Quem é que está a dar cartões que alguém abre.</p>
+    <div class="grafico"><canvas id="g-afiliado"></canvas></div>
+  </section>
+
+  <section class="painel">
+    <h2>Registo</h2>
+    <p class="ajuda">As últimas aberturas, da mais recente para a mais antiga.</p>
+    <div class="rolar">
+      <table>
+        <thead><tr>
+          <th>Quando</th><th>Cartão</th><th>Origem</th><th>Aparelho</th><th>País</th><th>Código</th>
+        </tr></thead>
+        <tbody id="t-visitas"></tbody>
+      </table>
+    </div>
+    <button class="accao" id="b-mais" style="margin-top:0.8rem">Carregar mais</button>
+  </section>
+
+  <section class="painel">
+    <h2>Recados em voz</h2>
+    <p class="ajuda">O que entrou pelo duplo digital.</p>
+    <div class="cartoes" id="fichas-voz"></div>
+  </section>
+</main>
+
+<!-- modal do gerador -->
+<dialog id="m-gerador">
+  <div class="modal-topo">
+    <h3>Gerador de folhas A4</h3>
+    <button class="accao" style="margin-left:auto" onclick="document.getElementById('m-gerador').close()">Fechar</button>
+  </div>
+  <div class="modal-corpo"><iframe id="if-gerador" title="Gerador de folhas"></iframe></div>
+</dialog>
+
+<!-- modal dos afiliados -->
+<dialog id="m-afiliados">
+  <div class="modal-topo">
+    <h3>Afiliados</h3>
+    <button class="accao" style="margin-left:auto" onclick="document.getElementById('m-afiliados').close()">Fechar</button>
+  </div>
+  <div class="modal-corpo">
+    <p class="ajuda">O número já está impresso no cartão. Aqui diz-se de quem é. Pode procurar a pessoa
+       no Pessoas, ou criá-la ali mesmo se ainda não existir.</p>
+    <input type="search" id="q-afiliado" placeholder="procurar por número ou nome" style="width:100%;margin-bottom:0.8rem">
+    <div class="rolar">
+      <table>
+        <thead><tr><th>Nº</th><th>Nome</th><th>Pessoa</th><th>Lote</th><th></th></tr></thead>
+        <tbody id="t-afiliados"></tbody>
+      </table>
+    </div>
+  </div>
+</dialog>
+
+<!-- modal de novo dono -->
+<dialog id="m-dono">
+  <div class="modal-topo">
+    <h3>Novo dono de cartão</h3>
+    <button class="accao" style="margin-left:auto" onclick="document.getElementById('m-dono').close()">Fechar</button>
+  </div>
+  <div class="modal-corpo">
+    <p class="ajuda">Uma pessoa, ou um especialista virtual. Fica com o número seguinte e já pode ter
+       cartões impressos. O perfil que a página mostra escreve-se depois.</p>
+    <p style="margin-bottom:0.7rem">
+      <input type="text" id="n-dono" placeholder="nome" style="width:min(22rem,100%)">
+    </p>
+    <p style="margin-bottom:0.9rem">
+      <select id="n-tipo"><option value="pessoa">pessoa</option><option value="especialista">especialista virtual</option></select>
+    </p>
+    <button class="accao destaque" id="b-criar-dono">Criar</button>
+    <p class="aviso" id="aviso-dono"></p>
+  </div>
+</dialog>
+
+<!-- modal de ligacao ao Pessoas -->
+<dialog id="m-pessoa">
+  <div class="modal-topo">
+    <h3>Ligar ao Pessoas</h3>
+    <button class="accao" style="margin-left:auto" onclick="document.getElementById('m-pessoa').close()">Fechar</button>
+  </div>
+  <div class="modal-corpo">
+    <p class="ajuda">Afiliado <strong id="p-afiliado"></strong>. Escreva o nome: se já existir aparece em baixo, se não existir cria-se.</p>
+    <input type="search" id="q-pessoa" placeholder="nome da pessoa" style="width:100%">
+    <div class="resultados" id="r-pessoas"></div>
+    <button class="accao destaque" id="b-criar-pessoa" style="margin-top:0.8rem">Criar pessoa nova com este nome</button>
+    <p class="aviso" id="aviso-pessoa"></p>
+  </div>
+</dialog>
+
+<script src="/painel/vendor/chart.umd.min.js"></script>
+<script src="/painel/estatisticas.js"></script>
+</body>
+</html>

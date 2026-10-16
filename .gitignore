@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+
+# Copias de seguranca nunca entram no repositorio nem na pasta servida: a versao antiga de uma
+# pagina legal publicada ao lado da nova e pior do que nao ter copia nenhuma. As copias vivem em
+# knowledge/backups/.
+*.bak
+*.bak-*

@@ -1,0 +1,17 @@
+{
+  "name": "mcminsky-site",
+  "private": true,
+  "type": "module",
+  "description": "Site publico da McMinsky (mcminsky.pt) servido por um Worker, mais o sistema de cartoes pessoais.",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "verificar": "node tools/verificar-paginas.mjs",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "migrar": "wrangler d1 migrations apply cartoes --remote",
+    "migrar:local": "wrangler d1 migrations apply cartoes --local"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.1"
+  }
+}

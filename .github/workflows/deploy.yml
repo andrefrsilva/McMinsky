@@ -1,0 +1,48 @@
+# Publica o site no Cloudflare a cada push, para o habito dele continuar a funcionar.
+#
+# Existe por uma razao concreta: o ficheiro "how to push to github.txt" deste repositorio diz
+# "git add . / git commit / git push --force", e era isso que publicava no GitHub Pages. Ao passar
+# para Worker, um push deixaria de publicar e NAO AVISARIA. Com este workflow, o push continua a ser
+# o gesto que publica, so que agora publica no Cloudflare.
+#
+# Precisa de dois segredos no repositorio (Settings, Secrets and variables, Actions):
+#   CLOUDFLARE_API_TOKEN   token com permissao de Workers apenas, criado no painel da Cloudflare
+#   CLOUDFLARE_ACCOUNT_ID  db8726320ac7ccb2e3e8db8f494d6aeb (nao e segredo, mas fica aqui por simetria)
+
+name: Publicar no Cloudflare
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instalar
+        run: npm ci || npm install
+
+      - name: Montar a pasta servida
+        run: npm run build
+
+      # Trava a publicacao se o build nao produziu o site. Sem isto, um erro no build publicava um
+      # Worker sem interface e so se daria por isso no browser.
+      - name: Travao, o dist tem de ter o site
+        run: |
+          test -f dist/index.html || { echo "dist/index.html nao existe, nao publico"; exit 1; }
+          n=$(find dist -type f | wc -l)
+          echo "dist tem $n ficheiros"
+          test "$n" -ge 40 || { echo "dist com menos de 40 ficheiros, nao publico"; exit 1; }
+
+      - name: Publicar
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

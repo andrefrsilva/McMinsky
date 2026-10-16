@@ -1,0 +1,53 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mcminsky",
+  "main": "src/index.js",
+
+  // Conta dedicada McMinsky, a MESMA onde vive a zona mcminsky.pt e os Workers pessoas, tempo e
+  // produtos. Fixar o account_id evita publicar por engano na outra conta (ver
+  // knowledge/protocols/cloudflare-contas.md). Para qualquer comando wrangler aqui e preciso
+  // exportar antes a chave desta conta.
+  "account_id": "db8726320ac7ccb2e3e8db8f494d6aeb",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+
+  // O site publico, montado por `node tools/build.mjs` numa pasta que contem SO o que e para
+  // servir. Nunca apontar para a raiz do repositorio: levaria o .git, o src/ e as notas internas.
+  //
+  // `not_found_handling: none` deixa o pedido cair no Worker quando nao existe ficheiro, e e o
+  // Worker que decide (rotas dos cartoes, painel, API, ou 404).
+  // `run_worker_first` marca o que NUNCA e servido directamente pelos ficheiros estaticos.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "none",
+    "run_worker_first": ["/c", "/c/*", "/C", "/C/*", "/api/*", "/painel", "/painel/*",
+      // O molde da pagina do cartao nao e para ser aberto directamente: sem os dados por
+      // dentro mostrava um cartao vazio e deixava a marca de substituicao a vista.
+      "/cartao", "/cartao/", "/cartao/index.html"]
+  },
+
+  // As fotografias dos cartoes e os audios das mensagens de voz. Ficam fora dos ficheiros do site
+  // de proposito: uma fotografia nova ou um audio novo nao podem obrigar a publicar o site outra
+  // vez, e os audios sao de pessoas, nao sao conteudo publico.
+  // Ligacao directa ao Worker do Pessoas, Worker a Worker. NAO e por HTTPS normal de proposito:
+  // dois Workers da mesma conta a chamarem-se pela internet dao erro 1042, e o Pessoas nao tem
+  // CORS aberto, tambem de proposito. Isto mantem a chave fora do browser.
+  "services": [
+    { "binding": "PESSOAS", "service": "pessoas" }
+  ],
+
+  "r2_buckets": [
+    { "binding": "FICHEIROS", "bucket_name": "cartoes" }
+  ],
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cartoes",
+      "database_id": "204c1321-ed36-42d6-92fd-396d46316146",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
