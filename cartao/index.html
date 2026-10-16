@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="robots" content="noindex, nofollow">
-<title>Cartão McMinsky</title>
+__OG__
+<link rel="icon" type="image/png" href="https://i.postimg.cc/T27BCpJj/logo-without-text.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="/css/styles.css">
 <link rel="stylesheet" href="/cartao/cartao.css">
 </head>
 <body data-parte="0">
@@ -25,22 +26,26 @@
     </div>
     <h1 id="nome" class="nome"></h1>
     <p id="papel" class="papel"></p>
+    <button id="b-partilhar" class="partilhar" type="button">
+      <span class="partilhar-icone" aria-hidden="true">&#8599;</span>
+      <span data-t="partilhar">Partilhar este cartão</span>
+    </button>
   </header>
 
   <section class="bio">
     <div id="bio"></div>
   </section>
 
-  <!-- ZONA HUMANA. Claro, de papel, quente. E a pessoa real. -->
+  <!-- ZONA HUMANA. Branco, a pagina nua. E a pessoa real. -->
   <section class="zona zona-humana" aria-labelledby="t-humana">
-    <p class="selo selo-humano"><span class="ponto"></span> Pessoa real</p>
-    <h2 id="t-humana" class="titulo-zona">Falar com <span id="primeiro-nome-1"></span></h2>
-    <p class="nota-zona">Responde quando puder, como qualquer pessoa.</p>
+    <p class="selo selo-humano"><span class="ponto"></span> <span data-t="pessoa_real">Pessoa real</span></p>
+    <h2 id="t-humana" class="titulo-zona"></h2>
+    <p class="nota-zona" id="nota-humana"></p>
     <div class="botoes">
       <a id="b-whatsapp" class="botao botao-humano" href="#" rel="noopener">
         <span class="icone" aria-hidden="true">&#9993;</span>
         <span class="rotulo">WhatsApp</span>
-        <span class="detalhe" id="d-whatsapp"></span>
+        <span class="detalhe" id="d-whatsapp" data-t="mensagem_directa">mensagem directa</span>
       </a>
       <a id="b-telegram" class="botao botao-humano" href="#" rel="noopener">
         <span class="icone" aria-hidden="true">&#9992;</span>
@@ -49,7 +54,7 @@
       </a>
       <a id="b-telefone" class="botao botao-humano" href="#">
         <span class="icone" aria-hidden="true">&#9742;</span>
-        <span class="rotulo">Telefonar</span>
+        <span class="rotulo" data-t="telefonar">Telefonar</span>
         <span class="detalhe" id="d-telefone"></span>
       </a>
       <a id="b-email" class="botao botao-humano" href="#">
@@ -60,53 +65,40 @@
       <a id="b-linkedin" class="botao botao-humano" href="#" target="_blank" rel="noopener">
         <span class="icone" aria-hidden="true">in</span>
         <span class="rotulo">LinkedIn</span>
-        <span class="detalhe">perfil profissional</span>
+        <span class="detalhe" data-t="perfil_profissional">perfil profissional</span>
       </a>
       <a id="b-mapa" class="botao botao-humano" href="#" target="_blank" rel="noopener">
         <span class="icone" aria-hidden="true">&#9906;</span>
-        <span class="rotulo">Estúdio</span>
+        <span class="rotulo" data-t="estudio">Estúdio</span>
         <span class="detalhe" id="d-morada"></span>
       </a>
     </div>
   </section>
 
-  <!-- ZONA DIGITAL. Escura, fria, com luz propria. E o duplo digital, e diz-se que o e. -->
+  <!-- ZONA DIGITAL. O mesmo preto do sitio, invertido. Nenhuma cor nova: o contraste e a bandeira. -->
   <section class="zona zona-digital" id="zona-digital" aria-labelledby="t-digital">
-    <div class="brilho" aria-hidden="true"></div>
-    <p class="selo selo-digital"><span class="ponto"></span> Gerado por inteligência artificial</p>
+    <p class="selo selo-digital"><span class="ponto"></span> <span data-t="gerado_ia">Gerado por inteligência artificial</span></p>
     <h2 id="t-digital" class="titulo-zona"><span id="gemeo-nome"></span></h2>
     <p class="nota-zona" id="gemeo-nota"></p>
 
-    <ul class="vantagens">
-      <li><strong>Às 3 da manhã</strong> também atende.</li>
-      <li><strong>Fala a sua língua</strong>, seja ela qual for.</li>
-      <li><strong>Explica dez vezes</strong> sem suspirar.</li>
-      <li><strong>Não interrompe</strong> e nunca diz que está em reunião.</li>
-    </ul>
+    <ul class="vantagens" id="vantagens"></ul>
 
     <button id="b-voz" class="botao-grande" type="button">
-      <span class="rotulo-grande">Deixar mensagem de voz</span>
-      <span class="sub-grande">Responde com a voz dele, em poucos minutos</span>
+      <span class="rotulo-grande" data-t="deixar_voz">Deixar mensagem de voz</span>
+      <span class="sub-grande" id="sub-voz" data-t="responde_voz">Responde com a voz dele, em poucos minutos</span>
     </button>
-    <button id="b-escrever" class="botao-texto" type="button">Prefiro escrever</button>
-    <p class="aviso-digital">A voz da resposta é sintética e a conversa fica guardada para poder ouvir outra vez.</p>
+    <button id="b-escrever" class="botao-texto" type="button" data-t="prefiro_escrever">Prefiro escrever</button>
+    <p class="aviso-digital" data-t="aviso_voz">A voz da resposta é sintética e a conversa fica guardada para poder ouvir outra vez.</p>
   </section>
 
   <section class="conversas-antigas" id="conversas-antigas" hidden>
-    <h2 class="titulo-zona">A sua conversa</h2>
+    <h2 class="titulo-zona" data-t="sua_conversa">A sua conversa</h2>
     <p class="nota-zona" id="resumo-conversa"></p>
-    <button id="b-abrir-conversa" class="botao-texto" type="button">Abrir conversa</button>
+    <button id="b-abrir-conversa" class="botao-texto escuro" type="button" data-t="abrir_conversa">Abrir conversa</button>
   </section>
 
-  <footer class="rodape">
-    <p class="marca">McMinsky</p>
-    <p class="cartao-id" id="cartao-id"></p>
-    <p class="legal">
-      <a href="/legal/privacy.html">Privacidade</a>
-      <a href="/legal/terms.html">Termos</a>
-      <button type="button" id="b-esquecer" class="ligacao">Esquecer este aparelho</button>
-    </p>
-  </footer>
+  <p class="cartao-id" id="cartao-id"></p>
+  <p class="esquecer"><button type="button" id="b-esquecer" class="ligacao" data-t="esquecer">Esquecer este aparelho</button></p>
 </main>
 
 <!-- ================= PALCO: partes 1, 2 e 3, em ecra inteiro ================= -->
@@ -116,70 +108,69 @@
 
   <!-- PARTE 1: gravar -->
   <section id="parte1" class="passo" hidden>
-    <p class="passo-selo">Mensagem para <span id="gemeo-nome-2"></span> <span class="selo-ia">IA</span></p>
-    <h2 class="passo-titulo" id="p1-titulo">Toque para falar</h2>
-    <p class="passo-sub" id="p1-sub">Diga o que quiser. Depois toque outra vez para enviar.</p>
+    <p class="passo-selo"><span data-t="mensagem_para">Mensagem para</span> <span class="gemeo-nome-eco"></span> <span class="selo-ia">IA</span></p>
+    <h2 class="passo-titulo" id="p1-titulo" data-t="toque_falar">Toque para falar</h2>
+    <p class="passo-sub" id="p1-sub" data-t="diga_o_que_quiser">Diga o que quiser. Depois toque outra vez para enviar.</p>
 
     <div class="arena">
       <canvas id="anel" class="anel" width="640" height="640" aria-hidden="true"></canvas>
       <button id="b-gravar" class="micro" type="button" aria-describedby="p1-sub">
         <span class="micro-icone" aria-hidden="true"></span>
-        <span class="micro-rotulo" id="micro-rotulo">Falar</span>
+        <span class="micro-rotulo" id="micro-rotulo" data-t="falar">Falar</span>
       </button>
     </div>
 
     <p class="cronometro" id="cronometro" hidden>0:00</p>
     <p class="limite" id="limite" hidden></p>
-    <button id="b-parar" class="botao-parar" type="button" hidden>Parar e enviar</button>
-    <button id="b-escrever-2" class="botao-texto claro" type="button">Escrever em vez de falar</button>
+    <button id="b-escrever-2" class="botao-texto claro" type="button" data-t="escrever_em_vez">Escrever em vez de falar</button>
     <p class="erro" id="erro-micro" hidden></p>
   </section>
 
-  <!-- PARTE 1b: escrever, para quem nao pode ou nao quer falar -->
+  <!-- PARTE 1b: escrever -->
   <section id="parte1b" class="passo" hidden>
-    <p class="passo-selo">Mensagem para <span id="gemeo-nome-3"></span> <span class="selo-ia">IA</span></p>
-    <h2 class="passo-titulo">Escreva a sua mensagem</h2>
-    <textarea id="texto" class="caixa-texto" rows="6" maxlength="1200"
-      placeholder="O que gostaria de perguntar?"></textarea>
-    <p class="contador" id="contador-texto">0 de 1200</p>
-    <button id="b-enviar-texto" class="botao-parar" type="button" disabled>Enviar</button>
-    <button id="b-voltar-voz" class="botao-texto claro" type="button">Prefiro falar</button>
+    <p class="passo-selo"><span data-t="mensagem_para">Mensagem para</span> <span class="gemeo-nome-eco"></span> <span class="selo-ia">IA</span></p>
+    <h2 class="passo-titulo" data-t="escreva_mensagem">Escreva a sua mensagem</h2>
+    <textarea id="texto" class="caixa-texto" rows="6" maxlength="1200"></textarea>
+    <p class="contador" id="contador-texto"></p>
+    <button id="b-enviar-texto" class="botao-parar" type="button" disabled data-t="enviar">Enviar</button>
+    <button id="b-voltar-voz" class="botao-texto claro" type="button" data-t="prefiro_falar">Prefiro falar</button>
   </section>
 
   <!-- PARTE 2: fila e atendimento -->
   <section id="parte2" class="passo" hidden>
     <canvas id="animacao" class="animacao" width="640" height="640" aria-hidden="true"></canvas>
-    <p class="passo-selo" id="p2-selo">Enviado</p>
-    <h2 class="passo-titulo" id="p2-titulo">A caminho</h2>
+    <p class="passo-selo" id="p2-selo"></p>
+    <h2 class="passo-titulo" id="p2-titulo"></h2>
     <p class="passo-sub" id="p2-sub"></p>
     <div class="fila" id="fila" hidden>
       <span class="fila-numero" id="fila-numero">0</span>
-      <span class="fila-rotulo">à sua frente</span>
+      <span class="fila-rotulo" data-t="a_sua_frente">à sua frente</span>
     </div>
-    <button id="b-ouvir-enviado" class="botao-texto claro" type="button" hidden>Ouvir o que enviei</button>
+    <button id="b-ouvir-enviado" class="botao-texto claro" type="button" hidden></button>
   </section>
 
   <!-- PARTE 3: resposta -->
   <section id="parte3" class="passo passo-conversa" hidden>
-    <p class="passo-selo">Conversa com <span id="gemeo-nome-4"></span> <span class="selo-ia">IA</span></p>
+    <p class="passo-selo"><span data-t="conversa_com">Conversa com</span> <span class="gemeo-nome-eco"></span> <span class="selo-ia">IA</span></p>
     <div id="fio" class="fio"></div>
     <div class="barra-baixo">
-      <button id="b-nova" class="botao-parar" type="button">Nova mensagem</button>
-      <button id="b-humano" class="botao-texto claro" type="button">Quero falar com a pessoa real</button>
+      <button id="b-nova" class="botao-parar" type="button" data-t="nova_mensagem">Nova mensagem</button>
+      <button id="b-humano" class="botao-texto claro" type="button" data-t="falar_pessoa_real">Quero falar com a pessoa real</button>
     </div>
   </section>
 </div>
 
-<!-- Consentimento. O codigo do aparelho so nasce depois de carregar em aceitar. -->
+<!-- Consentimento. O codigo do aparelho so nasce depois de carregar em aceitar, e gravar voz so
+     depois disso. Abre a seguir ao ecra de carregamento. -->
 <div id="consentimento" class="consentimento" hidden>
-  <p>Guardamos um código aleatório neste aparelho só para perceber quantas pessoas diferentes
-     abrem o cartão. Não guardamos o seu endereço de rede.</p>
+  <p data-t="texto_consentimento"></p>
   <div class="consentimento-botoes">
-    <button type="button" id="b-recusar" class="botao-texto">Não, obrigado</button>
-    <button type="button" id="b-aceitar" class="botao-aceitar">Aceito</button>
+    <button type="button" id="b-recusar" class="botao-texto" data-t="nao_obrigado">Não, obrigado</button>
+    <button type="button" id="b-aceitar" class="botao-aceitar" data-t="aceito">Aceito</button>
   </div>
 </div>
 
+<script src="/js/componentes.js" defer></script>
 <script src="/cartao/vendor/idb-keyval.umd.js" defer></script>
 <script src="/cartao/vendor/wavesurfer.min.js" defer></script>
 <script src="/cartao/cartao.js" defer></script>

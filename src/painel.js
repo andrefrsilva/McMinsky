@@ -246,7 +246,18 @@ export async function encaminhar(req, env, caminho) {
     });
   }
 
-  if (caminho === '/painel/estatisticas.js' || caminho === '/painel/vendor/chart.umd.min.js') {
+  // O nosso codigo muda a cada publicacao e NAO pode ficar guardado no browser: ja aconteceu olhar
+  // para um painel com a folha de estilo nova e o codigo velho, e andar a procurar o erro no sitio
+  // errado. As bibliotecas de fora tem versao fixa no nome e essas ficam guardadas.
+  if (caminho === '/painel/estatisticas.js') {
+    const r = await env.ASSETS.fetch(req);
+    return new Response(r.body, {
+      status: r.status,
+      headers: { 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-cache' },
+    });
+  }
+
+  if (caminho === '/painel/vendor/chart.umd.min.js') {
     const r = await env.ASSETS.fetch(req);
     return new Response(r.body, {
       status: r.status,

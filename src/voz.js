@@ -23,8 +23,13 @@ import { lerFicha, aparelhoValido } from './ficha.js';
 const MAX_BYTES = 3 * 1024 * 1024;   // 3 MB: 90 segundos de opus cabem com folga
 const MAX_MS = 95 * 1000;
 const MAX_TEXTO = 1200;
-const MAX_PEDIDOS_DIA = 12;
-const MAX_SEGUNDOS_DIA = 900;
+// NAO ha limite de mensagens nem de segundos por pessoa. Ordem dele a 16 Out 2026:
+// "nao quero nada destes limites! quem me dera ter muita gente a visitar o cartao e eu ter de
+//  pagar os limites para lá do free da cloudflare! tens de ter atenção é no TEU uso e se cada
+//  visita está otimizada para gastar o menos possível. nao nas visitas das pessoas."
+// O que fica e o tamanho e a duracao de CADA mensagem, que nao sao limites de uso: sao o formato
+// do produto (um recado de voz, nao um ficheiro de uma hora). O cuidado com o custo passou para o
+// lado de ca: menos escritas por visita.
 
 function hoje() {
   return new Date(Date.now() + 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -81,16 +86,6 @@ export async function receberMensagem(req, env) {
     if (ms > MAX_MS) return nao('muito_longa');
   }
 
-  // Travao por aparelho e por dia.
-  const dia = hoje();
-  const usado = await env.DB.prepare(
-    'SELECT pedidos, segundos FROM travao_voz WHERE dia = ? AND visitante = ?',
-  ).bind(dia, aparelho).first();
-  if (usado) {
-    if (usado.pedidos >= MAX_PEDIDOS_DIA) return nao('limite_dia', 429);
-    if (usado.segundos >= MAX_SEGUNDOS_DIA) return nao('limite_tempo', 429);
-  }
-
   const conversa = await conversaDe(env, cartao.dono, cartao.afiliado, aparelho);
 
   let chave = null;
@@ -110,14 +105,8 @@ export async function receberMensagem(req, env) {
      VALUES (?, 'visitante', ?, ?, ?, 'pendente', ?) RETURNING id`,
   ).bind(conversa, texto || null, chave, chave ? ms : null, agora()).first();
 
-  await env.DB.batch([
-    env.DB.prepare(
-      `INSERT INTO travao_voz (dia, visitante, pedidos, segundos) VALUES (?, ?, 1, ?)
-       ON CONFLICT(dia, visitante) DO UPDATE SET
-         pedidos = pedidos + 1, segundos = segundos + excluded.segundos`,
-    ).bind(dia, aparelho, Math.round(ms / 1000)),
-    env.DB.prepare('UPDATE conversas SET ultima_em = ? WHERE id = ?').bind(agora(), conversa),
-  ]);
+  // Uma escrita, nao tres: cada linha a menos por mensagem e orcamento que fica para quem visita.
+  await env.DB.prepare('UPDATE conversas SET ultima_em = ? WHERE id = ?').bind(agora(), conversa).run();
 
   // A posicao na fila e quantas mensagens por atender estao a frente desta. E uma estimativa
   // honesta, e e por isso que o numero que a pagina mostra comeca aqui e nao num valor inventado.

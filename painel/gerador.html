@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap">
 <title>Cartoes McMinsky: folhas A4</title>
 <!--
   Base: o "legacy a4 grid generator.html" do Andre, que ele enviou a 16 Out 2026 e que ja fazia o
@@ -63,12 +66,19 @@
   }
   .margin-stripe.bottom { border-bottom: none; border-top: 1px dashed #ccc; }
   .grid-area { width: 100%; flex-grow: 1; min-height: 0; display: grid; }
+  /* Duas metades iguais. Ele corta a etiqueta ao meio na guilhotina, logo cada metade tem de ser
+     um cartao inteiro e centrado nela propria. Isto substitui a regra antiga de espacamento igual
+     nos tres intervalos, que so fazia sentido quando a etiqueta era UM cartao. */
   .cell {
-    border: 0.5px solid #f0f0f0; display: flex; justify-content: space-evenly;
-    align-items: center; overflow: hidden; padding: 1mm;
+    border: 0.5px solid #f0f0f0; display: flex; align-items: stretch;
+    overflow: hidden; padding: 0.6mm;
   }
+  .meia {
+    flex: 1 1 50%; min-width: 0; display: flex; align-items: center; justify-content: center;
+    padding: 0.4mm;
+  }
+  .cell svg { max-width: 100%; max-height: 100%; width: auto; height: auto; }
   .cell.vazia { background: #fafafa; }
-  .cell svg { height: 100%; width: auto; }
 
   /* --- IMPRESSAO (PDF) --- */
   @media print {
@@ -108,7 +118,7 @@
     </div>
     <div class="input-group">
       <label for="quantosInput"><strong>Quantos cartões</strong></label>
-      <input type="number" id="quantosInput" value="33" min="1" max="200">
+      <input type="number" id="quantosInput" value="66" min="1" max="400">
     </div>
 
     <button id="reservarBtn" type="button">Reservar números e gerar</button>
@@ -141,7 +151,7 @@
   const resetBtn = document.getElementById('resetBtn');
   const aviso = document.getElementById('aviso');
 
-  const DEFAULTS = { topMargin: 10, bottomMargin: 10, rows: 11, cols: 3, quantos: 33, dono: 1 };
+  const DEFAULTS = { topMargin: 10, bottomMargin: 10, rows: 11, cols: 3, quantos: 66, dono: 1 };
   const STORAGE_KEY = 'a4GridSettings';
 
   // Os cartoes reservados na ultima vez. Ficam guardados para a folha sobreviver a um refresh
@@ -178,14 +188,35 @@
     }));
   }
 
-  // Um conjunto: o QR em modulos vectoriais, "McMinsky.pt" e "P=1 | A=22", as duas linhas de texto
-  // com a largura EXACTA do QR. A largura imposta faz-se com textLength mais
-  // lengthAdjust="spacingAndGlyphs", que e deterministico; andar a adivinhar tamanhos de letra nao e.
+  // Um conjunto e UM cartao: o QR a esquerda e, ao lado, "McMinsky.pt" por cima de "P=1 | A=22".
+  //
+  // As duas linhas ficam com a MESMA largura, e isso faz-se a mexer no espaco entre as letras, que
+  // foi o que ele pediu: "teria de se mexer é no espaçamento lateral entre as letras em si. nunca
+  // esticar, fica cheesy e nada profissional". Esticar glifos (textLength com spacingAndGlyphs)
+  // deforma a letra e vê-se. A largura natural de cada linha mede-se numa tela, com a MESMA fonte,
+  // e so depois se calcula quanto espaco falta repartir entre as letras.
   //
   // O endereco vai todo em MAIUSCULAS de proposito: o QR tem um modo de codificacao proprio, mais
   // denso, so para maiusculas, digitos e . / : - + * % $, e isso da um codigo mais pequeno e com
   // mais correccao de erro ao mesmo tempo (medido a 16 Out 2026: 25 modulos em maiusculas contra 29
   // em minusculas, e 33 na forma com parametros de consulta, que cai sempre no modo de bytes).
+
+  // A marca vai na letra da casa. O NUMERO vai em Inter, porque os algarismos do Cormorant sao
+  // antigos e o 1 sai igual a um i maiusculo: num numero que se le a olho para identificar o
+  // cartao, isso nao serve.
+  const FONTE_MARCA = '"Cormorant Garamond", Garamond, "Times New Roman", serif';
+  const FONTE_NUMERO = 'Inter, "Helvetica Neue", Arial, sans-serif';
+  let telaMedida = null;
+  function largura(texto, tamanho, fonte) {
+    if (!telaMedida) telaMedida = document.createElement('canvas').getContext('2d');
+    telaMedida.font = '500 ' + tamanho + 'px ' + fonte;
+    return telaMedida.measureText(texto).width;
+  }
+
+  function escapar(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   function conjunto(cartao) {
     const qr = qrcode(0, 'Q');
     qr.addData(cartao.url_qr, 'Alphanumeric');
@@ -193,10 +224,10 @@
     const n = qr.getModuleCount();
 
     const LADO = 100;                 // unidades do desenho, nao mm: o SVG escala com a celula
+    const GAP = 9;
+    const LARGURA_TEXTO = 68;
+    const total = LADO + GAP + LARGURA_TEXTO;
     const modulo = LADO / n;
-    const ALTURA_LINHA = 13;
-    const ESPACO = 2;
-    const alturaTotal = LADO + ESPACO + ALTURA_LINHA * 2;
 
     let modulos = '';
     for (let r = 0; r < n; r++) {
@@ -208,21 +239,41 @@
       }
     }
 
-    const linha1 = 'McMinsky.pt';
-    const linha2 = 'P=' + cartao.dono + ' | A=' + cartao.afiliado;
-    const texto = function (y, conteudo, tamanho) {
-      return '<text x="0" y="' + y + '" textLength="' + LADO + '" lengthAdjust="spacingAndGlyphs"'
-        + ' font-family="Cormorant Garamond, Garamond, Times New Roman, serif"'
-        + ' font-size="' + tamanho + '" fill="#000">' + conteudo + '</text>';
-    };
+    const linhas = [
+      { texto: 'McMinsky.pt', fonte: FONTE_MARCA, peso: 500, y: 45, altura: 24 },
+      { texto: 'P=' + cartao.dono + '  |  A=' + cartao.afiliado, fonte: FONTE_NUMERO, peso: 500, y: 70, altura: 19 },
+    ];
 
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + LADO + ' ' + alturaTotal + '"'
+    // Cada linha tem o seu tamanho de letra, e o espaco ENTRE as letras e que a leva exactamente a
+    // largura do bloco de texto. O espaco entra depois de cada letra, logo sao (n-1) intervalos a
+    // repartir, que e o que faz a tinta acabar no sitio certo.
+    const desenhadas = linhas.map(function (l) {
+      // A altura pedida e um TECTO, nao uma imposicao: se a linha natural ja for mais larga do que
+      // o bloco, encolhe-se a letra ate caber com folga. Sem isto o espacamento sai negativo e as
+      // letras sobrepoem-se, que foi o que aconteceu na primeira tentativa.
+      const naturalUnitaria = largura(l.texto, 100, l.fonte) / 100;
+      const tamanho = Math.min(l.altura, (LARGURA_TEXTO * 0.92) / naturalUnitaria);
+      const natural = naturalUnitaria * tamanho;
+      const intervalos = Math.max(1, l.texto.length - 1);
+      const espaco = (LARGURA_TEXTO - natural) / intervalos;
+      return '<text x="' + (LADO + GAP).toFixed(2) + '" y="' + l.y + '"'
+        + ' font-family=\'' + l.fonte + '\' font-weight="' + l.peso + '"'
+        + ' font-size="' + tamanho.toFixed(3) + '" letter-spacing="' + espaco.toFixed(4) + '"'
+        + ' fill="#000">' + escapar(l.texto) + '</text>';
+    });
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + total + ' ' + LADO + '"'
       + ' shape-rendering="crispEdges">'
       + '<g fill="#000">' + modulos + '</g>'
-      + '<g shape-rendering="auto">'
-      + texto(LADO + ESPACO + ALTURA_LINHA * 0.8, linha1, ALTURA_LINHA * 0.95)
-      + texto(LADO + ESPACO + ALTURA_LINHA * 1.85, linha2, ALTURA_LINHA * 0.95)
-      + '</g></svg>';
+      + '<g shape-rendering="auto">' + desenhadas.join('') + '</g>'
+      + '</svg>';
+  }
+
+  function metade(cartao) {
+    const div = document.createElement('div');
+    div.className = 'meia';
+    if (cartao) div.innerHTML = conjunto(cartao);
+    return div;
   }
 
   function initGrid() {
@@ -234,16 +285,18 @@
     gridContainer.style.gridTemplateRows = 'repeat(' + rows + ', 1fr)';
     gridContainer.innerHTML = '';
 
+    // DOIS cartoes por etiqueta, com numeros DIFERENTES, porque ele corta a etiqueta ao meio:
+    // "cada etiqueta tem dois qr codes! é para ser para dois afiliados diferentes e nao repetido!
+    // isto depois quando imprime eu vou cortar na guilhotina!". Logo uma folha de 33 etiquetas da
+    // 66 cartoes.
     for (let i = 0; i < total; i++) {
       const cell = document.createElement('div');
       cell.className = 'cell';
-      const cartao = cartoes[i];
-      if (cartao) {
-        // Dois conjuntos por etiqueta, com o MESMO numero de afiliado, porque o numero e por
-        // etiqueta (palavras dele a 16 Out: "cada etiqueta com tag de afiliado diferente").
-        // O justify-content: space-evenly do CSS garante que o espaco a esquerda, o do meio e o da
-        // direita sao iguais, que foi o que ele pediu.
-        cell.innerHTML = conjunto(cartao) + conjunto(cartao);
+      const esquerdo = cartoes[i * 2];
+      const direito = cartoes[i * 2 + 1];
+      if (esquerdo || direito) {
+        cell.appendChild(metade(esquerdo));
+        cell.appendChild(metade(direito));
       } else {
         cell.classList.add('vazia');
       }
@@ -296,7 +349,8 @@
     const dono = parseInt(donoInput.value, 10) || 0;
     if (!dono || quantos < 1) { mostrar('Falta o dono ou a quantidade.', 'erro'); return; }
 
-    const cabem = (parseInt(rowsInput.value, 10) || 1) * (parseInt(colsInput.value, 10) || 1);
+    // Cada etiqueta leva DOIS cartoes, logo cabem o dobro.
+    const cabem = (parseInt(rowsInput.value, 10) || 1) * (parseInt(colsInput.value, 10) || 1) * 2;
     if (quantos > cabem) {
       mostrar('Pediu ' + quantos + ' cartões mas a folha só tem ' + cabem + ' etiquetas.', 'erro');
       return;
@@ -350,6 +404,12 @@
   }
   applyAll();
   carregarDonos();
+
+  // Sem isto, a primeira folha e medida com a letra de recurso do sistema e as duas linhas saem
+  // com larguras diferentes. Viu-se na imagem da etiqueta.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { initGrid(); });
+  }
 })();
 </script>
 </body>

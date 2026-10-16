@@ -78,15 +78,15 @@
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: { labels: { color: '#8d8d8d', boxWidth: 10, font: { family: 'Inter', size: 11 } } },
+      legend: { labels: { color: '#4a4a4a', boxWidth: 10, font: { family: 'Inter', size: 11 } } },
       tooltip: {
-        backgroundColor: '#1b1b1b', borderColor: '#333', borderWidth: 1,
-        titleColor: '#f0f0f0', bodyColor: '#c9c9c9', padding: 10,
+        backgroundColor: '#121212', borderColor: '#121212', borderWidth: 1,
+        titleColor: '#ffffff', bodyColor: '#d8d8d8', padding: 10,
       },
     },
     scales: {
-      x: { grid: { color: '#1e1e1e' }, ticks: { color: '#6a6a6a', font: { family: 'Inter', size: 10 }, maxRotation: 0, autoSkipPadding: 18 } },
-      y: { beginAtZero: true, grid: { color: '#1e1e1e' }, ticks: { color: '#6a6a6a', precision: 0, font: { family: 'Inter', size: 10 } } },
+      x: { grid: { color: '#eeeeee' }, ticks: { color: '#7d7d7d', font: { family: 'Inter', size: 10 }, maxRotation: 0, autoSkipPadding: 18 } },
+      y: { beginAtZero: true, grid: { color: '#eeeeee' }, ticks: { color: '#7d7d7d', precision: 0, font: { family: 'Inter', size: 10 } } },
     },
   };
 
@@ -96,11 +96,11 @@
       labels: etiquetas,
       datasets: [
         { label: 'pessoas', data: serie.map(function (l) { return l.visitas; }),
-          borderColor: '#c9a962', backgroundColor: 'rgba(201,169,98,0.14)', fill: true, tension: 0.3, pointRadius: 2 },
+          borderColor: '#121212', backgroundColor: 'rgba(18,18,18,0.07)', fill: true, tension: 0.3, pointRadius: 2 },
         { label: 'aparelhos distintos', data: serie.map(function (l) { return l.aparelhos; }),
-          borderColor: '#7fb2ff', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 },
+          borderColor: '#c9a962', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 },
         { label: 'robôs', data: serie.map(function (l) { return l.robos; }),
-          borderColor: '#555', backgroundColor: 'transparent', borderDash: [4, 4], tension: 0.3, pointRadius: 0 },
+          borderColor: '#b4b4b4', backgroundColor: 'transparent', borderDash: [4, 4], tension: 0.3, pointRadius: 0 },
       ],
     };
     if (graficoTempo) { graficoTempo.data = dados; graficoTempo.update(); return; }
@@ -112,7 +112,7 @@
       labels: lista.map(function (l) { return 'A' + (l.afiliado_num || 0); }),
       datasets: [{
         label: 'aberturas', data: lista.map(function (l) { return l.visitas; }),
-        backgroundColor: 'rgba(201,169,98,0.5)', borderColor: '#c9a962', borderWidth: 1,
+        backgroundColor: 'rgba(18,18,18,0.78)', borderColor: '#121212', borderWidth: 1,
       }],
     };
     if (graficoAfiliado) { graficoAfiliado.data = dados; graficoAfiliado.update(); return; }

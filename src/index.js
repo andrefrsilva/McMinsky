@@ -18,12 +18,14 @@ import { criarFicha, lerFicha, aparelhoValido } from './ficha.js';
 import { encaminhar as encaminharVoz } from './voz.js';
 import { encaminhar as encaminharPainel } from './painel.js';
 
-const ORIGENS = { Q: 'qr', M: 'manual', L: 'link' };
+const ORIGENS = { Q: 'qr', M: 'manual', L: 'link', S: 'partilhado' };
 
 // Tecto diario de linhas em cru por cartao. Passado o tecto a visita continua a ser servida e
 // continua a contar no agregado, mas deixa de gravar linha em cru. Ver o comentario da migracao:
 // o tecto do D1 que bloqueia e o das escritas e e PARTILHADO com o Pessoas e o Tempo.
-const TECTO_ESCRITAS_DIA = 300;
+// (O tecto de escritas por cartao foi retirado a 16 Out 2026, por ordem dele. A proteccao do
+// orcamento passou a ser nao gravar linha em cru para robos, que sao o unico caso capaz de disparar
+// aos milhares, e gravar menos linhas por visita.)
 
 const ROBOS = /bot|crawler|spider|preview|facebookexternalhit|whatsapp|telegrambot|slackbot|discordbot|twitterbot|linkedinbot|embedly|quora link preview|pinterest|vkshare|skypeuripreview|googlebot|bingbot|applebot|headlesschrome|python-requests|curl\/|wget/i;
 
@@ -87,51 +89,45 @@ function lerCaminho(pathname) {
   };
 }
 
-// Grava a visita. O agregado e escrito SEMPRE (e uma linha pequena e e o que o painel le); a linha
-// em cru so e escrita abaixo do tecto do dia. Tudo numa so chamada a base.
+// Grava a visita.
+//
+// Duas escritas, e nao mais: a linha em cru e o agregado. O agregado e escrito por QUEM ESCREVE,
+// nunca calculado por quem le, porque um ecra que conta o universo a cada abertura custa universo
+// vezes aberturas (foi assim que se gastaram 1,76 milhoes de leituras num dia a 9 Out 2026).
+//
+// NAO ha tecto de visitas por cartao. Ordem dele a 16 Out 2026: "nao quero nada destes limites!
+// quem me dera ter muita gente a visitar o cartao". O cuidado com o custo e todo do nosso lado:
+// menos linhas por visita, e o ROBO nao grava linha em cru. Um robo e o unico visitante capaz de
+// bater mil vezes num minuto, e continua a ser contado no agregado, que e onde ele interessa.
 async function registarVisita(env, dados) {
   const dia = hoje();
   const chaveAfiliado = dados.afiliado ?? 0;
   const comandos = [];
 
-  const travao = await env.DB.prepare(
-    'SELECT escritas FROM travao_dia WHERE dia = ? AND dono_num = ? AND afiliado_num = ?',
-  ).bind(dia, dados.dono, chaveAfiliado).first();
-  const jaEscritas = travao?.escritas ?? 0;
-  const podeGravarCru = jaEscritas < TECTO_ESCRITAS_DIA;
-
-  if (podeGravarCru) {
-    comandos.push(
-      env.DB.prepare(
-        `INSERT INTO visitas (ts, dono_num, afiliado_num, origem, dispositivo, pais, robo, visitante)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
-      ).bind(
-        Math.floor(Date.now() / 1000), dados.dono, dados.afiliado, dados.origem,
-        dados.dispositivo, dados.pais, dados.robo ? 1 : 0, dados.visitante,
-      ),
-      env.DB.prepare(
-        `INSERT INTO travao_dia (dia, dono_num, afiliado_num, escritas) VALUES (?, ?, ?, 1)
-         ON CONFLICT(dia, dono_num, afiliado_num) DO UPDATE SET escritas = escritas + 1`,
-      ).bind(dia, dados.dono, chaveAfiliado),
-    );
+  if (!dados.robo) {
+    comandos.push(env.DB.prepare(
+      `INSERT INTO visitas (ts, dono_num, afiliado_num, origem, dispositivo, pais, robo, visitante)
+       VALUES (?, ?, ?, ?, ?, ?, 0, ?) RETURNING id`,
+    ).bind(
+      Math.floor(Date.now() / 1000), dados.dono, dados.afiliado, dados.origem,
+      dados.dispositivo, dados.pais, dados.visitante,
+    ));
   }
 
-  comandos.push(
-    env.DB.prepare(
-      `INSERT INTO agregado_dia (dia, dono_num, afiliado_num, visitas, visitas_robo)
-       VALUES (?, ?, ?, ?, ?)
-       ON CONFLICT(dia, dono_num, afiliado_num) DO UPDATE SET
-         visitas = visitas + excluded.visitas,
-         visitas_robo = visitas_robo + excluded.visitas_robo`,
-    ).bind(dia, dados.dono, chaveAfiliado, dados.robo ? 0 : 1, dados.robo ? 1 : 0),
-  );
+  comandos.push(env.DB.prepare(
+    `INSERT INTO agregado_dia (dia, dono_num, afiliado_num, visitas, visitas_robo)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(dia, dono_num, afiliado_num) DO UPDATE SET
+       visitas = visitas + excluded.visitas,
+       visitas_robo = visitas_robo + excluded.visitas_robo`,
+  ).bind(dia, dados.dono, chaveAfiliado, dados.robo ? 0 : 1, dados.robo ? 1 : 0));
 
   const saida = await env.DB.batch(comandos);
   // O id da linha em cru serve para a pagina, depois de a pessoa aceitar, dizer QUAL a visita a
   // que pertence o codigo do aparelho. Sem ele so se podia adivinhar pela mais recente, e duas
   // pessoas a abrir o mesmo cartao ao mesmo tempo trocavam de lugar.
-  const visita = podeGravarCru ? (saida?.[0]?.results?.[0]?.id ?? null) : null;
-  return { gravou_cru: podeGravarCru, visita, escritas_hoje: jaEscritas + (podeGravarCru ? 1 : 0) };
+  const visita = dados.robo ? null : (saida?.[0]?.results?.[0]?.id ?? null);
+  return { gravou_cru: !dados.robo, visita };
 }
 
 function paginaSimples(titulo, corpo, estado = 200) {
@@ -303,9 +299,24 @@ async function servirCartao(req, env, pedido, dono) {
     // Um cartao que nao abre porque a estatistica falhou seria o pior erro possivel aqui.
   }
 
+  // As traducoes do perfil. Vao TODAS para a pagina, para a troca de lingua ser instantanea e
+  // para continuar a funcionar sem rede.
+  const linguas = {};
+  try {
+    const r = await env.DB.prepare(
+      'SELECT lingua, nome, papel, bio, gemeo_nome, gemeo_nota FROM perfil_textos WHERE dono_num = ?',
+    ).bind(pedido.dono).all();
+    for (const l of r.results ?? []) {
+      linguas[l.lingua] = {
+        nome: l.nome, papel: l.papel, bio: l.bio,
+        gemeo_nome: l.gemeo_nome, gemeo_nota: l.gemeo_nota,
+      };
+    }
+  } catch (e) { /* um cartao sem traducoes abre na mesma, na lingua base */ }
+
   const dados = {
     ficha: await criarFicha(pedido.dono, pedido.afiliado, segredo),
-    cartao: { p: pedido.dono, a: pedido.afiliado, origem: pedido.origem },
+    cartao: { p: pedido.dono, a: pedido.afiliado, origem: pedido.origem, kk: pedido.verificador },
     dono: { num: dono.num, nome: dono.nome, tipo: dono.tipo || 'pessoa' },
     perfil: {
       nome: perfil?.nome || dono.nome,
@@ -322,6 +333,7 @@ async function servirCartao(req, env, pedido, dono) {
       gemeo_activo: perfil ? !!perfil.gemeo_activo : false,
       gemeo_nome: perfil?.gemeo_nome || null,
       gemeo_nota: perfil?.gemeo_nota || null,
+      linguas,
     },
   };
   if (registo.visita) {
@@ -335,7 +347,9 @@ async function servirCartao(req, env, pedido, dono) {
   if (!pagina.ok) {
     return paginaSimples(dono.nome, `<h1>${dono.nome}</h1><p>O cartão está a funcionar.</p>`);
   }
-  const html = (await pagina.text()).replace('__DADOS__', escaparParaScript(JSON.stringify(dados)));
+  const html = (await pagina.text())
+    .replace('__OG__', etiquetasDePartilha(req, dados))
+    .replace('__DADOS__', escaparParaScript(JSON.stringify(dados)));
   return new Response(html, {
     headers: {
       'content-type': 'text/html; charset=utf-8',
@@ -344,6 +358,45 @@ async function servirCartao(req, env, pedido, dono) {
       'x-content-type-options': 'nosniff',
     },
   });
+}
+
+// O cartao que aparece quando alguem cola a ligacao no Telegram, no WhatsApp ou no LinkedIn.
+// Sem isto sai um rectangulo cinzento sem nada, que e o contrario de um cartao de visita. A
+// fotografia e a da pessoa do cartao, quando ela tem fotografia.
+function escaparHtml(texto) {
+  return String(texto ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function etiquetasDePartilha(req, dados) {
+  const p = dados.perfil || {};
+  const nome = p.nome || 'McMinsky';
+  const resumo = [p.papel, (p.bio || '').split(/\n/)[0]].filter(Boolean).join('. ').slice(0, 180);
+  const origem = new URL(req.url).origin;
+  const imagem = p.foto ? origem + p.foto : null;
+  const ligacao = `${origem}/C/${dados.cartao.p}.${dados.cartao.a}.L.${dados.cartao.kk}`;
+
+  const linhas = [
+    `<title>${escaparHtml(nome)} | McMinsky</title>`,
+    `<meta name="description" content="${escaparHtml(resumo)}">`,
+    `<meta property="og:type" content="profile">`,
+    `<meta property="og:site_name" content="McMinsky">`,
+    `<meta property="og:title" content="${escaparHtml(nome)}">`,
+    `<meta property="og:description" content="${escaparHtml(resumo)}">`,
+    `<meta property="og:url" content="${escaparHtml(ligacao)}">`,
+    `<meta name="twitter:card" content="${imagem ? 'summary_large_image' : 'summary'}">`,
+    `<meta name="twitter:title" content="${escaparHtml(nome)}">`,
+    `<meta name="twitter:description" content="${escaparHtml(resumo)}">`,
+  ];
+  if (imagem) {
+    linhas.push(`<meta property="og:image" content="${escaparHtml(imagem)}">`);
+    linhas.push(`<meta property="og:image:width" content="800">`);
+    linhas.push(`<meta property="og:image:height" content="800">`);
+    linhas.push(`<meta property="og:image:alt" content="${escaparHtml(nome)}">`);
+    linhas.push(`<meta name="twitter:image" content="${escaparHtml(imagem)}">`);
+  }
+  return linhas.join('\n');
 }
 
 // O codigo do aparelho chega DEPOIS da pagina, porque so existe depois de a pessoa aceitar. Esta
@@ -551,8 +604,8 @@ export default {
         const donoNum = Number(corpo?.dono);
         const quantos = Number(corpo?.quantos);
         if (!Number.isInteger(donoNum) || donoNum < 1) return Response.json({ ok: false, erro: 'dono invalido' }, { status: 400 });
-        if (!Number.isInteger(quantos) || quantos < 1 || quantos > 200) {
-          return Response.json({ ok: false, erro: 'quantidade fora de 1 a 200' }, { status: 400 });
+        if (!Number.isInteger(quantos) || quantos < 1 || quantos > 400) {
+          return Response.json({ ok: false, erro: 'quantidade fora de 1 a 400' }, { status: 400 });
         }
         const r = await reservarBloco(env, donoNum, quantos);
         return Response.json(r, { status: r.ok ? 200 : 400 });
