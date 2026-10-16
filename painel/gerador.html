@@ -188,31 +188,25 @@
     }));
   }
 
-  // Um conjunto e UM cartao: o QR a esquerda e, ao lado, "McMinsky.pt" por cima de "P=1 | A=22".
+  // Um conjunto e UM cartao: o QR, e por baixo "McMinsky.pt" e "P=1 | A=22", as duas linhas com a
+  // largura EXACTA do QR. Esse conjunto e depois DEITADO, rodado um quarto de volta, porque e
+  // assim que ele o quer e porque e assim que o codigo fica maior: a meia etiqueta tem 35 mm de
+  // largura por 25,18 mm de altura, e o conjunto e mais alto do que largo. De pe o QR nao passa de
+  // cerca de 17 mm; deitado chega a cerca de 24 mm.
   //
-  // As duas linhas ficam com a MESMA largura, e isso faz-se a mexer no espaco entre as letras, que
-  // foi o que ele pediu: "teria de se mexer é no espaçamento lateral entre as letras em si. nunca
-  // esticar, fica cheesy e nada profissional". Esticar glifos (textLength com spacingAndGlyphs)
-  // deforma a letra e vê-se. A largura natural de cada linha mede-se numa tela, com a MESMA fonte,
-  // e so depois se calcula quanto espaco falta repartir entre as letras.
+  // A largura das duas linhas faz-se com ESPACO ENTRE AS LETRAS, nunca esticando o glifo:
+  // "teria de se mexer é no espaçamento lateral entre as letras em si. nunca esticar, fica cheesy
+  // e nada profissional".
   //
   // O endereco vai todo em MAIUSCULAS de proposito: o QR tem um modo de codificacao proprio, mais
-  // denso, so para maiusculas, digitos e . / : - + * % $, e isso da um codigo mais pequeno e com
-  // mais correccao de erro ao mesmo tempo (medido a 16 Out 2026: 25 modulos em maiusculas contra 29
-  // em minusculas, e 33 na forma com parametros de consulta, que cai sempre no modo de bytes).
+  // denso, so para maiusculas, digitos e . / : - + * % $ (medido a 16 Out 2026: 25 modulos em
+  // maiusculas contra 29 em minusculas, e 33 na forma com parametros de consulta).
 
-  // A marca vai na letra da casa. O NUMERO vai em Inter, porque os algarismos do Cormorant sao
-  // antigos e o 1 sai igual a um i maiusculo: num numero que se le a olho para identificar o
-  // cartao, isso nao serve.
-  const FONTE_MARCA = '"Cormorant Garamond", Garamond, "Times New Roman", serif';
-  const FONTE_NUMERO = 'Inter, "Helvetica Neue", Arial, sans-serif';
-  let telaMedida = null;
-  function largura(texto, tamanho, fonte) {
-    if (!telaMedida) telaMedida = document.createElement('canvas').getContext('2d');
-    telaMedida.font = '500 ' + tamanho + 'px ' + fonte;
-    return telaMedida.measureText(texto).width;
-  }
-
+  // UMA letra so, a da casa, nas duas linhas: "a fonte do texto deve ser toda igual nas etiquetas".
+  // O problema dos algarismos do Cormorant (que por omissao sao os antigos, e escrevem o 1 como um
+  // i maiusculo) resolve-se a pedir a forma moderna a propria fonte, com lining-nums, em vez de
+  // trocar de letra.
+  const FONTE = '"Cormorant Garamond", Garamond, "Times New Roman", serif';
   function escapar(t) {
     return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
@@ -223,10 +217,11 @@
     qr.make();
     const n = qr.getModuleCount();
 
-    const LADO = 100;                 // unidades do desenho, nao mm: o SVG escala com a celula
-    const GAP = 9;
-    const LARGURA_TEXTO = 68;
-    const total = LADO + GAP + LARGURA_TEXTO;
+    const LADO = 100;          // unidades do desenho, nao mm: o SVG escala com a celula
+    const ESPACO = 5;          // entre o codigo e a primeira linha
+    const ALTURA_1 = 15;       // caixa da linha da marca
+    const ALTURA_2 = 13;       // caixa da linha do numero
+    const ALTO = LADO + ESPACO + ALTURA_1 + 2 + ALTURA_2;
     const modulo = LADO / n;
 
     let modulos = '';
@@ -240,33 +235,118 @@
     }
 
     const linhas = [
-      { texto: 'McMinsky.pt', fonte: FONTE_MARCA, peso: 500, y: 45, altura: 24 },
-      { texto: 'P=' + cartao.dono + '  |  A=' + cartao.afiliado, fonte: FONTE_NUMERO, peso: 500, y: 70, altura: 19 },
+      { texto: 'McMinsky.pt', fonte: FONTE, tecto: ALTURA_1, base: LADO + ESPACO + ALTURA_1 * 0.82 },
+      { texto: 'P=' + cartao.dono + ' | A=' + cartao.afiliado, fonte: FONTE, tecto: ALTURA_2,
+        base: LADO + ESPACO + ALTURA_1 + 2 + ALTURA_2 * 0.82 },
     ];
 
-    // Cada linha tem o seu tamanho de letra, e o espaco ENTRE as letras e que a leva exactamente a
-    // largura do bloco de texto. O espaco entra depois de cada letra, logo sao (n-1) intervalos a
-    // repartir, que e o que faz a tinta acabar no sitio certo.
+    // Sai sem espacamento e com um tamanho de partida. O ajuste fino e feito depois de estar no
+    // ecra, por `ajustarLinhas`, que mede o desenho verdadeiro.
     const desenhadas = linhas.map(function (l) {
-      // A altura pedida e um TECTO, nao uma imposicao: se a linha natural ja for mais larga do que
-      // o bloco, encolhe-se a letra ate caber com folga. Sem isto o espacamento sai negativo e as
-      // letras sobrepoem-se, que foi o que aconteceu na primeira tentativa.
-      const naturalUnitaria = largura(l.texto, 100, l.fonte) / 100;
-      const tamanho = Math.min(l.altura, (LARGURA_TEXTO * 0.92) / naturalUnitaria);
-      const natural = naturalUnitaria * tamanho;
-      const intervalos = Math.max(1, l.texto.length - 1);
-      const espaco = (LARGURA_TEXTO - natural) / intervalos;
-      return '<text x="' + (LADO + GAP).toFixed(2) + '" y="' + l.y + '"'
-        + ' font-family=\'' + l.fonte + '\' font-weight="' + l.peso + '"'
-        + ' font-size="' + tamanho.toFixed(3) + '" letter-spacing="' + espaco.toFixed(4) + '"'
+      return '<text x="0" y="' + l.base.toFixed(2) + '"'
+        + ' font-family=\'' + l.fonte + '\' font-weight="500"'
+        + ' font-size="' + l.tecto + '" data-alvo="' + LADO + '"'
+        + ' style="font-variant-numeric: lining-nums; font-feature-settings: &quot;lnum&quot; 1"'
         + ' fill="#000">' + escapar(l.texto) + '</text>';
     });
 
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + total + ' ' + LADO + '"'
+    // A roda: o conjunto e desenhado de pe, em LADO x ALTO, e depois deitado. Com
+    // translate(0, LADO) rotate(-90), um ponto (x, y) de pe vai parar a (y, LADO - x), o que enche
+    // exactamente a area ALTO x LADO da etiqueta.
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + ALTO + ' ' + LADO + '"'
       + ' shape-rendering="crispEdges">'
+      + '<g transform="translate(0,' + LADO + ') rotate(-90)">'
       + '<g fill="#000">' + modulos + '</g>'
       + '<g shape-rendering="auto">' + desenhadas.join('') + '</g>'
-      + '</svg>';
+      + '</g></svg>';
+  }
+
+  // A TINTA, medida na tinta: desenha-se a frase numa tela ao tamanho de referencia, varrem-se os
+  // pixeis, e fica-se a saber onde comeca e onde acaba. Tudo o resto (avanco, caixas de ligacao,
+  // ombros das letras) descreve outra coisa, e a diferenca entre essa outra coisa e a tinta e
+  // exactamente o que se ve no papel.
+  const REF = 400;                  // tamanho de referencia da medicao: quanto maior, menor o erro relativo
+  const tintaCache = {};
+  let telaTinta = null;
+
+  function tintaDe(texto, fonte) {
+    const chave = fonte + '|' + texto;
+    if (tintaCache[chave]) return tintaCache[chave];
+
+    if (!telaTinta) {
+      const t = document.createElement('canvas');
+      t.width = 6000; t.height = 900;
+      telaTinta = t.getContext('2d', { willReadFrequently: true });
+    }
+    const ctx = telaTinta;
+    ctx.clearRect(0, 0, 6000, 900);
+    ctx.font = '500 ' + REF + 'px ' + fonte;
+    // A mesma forma de algarismos do desenho, senao mede-se uma largura que nao e a que sai.
+    if ('fontVariantCaps' in ctx) { try { ctx.fontVariantCaps = 'normal'; } catch (e) {} }
+    ctx.letterSpacing = '0px';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#000';
+    ctx.fillText(texto, 300, 650);
+
+    const dados = ctx.getImageData(0, 0, 6000, 900).data;
+    let esquerda = -1, direita = -1;
+    for (let x = 0; x < 6000; x++) {
+      let temTinta = false;
+      for (let y = 0; y < 900; y++) {
+        if (dados[(y * 6000 + x) * 4 + 3] > 40) { temTinta = true; break; }
+      }
+      if (temTinta) { if (esquerda < 0) esquerda = x; direita = x; }
+    }
+    const avanco = ctx.measureText(texto).width / REF;
+    const r = esquerda < 0
+      ? { largura: REF, inicio: 0, avanco: avanco }
+      : { largura: (direita - esquerda + 1) / REF, inicio: (esquerda - 300) / REF, avanco: avanco };
+    tintaCache[chave] = r;
+    return r;
+  }
+
+  // Poe as duas linhas com a largura EXACTA do codigo, a mexer no espaco entre as letras e nunca
+  // no desenho da letra.
+  function ajustarLinhas(raiz) {
+    const textos = raiz.querySelectorAll('text[data-alvo]');
+    for (let i = 0; i < textos.length; i++) {
+      const no = textos[i];
+      const alvo = parseFloat(no.getAttribute('data-alvo'));
+      const texto = no.textContent || '';
+      // Espacos seguidos sao ENCOLHIDOS por quem desenha o texto, e entao o numero de intervalos
+      // que leva espacamento nao e o numero de letras que eu contei aqui. Por isso a frase do
+      // numero leva espacos simples, e por isso se conta pela mesma regra do desenho.
+      const letras = Math.max(1, texto.replace(/\s+/g, ' ').trim().length - 1);
+      const t = tintaDe(texto, no.getAttribute('font-family'));
+
+      // Tamanho: o que estiver pedido, mas nunca tao grande que a frase sozinha ja passe do
+      // codigo, senao o espaco a repartir seria negativo e as letras sobrepunham-se.
+      // A tela desenha os algarismos na forma antiga da fonte e o SVG desenha-os na forma moderna,
+      // porque lha pedimos: as larguras nao sao as mesmas. Compara-se o AVANCO medido nos dois
+      // sitios e usa-se essa razao para corrigir a tinta. Sem isto a linha do numero sai curta,
+      // como saiu (75 px onde o codigo tem 86).
+      // Esta funcao corre mais do que uma vez (antes e depois de a letra estar carregada) e nao
+      // pode partir do resultado da vez anterior: guarda-se o tamanho de origem e recomeca-se
+      // sempre dele. Sem isto, a segunda passagem encolhia em cima do ja encolhido.
+      if (!no.getAttribute('data-origem')) no.setAttribute('data-origem', no.getAttribute('font-size'));
+      no.setAttribute('font-size', no.getAttribute('data-origem'));
+      no.removeAttribute('letter-spacing');
+      const avancoSvg = no.getBBox().width / parseFloat(no.getAttribute('font-size'));
+      const razao = (t.avanco > 0 && avancoSvg > 0) ? (avancoSvg / t.avanco) : 1;
+      const larguraReal = t.largura * razao;
+
+      let tamanho = parseFloat(no.getAttribute('font-size'));
+      if (larguraReal * tamanho > alvo * 0.95) tamanho = (alvo * 0.95) / larguraReal;
+      no.setAttribute('font-size', tamanho.toFixed(3));
+
+      const tinta = larguraReal * tamanho;
+      const espaco = (alvo - tinta) / letras;
+      no.setAttribute('letter-spacing', espaco.toFixed(4) + 'px');
+
+      // A tinta da primeira letra nao comeca no ponto de partida do texto: comeca um pouco a
+      // frente ou atras. Recua-se exactamente esse tanto para a linha comecar no zero do codigo.
+      no.setAttribute('x', (-t.inicio * razao * tamanho).toFixed(3));
+    }
   }
 
   function metade(cartao) {
@@ -301,6 +381,17 @@
         cell.classList.add('vazia');
       }
       gridContainer.appendChild(cell);
+    }
+    // So depois de estar no ecra e que o desenho tem medidas.
+    ajustarLinhas(gridContainer);
+
+    // Cada etiqueta leva DOIS cartoes. Um lote reservado antes desta mudanca tem metade dos
+    // numeros que a folha precisa, e isso via-se como meia folha em branco sem explicacao.
+    const precisa = total * 2;
+    if (cartoes.length && cartoes.length < precisa) {
+      mostrar('Este lote tem ' + cartoes.length + ' cartões e a folha leva ' + precisa
+        + ' (dois por etiqueta, para cortar ao meio). Faltam ' + (precisa - cartoes.length)
+        + '. Reserve ' + precisa + ' de uma vez para a folha sair cheia.', 'erro');
     }
   }
 
@@ -407,8 +498,12 @@
 
   // Sem isto, a primeira folha e medida com a letra de recurso do sistema e as duas linhas saem
   // com larguras diferentes. Viu-se na imagem da etiqueta.
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { initGrid(); });
+  // Carregar as fontes A SERIO antes de medir. document.fonts.ready sozinho nao chega: resolve
+  // sem carregar uma fonte que ainda ninguem pediu, e a medicao sai feita na letra de recurso.
+  if (document.fonts && document.fonts.load) {
+    Promise.all([
+      document.fonts.load('500 400px "Cormorant Garamond"'),
+    ]).then(function () { initGrid(); }).catch(function () { initGrid(); });
   }
 })();
 </script>

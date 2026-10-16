@@ -149,9 +149,16 @@
       var l = loader();
       document.body.insertBefore(l, document.body.firstChild);
       saida.loader = l;
-      var esconder = function () { l.classList.add('hidden'); };
-      if (document.readyState === 'complete') window.setTimeout(esconder, 350);
-      else window.addEventListener('load', function () { window.setTimeout(esconder, 350); });
+      // Os MESMOS tempos do resto do sitio (js/main.js): 2 segundos depois de a pagina carregar,
+      // que e exactamente o tempo que a barra dourada leva a encher. Com menos do que isso a
+      // animacao nem chega ao fim, e foi o que ele viu: "a loading animation nem chega ao fim!"
+      document.body.classList.add('loading');
+      var esconder = function () {
+        l.classList.add('hidden');
+        document.body.classList.remove('loading');
+      };
+      if (document.readyState === 'complete') window.setTimeout(esconder, 2000);
+      else window.addEventListener('load', function () { window.setTimeout(esconder, 2000); });
       // Rede de seguranca: um recurso preso nunca pode deixar a pagina tapada para sempre.
       window.setTimeout(esconder, 4000);
     }

@@ -26,6 +26,10 @@
    browser. Sem esta linha o palco e os quatro passos aparecem todos por cima do cartao. */
 [hidden] { display: none !important; }
 
+/* Guarda o lugar e desaparece. E o que impede o botao do meio de saltar quando o cronometro
+   aparece ou o botao de baixo some: ele reparou nisso e tinha razao, quebra a continuidade. */
+.invisivel { visibility: hidden !important; }
+
 /* A folha do sitio da borda aos botoes. Aqui dentro, quem leva borda leva-a de proposito. */
 .palco button, .parte0 button, .consentimento button { border: 0; }
 .partilhar, .botao-aceitar, .leitor-tocar, .selo-ia { border: 1px solid; }
@@ -305,7 +309,16 @@ body[data-parte="1"], body[data-parte="2"], body[data-parte="3"] { overflow: hid
   line-height: 1.12;
   color: var(--white);
 }
-.passo-sub { color: #9a9a9a; font-size: 0.94rem; margin-top: 0.5rem; max-width: 22rem; }
+/* Duas linhas reservadas de propósito: o texto muda quando a gravacao comeca e, sem isto, o
+   bloco inteiro sobe ou desce e o botao do meio parece saltar. */
+/* Altura FIXA, nao minima: o texto muda quando a gravacao comeca e, com altura variavel, o bloco
+   todo sobe ou desce e o botao do meio salta. Ele reparou nisso e tinha razao. O transbordo fica
+   visivel de proposito: numa lingua mais comprida prefiro uma linha a mais do que o botao a saltar. */
+.passo-sub {
+  color: #9a9a9a; font-size: 0.94rem; margin-top: 0.5rem; max-width: 22rem;
+  height: 3.1em; overflow: visible;
+}
+.passo-titulo { height: 1.15em; }
 
 .arena {
   position: relative;
@@ -525,3 +538,9 @@ body[data-gravando="1"] .micro-icone::after { display: none; }
 @media (prefers-reduced-motion: reduce) { .bolha p.a-escrever::after { animation: none; } }
 
 .leitor-estado { font-size: 0.68rem; opacity: 0.6; margin-left: auto; letter-spacing: 0.04em; }
+
+/* No ecra de gravar, o conteudo fica ANCORADO AO TOPO em vez de centrado. Centrado, qualquer
+   mudanca de altura em baixo (o cronometro que aparece, o botao que desaparece) empurra o botao do
+   meio, e ele reparou: "o botao central sai ligeiramente para sitio diferente o que quebra a
+   ilusao de continuidade". Ancorado ao topo, com as alturas de cima fixas, o botao nao se mexe. */
+body[data-parte="1"] .palco { justify-content: flex-start; padding-top: 12vh; }

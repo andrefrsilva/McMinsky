@@ -565,8 +565,8 @@
     $('micro-rotulo').textContent = t('parar');
     $('p1-titulo').textContent = t('a_ouvir');
     $('p1-sub').textContent = t('fale_a_vontade');
-    $('cronometro').removeAttribute('hidden');
-    $('b-escrever-2').setAttribute('hidden', '');
+    $('cronometro').classList.remove('invisivel');
+    $('b-escrever-2').classList.add('invisivel');
     animarAnel();
     cronometro = window.setInterval(tiqueCronometro, 200);
   }
@@ -577,7 +577,7 @@
     $('cronometro').textContent = m + ':' + (r < 10 ? '0' : '') + r;
     var limite = $('limite');
     if (s >= AVISO_SEGUNDOS) {
-      limite.removeAttribute('hidden');
+      limite.classList.remove('invisivel');
       limite.textContent = t('faltam_segundos').replace('{n}', String(Math.max(0, Math.ceil(MAX_SEGUNDOS - s))));
     }
     if (s >= MAX_SEGUNDOS) pararGravacao(false);
@@ -589,7 +589,7 @@
     window.cancelAnimationFrame(desenho);
     corpo.removeAttribute('data-gravando');
     $('micro-rotulo').textContent = t('falar');
-    $('limite').setAttribute('hidden', '');
+    $('limite').classList.add('invisivel');
     if (cancelar && media) { try { media.onstop = null; } catch (e) {} }
     try { if (media && media.state !== 'inactive') media.stop(); } catch (e) {}
     try { if (fluxo) fluxo.getTracks().forEach(function (x) { x.stop(); }); } catch (e) {}
@@ -645,21 +645,30 @@
       if (aprendidas < 45) { chao = (chao * aprendidas + bruto) / (aprendidas + 1); aprendidas++; }
       else if (bruto < chao) { chao = chao * 0.97 + bruto * 0.03; }
 
-      var limpo = Math.max(0, bruto - chao * 1.6);
-      var volume = Math.min(1, Math.pow(limpo * 7.5, 0.75));
-      // Sobe depressa e desce devagar: e assim que uma barra de som se le bem.
-      suave = volume > suave ? volume * 0.65 + suave * 0.35 : volume * 0.18 + suave * 0.82;
-      pico = Math.max(pico * 0.94, suave);
+      var limpo = Math.max(0, bruto - chao * 1.4);
+      // Escala de decibeis, nao linear: o ouvido ouve assim e, sobretudo, assim ha DEGRAUS entre
+      // falar baixo, falar normal e falar alto. A primeira versao multiplicava e elevava a uma
+      // potencia, e qualquer som chegava quase ao maximo, que foi o que ele viu.
+      var volume = 0;
+      if (limpo > 0.0008) {
+        volume = (Math.log(limpo) / Math.LN10 + 2.35) / 1.75;   // 0,0045 -> 0 ; 0,27 -> 1
+        volume = Math.max(0, Math.min(1, volume));
+      }
+      // Sobe depressa e desce devagar, mas sem saltos: e assim que uma barra de som se le bem.
+      suave = volume > suave ? volume * 0.45 + suave * 0.55 : volume * 0.12 + suave * 0.88;
+      pico = Math.max(pico * 0.95, suave);
 
       fase += 0.02;
       var barras = 84;
       for (var b = 0; b < barras; b++) {
         var ang = (b / barras) * Math.PI * 2 - Math.PI / 2;
         var ruga = 0.45 + 0.55 * Math.sin(fase * 2.3 + b * 0.62) * Math.sin(fase * 0.7 + b * 0.21);
-        var comp = raio * (0.05 + suave * 1.15 * (0.35 + 0.65 * ruga));
-        var forca = 0.16 + suave * 0.84;
+        // O comprimento maximo e metade do raio: assim o anel nunca toca nos limites da caixa,
+        // que era o outro reparo dele.
+        var comp = raio * (0.045 + suave * 0.5 * (0.4 + 0.6 * ruga));
+        var forca = 0.14 + suave * 0.66;
         ctx.strokeStyle = 'rgba(245,245,245,' + forca.toFixed(3) + ')';
-        ctx.lineWidth = l * (0.006 + suave * 0.006);
+        ctx.lineWidth = l * (0.0055 + suave * 0.004);
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(c + Math.cos(ang) * raio, c + Math.sin(ang) * raio);
@@ -668,10 +677,10 @@
       }
 
       // Um aro que respira com o pico, para haver resposta mesmo nas pausas entre palavras.
-      ctx.strokeStyle = 'rgba(201,169,98,' + (0.10 + pico * 0.5).toFixed(3) + ')';
-      ctx.lineWidth = l * 0.0035;
+      ctx.strokeStyle = 'rgba(201,169,98,' + (0.08 + pico * 0.38).toFixed(3) + ')';
+      ctx.lineWidth = l * 0.003;
       ctx.beginPath();
-      ctx.arc(c, c, raio * (1 + pico * 0.42), 0, Math.PI * 2);
+      ctx.arc(c, c, raio * (1 + pico * 0.22), 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.strokeStyle = 'rgba(255,255,255,0.09)';
@@ -692,8 +701,8 @@
       irPara(1);
       $('p1-titulo').textContent = t('curto_demais');
       $('p1-sub').textContent = t('toque_e_fale');
-      $('cronometro').setAttribute('hidden', '');
-      $('b-escrever-2').removeAttribute('hidden');
+      $('cronometro').classList.add('invisivel');
+      $('b-escrever-2').classList.remove('invisivel');
       return;
     }
     await enviar({ audio: bocado, ms: ms });
@@ -766,9 +775,9 @@
   function repor1() {
     $('p1-titulo').textContent = t('toque_falar');
     $('p1-sub').textContent = t('diga_o_que_quiser');
-    $('cronometro').setAttribute('hidden', '');
+    $('cronometro').classList.add('invisivel');
     $('cronometro').textContent = '0:00';
-    $('b-escrever-2').removeAttribute('hidden');
+    $('b-escrever-2').classList.remove('invisivel');
     limparErroMicro();
   }
 
