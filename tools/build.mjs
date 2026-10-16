@@ -35,6 +35,11 @@ const SERVIR = [
   'programas',
 ];
 
+// Entradas que PODEM nao existir no checkout. A `afiliados/` esta vazia na maquina dele, e o git
+// nao guarda pastas vazias: no GitHub Actions nao existe, e o build parava. Se um dia levar
+// ficheiros, passa a ser copiada sozinha.
+const OPCIONAIS = new Set(['afiliados']);
+
 // O que NUNCA vai para o dist, mesmo que apareca dentro das pastas acima.
 const EXCLUIR = new Set(['.git', '.wrangler', '.claude', 'node_modules', 'dist', 'Thumbs.db', '.DS_Store']);
 
@@ -65,6 +70,10 @@ const faltam = [];
 for (const item of SERVIR) {
   const origem = join(raiz, item);
   if (!existsSync(origem)) {
+    if (OPCIONAIS.has(item)) {
+      console.log(`aviso: ${item}/ nao existe neste checkout, e opcional, sigo sem ela`);
+      continue;
+    }
     faltam.push(item);
     continue;
   }
