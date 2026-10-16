@@ -32,8 +32,9 @@ import { readFileSync } from 'node:fs';
 function buscarLocal(caminho) {
   const alvo = caminho === '/' ? '/index.html' : caminho;
   try {
-    const buf = readFileSync(join(dist, alvo.slice(1)));
-    return { estado: 200, resumo: createHash('sha256').update(buf).digest('hex').slice(0, 16), bytes: buf.length };
+    const bruto = readFileSync(join(dist, alvo.slice(1)));
+    const buf = normalizar(bruto, alvo);
+    return { estado: 200, resumo: createHash('sha256').update(buf).digest('hex').slice(0, 16), bytes: bruto.length };
   } catch (e) {
     return { estado: 0, resumo: 'erro', bytes: 0, erro: String(e.message || e) };
   }
@@ -46,8 +47,9 @@ async function buscar(base, caminho) {
       redirect: 'follow',
       headers: { 'user-agent': 'mcminsky-verificacao/1.0 (controlo interno)' },
     });
-    const buf = Buffer.from(await r.arrayBuffer());
-    return { estado: r.status, resumo: createHash('sha256').update(buf).digest('hex').slice(0, 16), bytes: buf.length };
+    const bruto = Buffer.from(await r.arrayBuffer());
+    const buf = normalizar(bruto, caminho);
+    return { estado: r.status, resumo: createHash('sha256').update(buf).digest('hex').slice(0, 16), bytes: bruto.length };
   } catch (e) {
     return { estado: 0, resumo: 'erro', bytes: 0, erro: String(e.message || e) };
   }
@@ -58,7 +60,19 @@ async function buscar(base, caminho) {
 // falha sempre nao verifica nada.
 const ATRAS_DE_SENHA = /^\/painel\//;
 
-const caminhos = todos(dist).filter((c) => !ATRAS_DE_SENHA.test(c)).sort();
+// O molde da pagina do cartao nao e servido em cru de proposito: responde com um reencaminhamento
+// para a entrada manual. Compara-lo com o ficheiro acusaria diferenca todos os dias.
+const NAO_SERVIDO_EM_CRU = new Set(['/cartao/index.html']);
+
+// Fim de linha nao e conteudo. Esta maquina guarda CRLF e o publicador automatico corre em Linux
+// com LF: sem isto, cada ficheiro de texto acusava diferenca de uma linha por linha.
+const TEXTO = /\.(html|css|js|mjs|json|svg|txt|xml|md)$/i;
+function normalizar(buf, caminho) {
+  if (!TEXTO.test(caminho) && caminho !== '/') return buf;
+  return Buffer.from(buf.toString('utf8').replace(/\r\n/g, '\n'), 'utf8');
+}
+
+const caminhos = todos(dist).filter((c) => !ATRAS_DE_SENHA.test(c) && !NAO_SERVIDO_EM_CRU.has(c)).sort();
 // A raiz tambem se verifica: `/index.html` e `/` tem de dar o mesmo.
 caminhos.unshift('/');
 
