@@ -76,6 +76,12 @@
 
   .mini { padding: 0.3rem 0.55rem; font-size: 0.78rem; border: 1px solid var(--linha-forte); background: var(--fundo); }
   .mini:hover { border-color: var(--tinta); }
+  .mini.feito { border-color: var(--ouro-escuro); color: var(--ouro-escuro); }
+
+  /* A ligacao e para ser lida e copiada a olho, por isso leva algarismos de largura fixa e parte
+     de linha onde for preciso em vez de empurrar a tabela para fora do ecra. */
+  .lig { font-size: 0.78rem; color: var(--tinta-2); font-variant-numeric: tabular-nums; word-break: break-all; }
+  .lig-accoes { display: flex; gap: 0.35rem; white-space: nowrap; }
 
   dialog {
     background: var(--fundo); color: var(--tinta); border: 1px solid var(--linha-forte);
@@ -136,6 +142,24 @@
   <div class="cartoes" id="fichas"></div>
 
   <section class="painel">
+    <h2>Cartões e ligações</h2>
+    <p class="ajuda">Uma linha por pessoa com cartão. A ligação desta coluna é a da PRÓPRIA pessoa, para
+       mandar por mensagem: abre o cartão igual e não atribui a visita a afiliado nenhum. A ligação de
+       cada cartão em plástico está em Afiliados, uma por número.</p>
+    <div class="rolar">
+      <table>
+        <thead><tr>
+          <th>Nº</th><th>Nome</th><th>Tipo</th><th>Impressos</th><th>Ligação da pessoa</th><th></th>
+        </tr></thead>
+        <tbody id="t-cartoes"></tbody>
+      </table>
+    </div>
+    <p class="ajuda" style="margin-top:0.9rem">
+      <button class="mini" id="b-afiliados-2">Ligações dos afiliados</button>
+    </p>
+  </section>
+
+  <section class="painel">
     <h2>Aberturas ao longo do tempo</h2>
     <p class="ajuda">Pessoas e robôs em linhas separadas. Os robôs são leitores de pré-visualização de links, não contam como visitas.</p>
     <div class="grafico"><canvas id="g-tempo"></canvas></div>
@@ -189,7 +213,7 @@
     <input type="search" id="q-afiliado" placeholder="procurar por número ou nome" style="width:100%;margin-bottom:0.8rem">
     <div class="rolar">
       <table>
-        <thead><tr><th>Nº</th><th>Nome</th><th>Pessoa</th><th>Lote</th><th></th></tr></thead>
+        <thead><tr><th>Nº</th><th>Nome</th><th>Pessoa</th><th>Lote</th><th>Ligação do cartão</th><th></th></tr></thead>
         <tbody id="t-afiliados"></tbody>
       </table>
     </div>

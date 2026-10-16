@@ -14,7 +14,7 @@
 // pequeno e com mais correccao de erro ao mesmo tempo. O browser trata o dominio, o caminho e
 // nosso.
 
-import { criarFicha, lerFicha, aparelhoValido } from './ficha.js';
+import { criarFicha, lerFicha, aparelhoValido, verificador } from './ficha.js';
 import { encaminhar as encaminharVoz } from './voz.js';
 import { encaminhar as encaminharPainel } from './painel.js';
 
@@ -53,24 +53,6 @@ function eRobo(req) {
   return fim.includes('prefetch') || fim.includes('preview');
 }
 
-// Alfabeto sem caracteres confundiveis a olho (sem I, O, 0, 1) e todo dentro do modo denso do QR.
-const ALFABETO = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-
-// Duas letras de verificacao a partir do par e de um segredo nosso. Duas letras dao 1 em 1.024, e
-// MEDIDO a 16 Out 2026: passar de uma para duas letras nao aumenta o tamanho do QR, logo e de graca.
-// Serve para que escrever /C/1.1, /C/1.2, ... nao de cartoes validos: sem isto, qualquer um suja as
-// estatisticas e, pior, gasta o orcamento de escritas da conta.
-async function verificador(dono, afiliado, segredo) {
-  const chave = await crypto.subtle.importKey(
-    'raw', new TextEncoder().encode(segredo),
-    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'],
-  );
-  const assinatura = new Uint8Array(
-    await crypto.subtle.sign('HMAC', chave, new TextEncoder().encode(`${dono}.${afiliado}`)),
-  );
-  return ALFABETO[assinatura[0] % 32] + ALFABETO[assinatura[1] % 32];
-}
-
 // /c/<P>.<A>.<O>.<KK> e tambem /c/<P>.<A> para links sem origem nem verificador.
 function lerCaminho(pathname) {
   const m = /^\/c\/([^/]+)\/?$/i.exec(pathname);
@@ -79,7 +61,9 @@ function lerCaminho(pathname) {
   if (partes.length < 2) return null;
   const dono = Number(partes[0]);
   const afiliado = Number(partes[1]);
-  if (!Number.isInteger(dono) || !Number.isInteger(afiliado) || dono < 1 || afiliado < 1) return null;
+  // O afiliado 0 e o cartao da PROPRIA pessoa, sem ninguem no meio: e a ligacao que ela copia do
+  // painel e manda por mensagem. Os cartoes em plastico levam sempre afiliado 1 ou mais.
+  if (!Number.isInteger(dono) || !Number.isInteger(afiliado) || dono < 1 || afiliado < 0) return null;
   const tagOrigem = (partes[2] || '').toUpperCase();
   return {
     dono,
@@ -288,7 +272,9 @@ async function servirCartao(req, env, pedido, dono) {
   try {
     registo = await registarVisita(env, {
       dono: pedido.dono,
-      afiliado: pedido.afiliado,
+      // Zero quer dizer "sem afiliado", e isso grava-se vazio na linha em cru, como sempre se
+      // gravou. No agregado continua a ser a chave 0, que e o que a chave primaria precisa.
+      afiliado: pedido.afiliado || null,
       origem: pedido.origem,
       dispositivo: dispositivoDe(req),
       pais: req.cf?.country ?? null,
@@ -566,7 +552,7 @@ export default {
     }
 
     // --- o painel ---
-    if (/^\/painel/i.test(caminho) || /^\/api\/(donos|lotes|afiliados|visitas|estatisticas|pessoas)\b/.test(caminho)) {
+    if (/^\/painel/i.test(caminho) || /^\/api\/(donos|lotes|afiliados|visitas|estatisticas|pessoas|cartoes)\b/.test(caminho)) {
       const senha = env.SENHA_PAINEL;
       const segredo = env.SEGREDO_CARTOES;
       if (!senha || !segredo) {

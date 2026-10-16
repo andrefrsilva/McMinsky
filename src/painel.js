@@ -11,6 +11,8 @@
 // pessoa no Pessoas, ou cria-a ali mesmo, e guarda so o id. Nao ha campo novo no Pessoas, que esta
 // exactamente nas 100 colunas que o D1 permite.
 
+import { verificador } from './ficha.js';
+
 function nao(erro, estado = 400) { return Response.json({ ok: false, erro }, { status: estado }); }
 
 function agora() { return Math.floor(Date.now() / 1000); }
@@ -115,24 +117,84 @@ async function registoVisitas(req, env) {
   return Response.json({ ok: true, visitas: r.results ?? [] });
 }
 
+// ---------------------------------------------------------------------------
+// As LIGACOES, montadas no servidor
+//
+// Porque tem de ser aqui: as duas letras de verificacao sao um HMAC com o segredo do Worker. O
+// browser nao as pode calcular (e nao deve: o segredo nunca sai daqui), logo o painel nao
+// conseguia montar uma ligacao de cartao nenhum. Vinham os numeros e os nomes, e nao vinha o que
+// ele queria copiar. Pergunta dele a 16 Out 2026: "no painel onde e que tem link para ver cada
+// cartao gerado (de cada pessoa)? e para copy and paste do link de algum cartao e de algum
+// afiliado? senao cria".
+//
+// Duas ligacoes diferentes, de proposito:
+//   - a da PESSOA, afiliado 0, que e a que ela manda por mensagem e que nao atribui nada a ninguem;
+//   - a de cada AFILIADO, que e a do cartao em plastico e conta para o afiliado certo.
+// A etiqueta de origem e L (ligacao), porque quem abre assim nao leu QR nem escreveu os numeros.
+
+async function listarCartoes(req, env) {
+  const base = new URL(req.url).origin;
+  const segredo = env.SEGREDO_CARTOES;
+
+  const donos = await env.DB.prepare(
+    'SELECT num, nome, pessoa_id, tipo, activo FROM donos ORDER BY num',
+  ).all();
+
+  // Quantos cartoes ja foram impressos para cada dono. Sai dos LOTES, que tem uma linha por folha,
+  // e nunca da tabela dos afiliados: assim a conta nao cresce com o numero de cartoes.
+  const impressos = await env.DB.prepare(
+    'SELECT dono_num, SUM(quantos) AS cartoes, MAX(ate) AS ultimo FROM lotes GROUP BY dono_num',
+  ).all();
+  const porDono = {};
+  for (const l of impressos.results ?? []) porDono[l.dono_num] = l;
+
+  const cartoes = [];
+  for (const d of donos.results ?? []) {
+    const kk = await verificador(d.num, 0, segredo);
+    const l = porDono[d.num] || {};
+    cartoes.push({
+      num: d.num,
+      nome: d.nome,
+      tipo: d.tipo,
+      activo: d.activo,
+      pessoa_id: d.pessoa_id,
+      impressos: l.cartoes ?? 0,
+      ultimo_afiliado: l.ultimo ?? null,
+      link: `${base}/C/${d.num}.0.L.${kk}`,
+    });
+  }
+  return Response.json({ ok: true, base, cartoes });
+}
+
 async function listarAfiliados(req, env) {
   const url = new URL(req.url);
   let limite = Number(url.searchParams.get('limite'));
   if (!Number.isInteger(limite) || limite < 1 || limite > 300) limite = 100;
   const q = (url.searchParams.get('q') || '').trim();
 
-  let consulta = `SELECT num, nome, pessoa_id, nota, lote_id, criado_em, atribuido_em
-                    FROM afiliados`;
+  // O dono vem pelo lote, que e quem sabe para quem a folha foi impressa. Sem ele nao se podia
+  // montar a ligacao, que leva sempre o par dono-afiliado.
+  let consulta = `SELECT a.num, a.nome, a.pessoa_id, a.nota, a.lote_id, a.criado_em,
+                         a.atribuido_em, l.dono_num
+                    FROM afiliados a LEFT JOIN lotes l ON l.id = a.lote_id`;
   const args = [];
   if (q) {
-    if (/^\d+$/.test(q)) { consulta += ' WHERE num = ?'; args.push(Number(q)); }
-    else { consulta += ' WHERE nome LIKE ?'; args.push('%' + q + '%'); }
+    if (/^\d+$/.test(q)) { consulta += ' WHERE a.num = ?'; args.push(Number(q)); }
+    else { consulta += ' WHERE a.nome LIKE ?'; args.push('%' + q + '%'); }
   }
-  consulta += ' ORDER BY num DESC LIMIT ?';
+  consulta += ' ORDER BY a.num DESC LIMIT ?';
   args.push(limite);
 
   const r = await env.DB.prepare(consulta).bind(...args).all();
-  return Response.json({ ok: true, afiliados: r.results ?? [] });
+  const base = new URL(req.url).origin;
+  const segredo = env.SEGREDO_CARTOES;
+  const afiliados = [];
+  for (const a of r.results ?? []) {
+    const dono = a.dono_num || 1;
+    const kk = await verificador(dono, a.num, segredo);
+    afiliados.push({ ...a, dono_num: dono, link: `${base}/C/${dono}.${a.num}.L.${kk}` });
+  }
+  return Response.json({ ok: true, afiliados });
 }
 
 async function guardarAfiliado(req, env) {
@@ -228,6 +290,7 @@ async function pessoas(req, env, caminho) {
 // ---------------------------------------------------------------------------
 
 export async function encaminhar(req, env, caminho) {
+  if (caminho === '/api/cartoes') return listarCartoes(req, env);
   if (caminho === '/api/estatisticas') return estatisticas(req, env);
   if (caminho === '/api/visitas') return registoVisitas(req, env);
   if (caminho === '/api/afiliados' && req.method === 'GET') return listarAfiliados(req, env);

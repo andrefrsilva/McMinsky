@@ -119,6 +119,114 @@
     graficoAfiliado = new Chart($('g-afiliado'), { type: 'bar', data: dados, options: COMUM });
   }
 
+  // ------------------------------------------------------------------ copiar
+  //
+  // A area de transferencia moderna so existe em pagina segura e pode ser recusada pelo browser.
+  // Quando falha, usa-se o caminho antigo (um campo invisivel e o comando de copia), que funciona
+  // em todo o lado. Um botao de copiar que as vezes nao copia e pior do que nao ter botao.
+  function copiar(valor) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(valor);
+    }
+    return new Promise(function (resolve, rejeitar) {
+      var campo = document.createElement('textarea');
+      campo.value = valor;
+      campo.setAttribute('readonly', '');
+      campo.style.position = 'fixed';
+      campo.style.opacity = '0';
+      document.body.appendChild(campo);
+      campo.select();
+      var deu = false;
+      try { deu = document.execCommand('copy'); } catch (e) { deu = false; }
+      document.body.removeChild(campo);
+      deu ? resolve() : rejeitar(new Error('sem copia'));
+    });
+  }
+
+  function botaoCopiar(valor, rotulo) {
+    var b = document.createElement('button');
+    b.className = 'mini';
+    b.textContent = rotulo || 'copiar';
+    b.addEventListener('click', function () {
+      copiar(valor).then(function () {
+        b.textContent = 'copiado';
+        b.classList.add('feito');
+      }).catch(function () {
+        b.textContent = 'copie à mão';
+      });
+      window.setTimeout(function () {
+        b.textContent = rotulo || 'copiar';
+        b.classList.remove('feito');
+      }, 1800);
+    });
+    return b;
+  }
+
+  function botaoAbrir(valor) {
+    var a = document.createElement('a');
+    a.className = 'mini';
+    a.href = valor;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = 'abrir';
+    a.style.textDecoration = 'none';
+    a.style.color = 'inherit';
+    return a;
+  }
+
+  function celulaLigacao(valor) {
+    var td = document.createElement('td');
+    var texto3 = document.createElement('div');
+    texto3.className = 'lig';
+    texto3.textContent = valor.replace(/^https?:\/\//, '');
+    td.appendChild(texto3);
+    return td;
+  }
+
+  function celulaAccoes(valor) {
+    var td = document.createElement('td');
+    var caixa = document.createElement('div');
+    caixa.className = 'lig-accoes';
+    caixa.appendChild(botaoCopiar(valor));
+    caixa.appendChild(botaoAbrir(valor));
+    td.appendChild(caixa);
+    return td;
+  }
+
+  // ------------------------------------------------------------------ cartoes e ligacoes
+  async function carregarCartoes() {
+    var j = await pedir('/api/cartoes');
+    if (!j || !j.ok) return;
+    var corpo = $('t-cartoes');
+    corpo.innerHTML = '';
+    if (!j.cartoes.length) {
+      var tr = document.createElement('tr');
+      var td = document.createElement('td');
+      td.colSpan = 6; td.className = 'vazio';
+      td.textContent = 'Ainda não há ninguém com cartão.';
+      tr.appendChild(td); corpo.appendChild(tr);
+      return;
+    }
+    for (var i = 0; i < j.cartoes.length; i++) corpo.appendChild(linhaCartao(j.cartoes[i]));
+  }
+
+  function linhaCartao(c) {
+    var tr = document.createElement('tr');
+    function td(valor) {
+      var e = document.createElement('td');
+      e.textContent = valor;
+      tr.appendChild(e);
+      return e;
+    }
+    td(c.num);
+    td(c.nome + (c.activo ? '' : ' (desligado)'));
+    td(c.tipo === 'especialista' ? 'especialista' : 'pessoa');
+    td(c.impressos ? (c.impressos + (c.ultimo_afiliado ? ' (até A=' + c.ultimo_afiliado + ')' : '')) : '·');
+    tr.appendChild(celulaLigacao(c.link));
+    tr.appendChild(celulaAccoes(c.link));
+    return tr;
+  }
+
   // ------------------------------------------------------------------ registo
   async function carregarVisitas(continuar) {
     var p = parametros();
@@ -177,7 +285,7 @@
     if (!j.afiliados.length) {
       var tr = document.createElement('tr');
       var td = document.createElement('td');
-      td.colSpan = 5; td.className = 'vazio';
+      td.colSpan = 6; td.className = 'vazio';
       td.textContent = 'Nenhum afiliado. Reserve uma folha no gerador e os números aparecem aqui.';
       tr.appendChild(td); corpo.appendChild(tr);
       return;
@@ -212,6 +320,14 @@
     var tdLote = document.createElement('td');
     tdLote.textContent = a.lote_id ? ('#' + a.lote_id) : '·';
     tr.appendChild(tdLote);
+
+    // A ligacao deste cartao, montada no servidor (as duas letras sao assinadas e nao se calculam
+    // aqui). E a que se manda a quem recebeu o cartao, ou se cola num anuncio dele.
+    var tdLig = celulaLigacao(a.link || '');
+    var accoes = celulaAccoes(a.link || '').firstChild;
+    accoes.style.marginTop = '0.3rem';
+    tdLig.appendChild(accoes);
+    tr.appendChild(tdLig);
 
     var tdAccao = document.createElement('td');
     var guardar = document.createElement('button');
@@ -319,12 +435,19 @@
       if (!marco.src) marco.src = '/painel/gerador';
       $('m-gerador').showModal();
     });
-    $('m-gerador').addEventListener('close', function () { carregarAfiliados(''); carregarEstatisticas(); });
+    $('m-gerador').addEventListener('close', function () {
+      carregarAfiliados('');
+      carregarEstatisticas();
+      // Uma folha nova muda os numeros impressos e o ultimo afiliado reservado.
+      carregarCartoes();
+    });
 
-    $('b-afiliados').addEventListener('click', function () {
+    function abrirAfiliados() {
       carregarAfiliados($('q-afiliado').value.trim());
       $('m-afiliados').showModal();
-    });
+    }
+    $('b-afiliados').addEventListener('click', abrirAfiliados);
+    $('b-afiliados-2').addEventListener('click', abrirAfiliados);
     $('q-afiliado').addEventListener('input', function () {
       var v = this.value.trim();
       window.clearTimeout(atrasoBusca);
@@ -391,5 +514,6 @@
 
   ligar();
   carregarDonos();
+  carregarCartoes();
   recarregar();
 })();
